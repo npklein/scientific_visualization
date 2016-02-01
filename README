@@ -1,0 +1,44 @@
+
+
+Fluid Flow demo for Mac OS X
+=============================
+
+1. Description
+
+This is the fluid flow demo application ported for Mac OS X. For a full description of the aims and scope of this application, please see the general platform-independent documentation.
+
+
+
+2. Building
+
+2.0. Requirements
+
+This application has been tested on several MacBook (Pro) computers running OS X versions 10.5x..10.6.x. The code does only depend on the OpenGL and GLUT frameworks, which are both installed by default under OS X.
+
+
+2.1. Building the FFTW library:
+
+cd fftw-2.1.5/sourceAndDoc
+
+./configure
+
+If something does not work in the above step, please see the FFTW documentation.
+
+make
+
+cp fftw/.libs/libfftw.a ../lib
+cp rfftw/.libs/librfftw.a ../lib
+
+cd ../..
+
+
+2.2. Building the application itself
+
+make
+
+The final application, called smoke, should be created in the current directory (where this README file is placed).
+
+
+
+
+
