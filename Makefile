@@ -1,8 +1,8 @@
 OBJECTS     = fluids.o
 CFILES      = $(OBJECTS:.o=.c)
 EXECFILE    = smoke
-FFTW        = /Users/freerkvandijk/Downloads/SmokeOSX/fftw-2.1.5
-INCLUDEDIRS = -I /Users/freerkvandijk/Downloads/SmokeOSX/fftw-2.1.5/include/
+FFTW        = /Users/freerkvandijk/git/scientific_visualization/fftw-2.1.5
+INCLUDEDIRS = -I /Users/freerkvandijk/git/scientific_visualization/fftw-2.1.5/include
 LIBDIRS     = $(FFTW)/lib
 LIBS        = -framework GLUT -framework OpenGL -lrfftw -lfftw
 CFLAGS      = -O2 -Wall -pipe
