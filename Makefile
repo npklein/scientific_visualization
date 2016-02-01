@@ -5,7 +5,7 @@ FFTW        = /Users/freerkvandijk/git/scientific_visualization/fftw-2.1.5
 INCLUDEDIRS = -I /Users/freerkvandijk/git/scientific_visualization/fftw-2.1.5/include
 LIBDIRS     = $(FFTW)/lib
 LIBS        = -framework GLUT -framework OpenGL -lrfftw -lfftw
-CFLAGS      = -O2 -Wall -pipe
+CFLAGS      = -O2 -Wall -pipe -Wno-deprecated-declarations
 LINKFLAGS   = 
 
 
