@@ -1,8 +1,8 @@
 OBJECTS     = fluids.o
-CFILES      = $(OBJECTS:.o=.c)
+CFILES      = $(OBJECTS:.o=.cpp)
 EXECFILE    = smoke
-FFTW        = /Users/freerkvandijk/git/scientific_visualization/fftw-2.1.5
-INCLUDEDIRS = -I /Users/freerkvandijk/git/scientific_visualization/fftw-2.1.5/include
+FFTW        = fftw-2.1.5
+INCLUDEDIRS = -I ${FFTW}/include/
 LIBDIRS     = $(FFTW)/lib
 LIBS        = -framework GLUT -framework OpenGL -lrfftw -lfftw
 CFLAGS      = -O2 -Wall -pipe -Wno-deprecated-declarations
@@ -14,15 +14,15 @@ LINKFLAGS   =
 all: $(EXECFILE)
 
 $(EXECFILE): $(OBJECTS)
-		cc $(LINKFLAGS) $(OBJECTS) -o $(EXECFILE) -L$(LIBDIRS) $(LIBS)
+		g++ $(LINKFLAGS) $(OBJECTS) -o $(EXECFILE) -L$(LIBDIRS) $(LIBS)
 
-.c.o: $$@.c $$@.h
-		cc $(CFLAGS) $(INCLUDEDIRS) -c  $<
+.cpp.o: $$@.cpp $$@.h
+		g++ $(CFLAGS) $(INCLUDEDIRS) -c  $<
 
 clean:
 		-rm -rf $(OBJECTS) $(EXECFILE)
 
 depend:
-		gcc -MM $(CFILES) > make.dep
+		g++ -MM $(CFILES) > make.dep
 
 -include make.dep

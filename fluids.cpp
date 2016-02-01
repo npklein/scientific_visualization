@@ -6,8 +6,8 @@
 #include <stdio.h>              //for printing the help text
 #include <math.h>               //for various math functions
 #include <GLUT/glut.h>          //the GLUT graphics library
-#include "simulation.c"			//for simulations
-#include "visualization.c"		//for visualization
+#include "simulation.cpp"			//for simulations
+#include "visualization.cpp"		//for visualization
 
 
 

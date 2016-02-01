@@ -36,7 +36,7 @@ void rainbow(float value,float* R,float* G,float* B)
 void set_colormap(float vy)
 {
    float R,G,B;
-
+   R = G = B = 0;
    if (scalar_col==COLOR_BLACKWHITE)
    {
        R = G = B = vy;
