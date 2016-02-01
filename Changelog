@@ -1,0 +1,2 @@
+v1 -> Skeleton code compiled
+v2 -> Extracted simulation code to simulation.c to keep simulation and visualization separate
