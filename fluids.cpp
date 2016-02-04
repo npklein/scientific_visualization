@@ -22,7 +22,7 @@ void display(void)
 	glLoadIdentity();
 	visualize();
 	glFlush();
-	glutSwapBuffers();
+    //glutSwapBuffers();
 }
 
 //reshape: Handle window resizing (reshaping) events
@@ -87,9 +87,17 @@ void drag(int mx, int my)
 }
 
 
-//main: The main program
+#include <QApplication>
+#include "window.h"
+
 int main(int argc, char **argv)
 {
+ QApplication app (argc, argv);
+
+ Window window;
+
+
+
 	printf("Fluid Flow Simulation and Visualization\n");
 	printf("=======================================\n");
 	printf("Click and drag the mouse to steer the flow!\n");
@@ -103,17 +111,21 @@ int main(int argc, char **argv)
 	printf("a:     toggle the animation on/off\n");
 	printf("q:     quit\n\n");
 
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-	glutInitWindowSize(500,500);
-	glutCreateWindow("Real-time smoke simulation and visualization");
-	glutDisplayFunc(display);
-	glutReshapeFunc(reshape);
-	glutIdleFunc(do_one_simulation_step);
-	glutKeyboardFunc(keyboard);
-	glutMotionFunc(drag);
+    //glutInit(&argc, argv);
+    //glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+    //glutInitWindowSize(500,500);
+    //glutCreateWindow("Real-time smoke simulation and visualization");
+    //glutDisplayFunc(display);
+    //glutReshapeFunc(reshape);
+    //glutIdleFunc(do_one_simulation_step);
+    //glutKeyboardFunc(keyboard);
+    //glutMotionFunc(drag);
 
-	init_simulation(DIM);	//initialize the simulation data structures
-	glutMainLoop();			//calls do_one_simulation_step, keyboard, display, drag, reshape
-	return 0;
-}
+    //init_simulation(DIM);	//initialize the simulation data structures
+    //glutMainLoop();			//calls do_one_simulation_step, keyboard, display, drag, reshape
+
+    window.show();
+
+    return app.exec();
+    return 0;
+   }

@@ -1,5 +1,7 @@
 #include <rfftw.h>              //the numerical simulation FFTW library
-
+#include <math.h>
+#include <simulation.h>
+#include <QGLWidget>
 
 //--- SIMULATION PARAMETERS ------------------------------------------------------------------------
 const int DIM = 100;			//size of simulation grid
@@ -167,6 +169,6 @@ void do_one_simulation_step(void)
         set_forces();
         solve(DIM, vx, vy, vx0, vy0, visc, dt);
         diffuse_matter(DIM, vx, vy, rho, rho0, dt);
-        glutPostRedisplay();
+        //glEnd();
     }
 }

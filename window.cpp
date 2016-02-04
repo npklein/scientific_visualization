@@ -1,5 +1,5 @@
 #include "window.h"
-#include "simulation.cpp"
+//#include "fluids.cpp"
 #include <QApplication>
  #include <QPushButton>
 Window::Window(QWidget *parent) :

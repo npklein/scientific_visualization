@@ -88,7 +88,7 @@ void visualize(void)
 
 	if (draw_smoke)
 	{
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glBegin(GL_TRIANGLES);
 	for (j = 0; j < DIM - 1; j++)			//draw smoke
 	{
