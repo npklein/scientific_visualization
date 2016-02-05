@@ -2,15 +2,16 @@
 //        the velocity field at the mouse location. Press the indicated keys to change options
 //--------------------------------------------------------------------------------------------------
 
-
+// Note-to-self: #include "" searches same directory, #include <> searches in an implementation dependent manner
 #include <stdio.h>              //for printing the help text
 #include <math.h>               //for various math functions
 #include <GLUT/glut.h>          //the GLUT graphics library
-#include "simulation.cpp"			//for simulations
-#include "visualization.cpp"		//for visualization
-
-
-
+#include "simulation.cpp"		//for simulations
+#include "visualization.cpp"    //for visualization
+#include "gui.h"
+#include "gui.cpp"
+#include <QApplication>
+#include <QPushButton>
 
 //------ INTERACTION CODE STARTS HERE -----------------------------------------------------------------
 
@@ -87,15 +88,22 @@ void drag(int mx, int my)
 }
 
 
-#include <QApplication>
-#include "window.h"
-
 int main(int argc, char **argv)
 {
- QApplication app (argc, argv);
 
- Window window;
+    QGuiApplication app(argc, argv);
 
+    QSurfaceFormat format;
+    format.setSamples(16);
+
+    TriangleWindow window;
+    window.setFormat(format);
+    window.resize(640, 480);
+    window.show();
+
+    window.setAnimating(true);
+
+    return app.exec();
 
 
 	printf("Fluid Flow Simulation and Visualization\n");
@@ -111,9 +119,10 @@ int main(int argc, char **argv)
 	printf("a:     toggle the animation on/off\n");
 	printf("q:     quit\n\n");
 
-    //glutInit(&argc, argv);
-    //glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-    //glutInitWindowSize(500,500);
+    //QTimer *timer = new QTimer(this);
+    //connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    //timer->start(1000);
+
     //glutCreateWindow("Real-time smoke simulation and visualization");
     //glutDisplayFunc(display);
     //glutReshapeFunc(reshape);
@@ -121,11 +130,6 @@ int main(int argc, char **argv)
     //glutKeyboardFunc(keyboard);
     //glutMotionFunc(drag);
 
-    //init_simulation(DIM);	//initialize the simulation data structures
+//    init_simulation(DIM);	//initialize the simulation data structures
     //glutMainLoop();			//calls do_one_simulation_step, keyboard, display, drag, reshape
-
-    window.show();
-
-    return app.exec();
-    return 0;
    }
