@@ -6,12 +6,9 @@
 #include <stdio.h>              //for printing the help text
 #include <math.h>               //for various math functions
 #include <GLUT/glut.h>          //the GLUT graphics library
-#include "simulation.cpp"			//for simulations
 #include "visualization.cpp"		//for visualization
-
-
-
-
+#include "simulation.h"
+#include "simulation.cpp"
 //------ INTERACTION CODE STARTS HERE -----------------------------------------------------------------
 
 //display: Handle window redrawing events. Simply delegates to visualize().
@@ -40,19 +37,19 @@ void keyboard(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
-	  case 't': dt -= 0.001; break;
-	  case 'T': dt += 0.001; break;
+      case 't': simulation.set_dt(simulation.get_dt() - 0.001); break;
+      case 'T': simulation.set_dt(simulation.get_dt() + 0.001); break;
 	  case 'c': color_dir = 1 - color_dir; break;
 	  case 'S': vec_scale *= 1.2; break;
 	  case 's': vec_scale *= 0.8; break;
-	  case 'V': visc *= 5; break;
-	  case 'v': visc *= 0.2; break;
+      case 'V': simulation.set_visc(simulation.get_visc()*5); break;
+      case 'v': simulation.set_visc(simulation.get_visc()*0.2); break;
 	  case 'x': draw_smoke = 1 - draw_smoke;
 		    if (draw_smoke==0) draw_vecs = 1; break;
 	  case 'y': draw_vecs = 1 - draw_vecs;
 		    if (draw_vecs==0) draw_smoke = 1; break;
 	  case 'm': scalar_col++; if (scalar_col>COLOR_BANDS) scalar_col=COLOR_BLACKWHITE; break;
-	  case 'a': frozen = 1-frozen; break;
+      case 'a': simulation.set_frozen(1-simulation.get_frozen()); break;
 	  case 'q': exit(0);
 	}
 }
@@ -67,12 +64,12 @@ void drag(int mx, int my)
 	static int lmx=0,lmy=0;				//remembers last mouse location
 
 	// Compute the array index that corresponds to the cursor location
-	xi = (int)clamp((double)(DIM + 1) * ((double)mx / (double)winWidth));
-	yi = (int)clamp((double)(DIM + 1) * ((double)(winHeight - my) / (double)winHeight));
+    xi = (int)simulation.clamp((double)(simulation.DIM + 1) * ((double)mx / (double)winWidth));
+    yi = (int)simulation.clamp((double)(simulation.DIM + 1) * ((double)(winHeight - my) / (double)winHeight));
 
 	X = xi; Y = yi;
 
-	if (X > (DIM - 1))  X = DIM - 1; if (Y > (DIM - 1))  Y = DIM - 1;
+    if (X > (simulation.DIM - 1))  X = simulation.DIM - 1; if (Y > (simulation.DIM - 1))  Y = simulation.DIM - 1;
 	if (X < 0) X = 0; if (Y < 0) Y = 0;
 
 	// Add force at the cursor location
@@ -80,11 +77,31 @@ void drag(int mx, int my)
 	dx = mx - lmx; dy = my - lmy;
 	len = sqrt(dx * dx + dy * dy);
 	if (len != 0.0) {  dx *= 0.1 / len; dy *= 0.1 / len; }
-	fx[Y * DIM + X] += dx;
-	fy[Y * DIM + X] += dy;
-	rho[Y * DIM + X] = 10.0f;
+    simulation.get_fx()[Y * simulation.DIM + X] += dx;
+    simulation.get_fy()[Y * simulation.DIM + X] += dy;
+    simulation.get_rho()[Y * simulation.DIM + X] = 10.0f;
 	lmx = mx; lmy = my;
 }
+
+//do_one_simulation_step: Do one complete cycle of the simulation:
+//      - set_forces:
+//      - solve:            read forces from the user
+//      - diffuse_matter:   compute a new set of velocities
+//      - gluPostRedisplay: draw a new visualization frame
+void do_one_simulation_step(void)
+{
+    if (!simulation.get_frozen())
+    {
+        simulation.set_forces();
+        simulation.solve(simulation.DIM, simulation.get_vx(), simulation.get_vy(), simulation.get_vx0(),
+                         simulation.get_vy0(), simulation.get_visc(), simulation.get_dt());
+        // Note to self: * in *simulation.get_vx() because simulation.get_vx() returns 'double *' and diffuse_matter needs 'double'
+        simulation.diffuse_matter(simulation.DIM, simulation.get_vx(), simulation.get_vy(),
+                                  simulation.get_rho(), simulation.get_rho0(), simulation.get_dt());
+        glutPostRedisplay();
+    }
+}
+
 
 
 //main: The main program
@@ -102,18 +119,18 @@ int main(int argc, char **argv)
 	printf("m:     toggle thru scalar coloring\n");
 	printf("a:     toggle the animation on/off\n");
 	printf("q:     quit\n\n");
-
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowSize(500,500);
 	glutCreateWindow("Real-time smoke simulation and visualization");
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
-	glutIdleFunc(do_one_simulation_step);
+    glutIdleFunc(do_one_simulation_step);
 	glutKeyboardFunc(keyboard);
 	glutMotionFunc(drag);
 
-	init_simulation(DIM);	//initialize the simulation data structures
+    simulation.init_simulation(simulation.DIM);	//initialize the simulation data structures
 	glutMainLoop();			//calls do_one_simulation_step, keyboard, display, drag, reshape
 	return 0;
 }
+
