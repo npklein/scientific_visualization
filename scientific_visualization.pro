@@ -9,10 +9,16 @@ SOURCES += \
     fluids.cpp \
     simulation.cpp \
     visualization.cpp \
-    gui.cpp
+    window.cpp \
+    myglwidget.cpp
 
 HEADERS += \
-    gui.h
+    window.h \
+    myglwidget.h \
+    simulation.h
 
 INCLUDEPATH += fftw-2.1.5/include
 LIBS += -L"$$_PRO_FILE_PWD_/fftw-2.1.5/lib" -lrfftw -lfftw -framework OpenGL -framework GLUT
+
+FORMS += \
+    window.ui
