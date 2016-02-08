@@ -64,8 +64,8 @@ void MyGLWidget::mousePressEvent(QMouseEvent *event)
 
 void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    int mx = event->x() - lastPos.x();
-    int my = event->y() - lastPos.y();
+    int mx = event->x();// - lastPos.x();
+    int my = event->y();// - lastPos.y();
     simulation.drag(mx,my, DIM, winWidth, winHeight);
     lastPos = event->pos();
 }
