@@ -2,8 +2,6 @@
         #define SIMULATION_H
 
         #include <rfftw.h>              //the numerical simulation FFTW library
-
-
         class Simulation {
 
 
@@ -22,31 +20,17 @@
             double get_dt() const;				//simulation time step
             float get_visc() const;				//fluid viscosity
             fftw_real* get_rho() const;
+            fftw_real* get_fy() const;
+            fftw_real* get_fx() const;
             fftw_real* get_rho0() const;
             fftw_real* get_vx() const;
             fftw_real* get_vy() const;
             fftw_real* get_vx0() const;
             fftw_real* get_vy0() const;
-            fftw_real* get_fy() const;
-            fftw_real* get_fx() const;
-
             //Mutator functions
             void set_frozen(int);
             void set_visc(float);
             void set_dt(double);
-            void set_vx(fftw_real*);
-            void set_vy(fftw_real*);
-            void set_vx0(fftw_real*);
-            void set_vy0(fftw_real*);
-            void set_fx(fftw_real*);
-            void set_fy(fftw_real*);
-            void set_rho(fftw_real*);
-            void set_rho0(fftw_real*);
-            void set_plan_rc(rfftwnd_plan);
-            void set_plan_cr(rfftwnd_plan new_plan_cr);
-
-            static const int DIM = 100;	//size of simulation grid (const, so already initialized) <- should probbly not be in Simulation class
-
 
             //init_simulation: Initialize simulation data structures as a function of the grid size 'n'.
             //                 Although the simulation takes place on a 2D grid, we allocate all data structures as 1D arrays,
@@ -56,19 +40,22 @@
 
             //set_forces: copy user-controlled forces to the force vectors that are sent to the solver.
             //            Also dampen forces and matter density to get a stable simulation.
-            void set_forces(void);
+            void set_forces(int);
 
             // diffuse_matter: This function diffuses matter that has been placed in the velocity field. It's almost identical to the
             // velocity diffusion step in the function above. The input matter densities are in rho0 and the result is written into rho.
             void diffuse_matter(int, fftw_real*, fftw_real*, fftw_real*, fftw_real*, fftw_real);
 
             //solve: Solve (compute) one step of the fluid flow simulation
-            void solve(int, fftw_real*, fftw_real*, fftw_real*, fftw_real*, fftw_real,fftw_real);
+            void solve(int n, fftw_real* vx, fftw_real* vy, fftw_real* vx0, fftw_real* vy0, fftw_real visc, fftw_real dt);
 
             int clamp(float);
 
+            void drag(int , int, int, int ,int);
+
         private:
             // member variables
+            int n;
             double dt;				//simulation time step
             float visc;				//fluid viscosity
             fftw_real *vx, *vy;             //(vx,vy)   = velocity field at the current moment

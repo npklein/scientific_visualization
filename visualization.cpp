@@ -79,6 +79,7 @@ void direction_to_color(float x, float y, int method)
 	glColor3f(r,g,b);
 }
 
+
 //visualize: This is the main visualization function
 void visualize(void)
 {
