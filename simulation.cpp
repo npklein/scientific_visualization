@@ -20,33 +20,22 @@ Simulation::Simulation(double new_dt, float new_visc, int new_frozen) {
 Simulation::~Simulation(){};
 
 //Accessor Functions
-int Simulation::get_n() const{return n;}
 int Simulation::get_frozen() const{return frozen;}
 double Simulation::get_dt() const{return dt;}
 float Simulation::get_visc() const{return visc;}
-fftw_real* Simulation::get_rho() const {return rho;}
+fftw_real* Simulation::get_fx() const{return fx;}
+fftw_real* Simulation::get_fy() const{return fy;}
+fftw_real* Simulation::get_rho() const{return rho;}
 fftw_real* Simulation::get_rho0() const {return rho0;}
 fftw_real* Simulation::get_vx() const {return vx;}
 fftw_real* Simulation::get_vy() const {return vy;}
 fftw_real* Simulation::get_vx0() const {return vx0;}
 fftw_real* Simulation::get_vy0() const {return vy0;}
-fftw_real* Simulation::get_fy() const {return fy;}
-fftw_real* Simulation::get_fx() const {return fx;}
-
 //Mutator functions
 void Simulation::set_frozen(int new_frozen){frozen = new_frozen;}
 void Simulation::set_dt(double new_dt){dt = new_dt;}
 void Simulation::set_visc(float new_visc){visc = new_visc;}
-void Simulation::set_vx(fftw_real* new_vx){vx = new_vx;}
-void Simulation::set_vy(fftw_real* new_vy){vy = new_vy;}
-void Simulation::set_vx0(fftw_real* new_vx0){vx0 = new_vx0;}
-void Simulation::set_vy0(fftw_real* new_vy0){vy0 = new_vy0;}
-void Simulation::set_fx(fftw_real* new_fx){fx = new_fx;}
-void Simulation::set_fy(fftw_real* new_fy){fy = new_fy;}
-void Simulation::set_rho(fftw_real* new_rho){rho = new_rho;}
-void Simulation::set_rho0(fftw_real* new_rho0){rho0 = new_rho0;}
-void Simulation::set_plan_rc(rfftwnd_plan new_plan_rc){plan_rc = new_plan_rc;}
-void Simulation::set_plan_cr(rfftwnd_plan new_plan_cr){plan_cr = new_plan_cr;}
+
 
 
 //init_simulation: Initialize simulation data structures as a function of the grid size 'n'.
@@ -56,18 +45,17 @@ void Simulation::init_simulation(int n)
 {
     int i; size_t dim;
     dim     = n * 2*(n/2+1)*sizeof(fftw_real);        //Allocate data structures
-    // set all the member variables of Simulation class
-    set_vx((fftw_real*) malloc(dim));
-    set_vy((fftw_real*) malloc(dim));
-    set_vx0((fftw_real*) malloc(dim));
-    set_vy0((fftw_real*) malloc(dim));
+    vx       = (fftw_real*) malloc(dim);
+    vy       = (fftw_real*) malloc(dim);
+    vx0      = (fftw_real*) malloc(dim);
+    vy0      = (fftw_real*) malloc(dim);
     dim     = n * n * sizeof(fftw_real);
-    set_fx((fftw_real*) malloc(dim));
-    set_fy((fftw_real*) malloc(dim));
-    set_rho((fftw_real*) malloc(dim));
-    set_rho0((fftw_real*) malloc(dim));
-    set_plan_rc(rfftw2d_create_plan(n, n, FFTW_REAL_TO_COMPLEX, FFTW_IN_PLACE));
-    set_plan_cr(rfftw2d_create_plan(n, n, FFTW_COMPLEX_TO_REAL, FFTW_IN_PLACE));
+    fx      = (fftw_real*) malloc(dim);
+    fy      = (fftw_real*) malloc(dim);
+    rho     = (fftw_real*) malloc(dim);
+    rho0    = (fftw_real*) malloc(dim);
+    plan_rc = rfftw2d_create_plan(n, n, FFTW_REAL_TO_COMPLEX, FFTW_IN_PLACE);
+    plan_cr = rfftw2d_create_plan(n, n, FFTW_COMPLEX_TO_REAL, FFTW_IN_PLACE);
 
     for (i = 0; i < n * n; i++)                      //Initialize data structures to 0
     { vx[i] = vy[i] = vx0[i] = vy0[i] = fx[i] = fy[i] = rho[i] = rho0[i] = 0.0f; }
@@ -171,7 +159,7 @@ void Simulation::diffuse_matter(int n, fftw_real *vx, fftw_real *vy, fftw_real *
 
 //set_forces: copy user-controlled forces to the force vectors that are sent to the solver.
 //            Also dampen forces and matter density to get a stable simulation.
-void Simulation::set_forces(void)
+void Simulation::set_forces(int DIM)
 {
     int i;
     for (i = 0; i < DIM * DIM; i++)
@@ -182,5 +170,30 @@ void Simulation::set_forces(void)
         vx0[i]    = fx[i];
         vy0[i]    = fy[i];
     }
+}
+
+void Simulation::drag(int mx, int my, int DIM, int winWidth, int winHeight)
+{
+    int xi,yi,X,Y; double  dx, dy, len;
+    static int lmx=0,lmy=0;				//remembers last mouse location
+
+    // Compute the array index that corresponds to the cursor location
+    xi = (int)clamp((double)(DIM + 1) * ((double)mx / (double)winWidth));
+    yi = (int)clamp((double)(DIM + 1) * ((double)(winHeight - my) / (double)winHeight));
+
+    X = xi; Y = yi;
+
+    if (X > (DIM - 1))  X = DIM - 1; if (Y > (DIM - 1))  Y = DIM - 1;
+    if (X < 0) X = 0; if (Y < 0) Y = 0;
+
+    // Add force at the cursor location
+    my = winHeight - my;
+    dx = mx - lmx; dy = my - lmy;
+    len = sqrt(dx * dx + dy * dy);
+    if (len != 0.0) {  dx *= 0.1 / len; dy *= 0.1 / len; }
+    fx[Y * DIM + X] += dx;
+    fy[Y * DIM + X] += dy;
+    rho[Y * DIM + X] = 10.0f;
+    lmx = mx; lmy = my;
 }
 

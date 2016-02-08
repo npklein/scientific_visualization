@@ -22,8 +22,6 @@ protected:
     void initializeGL();
     void paintGL();
     void resizeGL(int width, int height);
-    QSize minimumSizeHint() const;
-    QSize sizeHint() const;
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
 
@@ -43,6 +41,7 @@ private:
     static const int COLOR_RAINBOW=1;
     static const int COLOR_BANDS=2;
     int   scalar_col;           //method for scalar coloring
+    int DIM;
     QPoint lastPos;
 };
 
