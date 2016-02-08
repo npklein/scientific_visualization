@@ -2,8 +2,6 @@
         #define SIMULATION_H
 
         #include <rfftw.h>              //the numerical simulation FFTW library
-
-
         class Simulation {
 
 
@@ -18,6 +16,7 @@
             ~Simulation();
 
             //Accessor Functions (to get and set member variables)
+            int get_n() const;
             int get_frozen() const;
             double get_dt() const;				//simulation time step
             float get_visc() const;				//fluid viscosity
@@ -63,12 +62,13 @@
             void diffuse_matter(int, fftw_real*, fftw_real*, fftw_real*, fftw_real*, fftw_real);
 
             //solve: Solve (compute) one step of the fluid flow simulation
-            void solve(int, fftw_real*, fftw_real*, fftw_real*, fftw_real*, fftw_real,fftw_real);
+            void solve(int n, fftw_real* vx, fftw_real* vy, fftw_real* vx0, fftw_real* vy0, fftw_real visc, fftw_real dt);
 
             int clamp(float);
 
         private:
             // member variables
+            int n;
             double dt;				//simulation time step
             float visc;				//fluid viscosity
             fftw_real *vx, *vy;             //(vx,vy)   = velocity field at the current moment
