@@ -14,7 +14,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     //--- VISUALIZATION PARAMETERS ---------------------------------------------------------------------
     color_dir = 0;            //use direction color-coding or not
     vec_scale = 1000;			//scaling of hedgehogs
-    draw_smoke = 0;           //draw the smoke or not
+    draw_smoke = 1;           //draw the smoke or not
     draw_vecs = 1;            //draw the vector field or not
     scalar_col = 0;           //method for scalar coloring
     DIM = 100;
