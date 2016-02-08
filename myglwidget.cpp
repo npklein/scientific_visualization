@@ -141,3 +141,42 @@ void MyGLWidget::do_one_simulation_step()
         updateGL();
     }
 }
+
+
+
+void MyGLWidget::showAnimation(bool checked)
+{
+    simulation.set_frozen(1-simulation.get_frozen());
+}
+
+void MyGLWidget::drawMatter(bool checked)
+{
+    draw_smoke = 1 - draw_smoke;
+    if (draw_smoke==0) draw_vecs = 1;
+}
+
+void MyGLWidget::drawHedgehogs(bool checked)
+{
+    draw_vecs = 1 - draw_vecs;
+                if (draw_vecs==0) draw_smoke = 1;
+}
+
+void MyGLWidget::directionColoring(bool checked)
+{
+    color_dir = 1 - color_dir;
+}
+
+void MyGLWidget::timestep(int position)
+{
+
+}
+
+void MyGLWidget::hedgehogScaling(int position)
+{
+
+}
+
+void MyGLWidget::fluidViscosity(int position)
+{
+
+}

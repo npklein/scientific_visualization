@@ -18,6 +18,21 @@ signals:
 public slots:
     void do_one_simulation_step(void);
 
+private slots:
+    void showAnimation(bool checked);
+
+    void drawMatter(bool checked);
+
+    void drawHedgehogs(bool checked);
+
+    void directionColoring(bool checked);
+
+    void timestep(int position);
+
+    void hedgehogScaling(int position);
+
+    void fluidViscosity(int position);
+
 protected:
     void initializeGL();
     void paintGL();
