@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>638</height>
+    <width>626</width>
+    <height>416</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,17 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="MyGLWidget" name="myGLWidget" native="true"/>
+    <widget class="MyGLWidget" name="myGLWidget" native="true">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>500</width>
+       <height>500</height>
+      </size>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
