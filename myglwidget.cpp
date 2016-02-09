@@ -43,8 +43,9 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     glLoadIdentity();
     visualize();
     glFlush();
-    swapBuffers();
+    //swapBuffers();
 }
+
 
 
 void MyGLWidget::resizeGL(int width, int height)
