@@ -1,4 +1,4 @@
-
+#include "simulation.h"
 
 //--- VISUALIZATION PARAMETERS ---------------------------------------------------------------------
 int   winWidth, winHeight;      //size of the graphics window, in pixels
@@ -13,12 +13,12 @@ int   scalar_col = 0;           //method for scalar coloring
 //int   frozen = 0;               //toggles on/off the animation
 
 
-
-
+Simulation simulation;
 
 
 //------ VISUALIZATION CODE STARTS HERE -----------------------------------------------------------------
-
+float max(float x, float y)
+{ return x > y ? x : y; }
 
 //rainbow: Implements a color palette, mapping the scalar 'value' to a rainbow color RGB
 void rainbow(float value,float* R,float* G,float* B)
@@ -78,6 +78,7 @@ void direction_to_color(float x, float y, int method)
 	{ r = g = b = 1; }
 	glColor3f(r,g,b);
 }
+
 
 //visualize: This is the main visualization function
 void visualize(void)
