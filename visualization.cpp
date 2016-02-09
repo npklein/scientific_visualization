@@ -6,8 +6,8 @@ int   color_dir = 0;            //use direction color-coding or not
 float vec_scale = 1000;			//scaling of hedgehogs
 int   draw_smoke = 0;           //draw the smoke or not
 int   draw_vecs = 1;            //draw the vector field or not
-const int COLOR_BLACKWHITE = 0;   //different types of color mapping: black-and-white, rainbow, banded
-const int COLOR_RAINBOW = 1;
+const int COLOR_BLACKWHITE=0;   //different types of color mapping: black-and-white, rainbow, banded
+const int COLOR_RAINBOW=1;
 const int COLOR_BANDS=2;
 int   scalar_col = 0;           //method for scalar coloring
 //int   frozen = 0;               //toggles on/off the animation
@@ -78,63 +78,3 @@ void direction_to_color(float x, float y, int method)
 	{ r = g = b = 1; }
 	glColor3f(r,g,b);
 }
-
-
-//visualize: This is the main visualization function
-void visualize(void)
-{
-	int        i, j, idx, idx0, idx1, idx2, idx3; double px0,py0,px1,py1,px2,py2,px3,py3;
-	fftw_real  wn = (fftw_real)winWidth / (fftw_real)(DIM + 1);   // Grid cell width
-	fftw_real  hn = (fftw_real)winHeight / (fftw_real)(DIM + 1);  // Grid cell height
-
-	if (draw_smoke)
-	{
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glBegin(GL_TRIANGLES);
-	for (j = 0; j < DIM - 1; j++)			//draw smoke
-	{
-		for (i = 0; i < DIM - 1; i++)
-		{
-			px0  = wn + (fftw_real)i * wn;
-			py0  = hn + (fftw_real)j * hn;
-			idx0 = (j * DIM) + i;
-
-			px1  = wn + (fftw_real)i * wn;
-			py1  = hn + (fftw_real)(j + 1) * hn;
-			idx1 = ((j + 1) * DIM) + i;
-
-			px2  = wn + (fftw_real)(i + 1) * wn;
-			py2  = hn + (fftw_real)(j + 1) * hn;
-			idx2 = ((j + 1) * DIM) + (i + 1);
-
-			px3  = wn + (fftw_real)(i + 1) * wn;
-			py3  = hn + (fftw_real)j * hn;
-			idx3 = (j * DIM) + (i + 1);
-
-			set_colormap(rho[idx0]);	glVertex2f(px0, py0);
-			set_colormap(rho[idx1]);	glVertex2f(px1, py1);
-			set_colormap(rho[idx2]);	glVertex2f(px2, py2);
-
-			set_colormap(rho[idx0]);	glVertex2f(px0, py0);
-			set_colormap(rho[idx2]);	glVertex2f(px2, py2);
-			set_colormap(rho[idx3]);	glVertex2f(px3, py3);
-		}
-	}
-	glEnd();
-	}
-
-	if (draw_vecs)
-	{
-	  glBegin(GL_LINES);				//draw velocities
-	  for (i = 0; i < DIM; i++)
-	    for (j = 0; j < DIM; j++)
-	    {
-		  idx = (j * DIM) + i;
-		  direction_to_color(vx[idx],vy[idx],color_dir);
-		  glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
-		  glVertex2f((wn + (fftw_real)i * wn) + vec_scale * vx[idx], (hn + (fftw_real)j * hn) + vec_scale * vy[idx]);
-	    }
-	  glEnd();
-	}
-}
-
