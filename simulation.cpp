@@ -8,14 +8,6 @@ Simulation::Simulation() {
     frozen = 0;               //toggles on/off the animation
 }
 
-//Overload Constructor
-Simulation::Simulation(double new_dt, float new_visc, int new_frozen) {
-    // Non-default member variables
-    dt = new_dt;				//simulation time step
-    visc = new_visc;				//fluid viscosity
-    frozen = new_frozen;               //toggles on/off the animation
-}
-
 //Destructor
 Simulation::~Simulation(){};
 

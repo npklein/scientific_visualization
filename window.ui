@@ -7,10 +7,16 @@
     <x>0</x>
     <y>0</y>
     <width>524</width>
-    <height>711</height>
+    <height>646</height>
    </rect>
   </property>
   <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::DefaultContextMenu</enum>
+  </property>
+  <property name="acceptDrops">
    <bool>false</bool>
   </property>
   <property name="windowTitle">
@@ -19,12 +25,11 @@
   <property name="layoutDirection">
    <enum>Qt::LeftToRight</enum>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QGridLayout">
    <property name="sizeConstraint">
     <enum>QLayout::SetNoConstraint</enum>
    </property>
    <item>
-<<<<<<< 047870c3543afaf41bc12b1300d3f9acb2bb7461
     <widget class="MyGLWidget" name="myGLWidget" native="true">
      <property name="enabled">
       <bool>true</bool>
@@ -39,15 +44,14 @@
    </item>
    <item>
     <widget class="QCheckBox" name="animationCheckbox">
+   <item row="2" column="0">
+    <widget class="QCheckBox" name="directionColoringCheckbox">
      <property name="text">
-      <string>Animation</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
+      <string>Direction coloring</string>
      </property>
     </widget>
    </item>
-   <item>
+   <item row="4" column="0">
     <widget class="QRadioButton" name="drawingMatterRadio">
      <property name="text">
       <string>Drawing matter</string>
@@ -57,7 +61,83 @@
      </property>
     </widget>
    </item>
-   <item>
+   <item row="13" column="0">
+    <widget class="QSlider" name="fluidViscositySlider">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fluid viscosity&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>10</number>
+     </property>
+     <property name="value">
+      <number>5</number>
+     </property>
+     <property name="sliderPosition">
+      <number>5</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="MyGLWidget" name="myGLWidget" native="true">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="mouseTracking">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="0">
+    <widget class="QSlider" name="simulationTimestepSlider">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;timestep&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>1000</number>
+     </property>
+     <property name="value">
+      <number>500</number>
+     </property>
+     <property name="sliderPosition">
+      <number>500</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="0">
+    <widget class="QSlider" name="hedgehogScalingSlider">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;hedgehogscaling&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>1000</number>
+     </property>
+     <property name="value">
+      <number>500</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
     <widget class="QRadioButton" name="drawingHedgehogsCheckbox">
      <property name="text">
       <string>Drawing hedgehogs</string>
@@ -67,45 +147,15 @@
      </property>
     </widget>
    </item>
-   <item>
-    <widget class="QCheckBox" name="directionColoringCheckbox">
+   <item row="3" column="0">
+    <widget class="QCheckBox" name="animationCheckbox">
      <property name="text">
-      <string>Direction coloring</string>
+      <string>Animation</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
-   </item>
-   <item>
-    <widget class="QSlider" name="simulationTimestepSlider">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;timestep&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QSlider" name="hedgehogScalingSlider">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;hedgehogscaling&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QSlider" name="fluidViscositySlider">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fluid viscosity&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-=======
-    <widget class="MyGLWidget" name="myGLWidget" native="true"/>
->>>>>>> more simulation tries
    </item>
   </layout>
  </widget>
@@ -124,6 +174,9 @@
     <slot>drawMatter(bool)</slot>
     <slot>drawHedgehogs(bool)</slot>
     <slot>directionColoring(bool)</slot>
+    <slot>timestep(int,int)</slot>
+    <slot>hedgehogScaling(int,int)</slot>
+    <slot>fluidViscosity(int,int)</slot>
     <slot>timestep(int)</slot>
     <slot>hedgehogScaling(int)</slot>
     <slot>fluidViscosity(int)</slot>
@@ -139,8 +192,8 @@
    <slot>showAnimation(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>57</x>
-     <y>425</y>
+     <x>67</x>
+     <y>491</y>
     </hint>
     <hint type="destinationlabel">
      <x>57</x>
@@ -155,8 +208,8 @@
    <slot>directionColoring(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>25</x>
-     <y>482</y>
+     <x>35</x>
+     <y>473</y>
     </hint>
     <hint type="destinationlabel">
      <x>27</x>
@@ -166,13 +219,13 @@
   </connection>
   <connection>
    <sender>simulationTimestepSlider</sender>
-   <signal>sliderMoved(int)</signal>
+   <signal>valueChanged(int)</signal>
    <receiver>myGLWidget</receiver>
    <slot>timestep(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>251</x>
-     <y>523</y>
+     <x>260</x>
+     <y>565</y>
     </hint>
     <hint type="destinationlabel">
      <x>248</x>
@@ -182,13 +235,13 @@
   </connection>
   <connection>
    <sender>hedgehogScalingSlider</sender>
-   <signal>sliderMoved(int)</signal>
+   <signal>valueChanged(int)</signal>
    <receiver>myGLWidget</receiver>
    <slot>hedgehogScaling(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>190</x>
-     <y>552</y>
+     <x>199</x>
+     <y>599</y>
     </hint>
     <hint type="destinationlabel">
      <x>190</x>
@@ -198,13 +251,13 @@
   </connection>
   <connection>
    <sender>fluidViscositySlider</sender>
-   <signal>sliderMoved(int)</signal>
+   <signal>valueChanged(int)</signal>
    <receiver>myGLWidget</receiver>
    <slot>fluidViscosity(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>158</x>
-     <y>578</y>
+     <x>167</x>
+     <y>633</y>
     </hint>
     <hint type="destinationlabel">
      <x>161</x>
@@ -219,8 +272,8 @@
    <slot>drawMatter(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>101</x>
-     <y>450</y>
+     <x>111</x>
+     <y>516</y>
     </hint>
     <hint type="destinationlabel">
      <x>102</x>
@@ -235,8 +288,8 @@
    <slot>drawHedgehogs(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>148</x>
-     <y>472</y>
+     <x>155</x>
+     <y>535</y>
     </hint>
     <hint type="destinationlabel">
      <x>129</x>
