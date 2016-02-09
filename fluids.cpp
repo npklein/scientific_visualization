@@ -6,7 +6,7 @@
 #include <QApplication>
 #include "window.h"
 
-//main: The main program
+
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);

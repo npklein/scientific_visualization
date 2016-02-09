@@ -24,3 +24,4 @@ void Window::keyPressEvent(QKeyEvent *e)
     else
         QWidget::keyPressEvent(e);
 }
+

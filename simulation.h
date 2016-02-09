@@ -16,7 +16,6 @@
             ~Simulation();
 
             //Accessor Functions (to get and set member variables)
-            int get_n() const;
             int get_frozen() const;
             double get_dt() const;				//simulation time step
             float get_visc() const;				//fluid viscosity
