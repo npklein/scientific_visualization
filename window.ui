@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>597</width>
-    <height>610</height>
+    <width>524</width>
+    <height>711</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -52,7 +52,7 @@
       <string>Drawing matter</string>
      </property>
      <property name="checked">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
     </widget>
    </item>
@@ -60,6 +60,9 @@
     <widget class="QRadioButton" name="drawingHedgehogsCheckbox">
      <property name="text">
       <string>Drawing hedgehogs</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -72,6 +75,9 @@
    </item>
    <item>
     <widget class="QSlider" name="simulationTimestepSlider">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;timestep&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -79,6 +85,9 @@
    </item>
    <item>
     <widget class="QSlider" name="hedgehogScalingSlider">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;hedgehogscaling&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -86,6 +95,9 @@
    </item>
    <item>
     <widget class="QSlider" name="fluidViscositySlider">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fluid viscosity&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
