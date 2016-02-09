@@ -28,11 +28,40 @@ void display(void)
 //reshape: Handle window resizing (reshaping) events
 void reshape(int w, int h)
 {
+	int i;
+
+
+    static float col[6][3] = {{1,0,0},  // red
+	                      {0,1,0},  // green
+	                      {0,0,1},  // blue
+	                      {1,1,0},  // yellow
+	                      {0,1,1},  // cyan
+	                      {1,0,1}}; // purple
+
+    static int bot[6][2] = {{0.0f, 0.0f}},
+	       top[6][2] = {{(GLfloat)w, (GLfloat)h}};
+
+
  	glViewport(0.0f, 0.0f, (GLfloat)w, (GLfloat)h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(0.0, (GLdouble)w, 0.0, (GLdouble)h);
 	winWidth = w; winHeight = h;
+
+	// Use Quad strips to make color bar.
+
+	    glBegin (GL_QUAD_STRIP);
+	       for (i = 0; i <= 5; i++)  {
+	          glColor3fv  (col[i]);
+		  glVertex2iv (bot[i]);
+		  glVertex2iv (top[i]);
+	       }
+	    glEnd ();
+
+	    // Label ends of color bar.
+
+	    glColor3f (1, 1, 1);
+
 }
 
 //keyboard: Handle key presses
@@ -53,6 +82,8 @@ void keyboard(unsigned char key, int x, int y)
 		    if (draw_vecs==0) draw_smoke = 1; break;
 	  case 'm': scalar_col++; if (scalar_col>COLOR_BANDS) scalar_col=COLOR_BLACKWHITE; break;
 	  case 'a': frozen = 1-frozen; break;
+	  //case 'g': scalar_col=COLOR_BLACKWHITE; break;
+	  //case 'r': scalar_col=COLOR_RAINBOW; break;
 	  case 'q': exit(0);
 	}
 }
@@ -85,6 +116,7 @@ void drag(int mx, int my)
 	rho[Y * DIM + X] = 10.0f;
 	lmx = mx; lmy = my;
 }
+
 
 
 //main: The main program

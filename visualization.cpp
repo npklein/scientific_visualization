@@ -6,8 +6,8 @@ int   color_dir = 0;            //use direction color-coding or not
 float vec_scale = 1000;			//scaling of hedgehogs
 int   draw_smoke = 0;           //draw the smoke or not
 int   draw_vecs = 1;            //draw the vector field or not
-const int COLOR_BLACKWHITE=0;   //different types of color mapping: black-and-white, rainbow, banded
-const int COLOR_RAINBOW=1;
+const int COLOR_BLACKWHITE = 0;   //different types of color mapping: black-and-white, rainbow, banded
+const int COLOR_RAINBOW = 1;
 const int COLOR_BANDS=2;
 int   scalar_col = 0;           //method for scalar coloring
 //int   frozen = 0;               //toggles on/off the animation
@@ -84,7 +84,7 @@ void visualize(void)
 {
 	int        i, j, idx, idx0, idx1, idx2, idx3; double px0,py0,px1,py1,px2,py2,px3,py3;
 	fftw_real  wn = (fftw_real)winWidth / (fftw_real)(DIM + 1);   // Grid cell width
-	fftw_real  hn = (fftw_real)winHeight / (fftw_real)(DIM + 1);  // Grid cell heigh
+	fftw_real  hn = (fftw_real)winHeight / (fftw_real)(DIM + 1);  // Grid cell height
 
 	if (draw_smoke)
 	{
@@ -136,3 +136,4 @@ void visualize(void)
 	  glEnd();
 	}
 }
+
