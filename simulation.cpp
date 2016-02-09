@@ -188,6 +188,7 @@ void Simulation::drag(int mx, int my, int DIM, int winWidth, int winHeight)
 
     // Add force at the cursor location
     my = winHeight - my;
+<<<<<<< 047870c3543afaf41bc12b1300d3f9acb2bb7461
     dx = mx - lmx;
     dy = my - lmy;
     len = sqrt(dx * dx + dy * dy);

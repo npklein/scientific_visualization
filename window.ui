@@ -24,6 +24,7 @@
     <enum>QLayout::SetNoConstraint</enum>
    </property>
    <item>
+<<<<<<< 047870c3543afaf41bc12b1300d3f9acb2bb7461
     <widget class="MyGLWidget" name="myGLWidget" native="true">
      <property name="enabled">
       <bool>true</bool>
@@ -102,6 +103,9 @@
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
+=======
+    <widget class="MyGLWidget" name="myGLWidget" native="true"/>
+>>>>>>> more simulation tries
    </item>
   </layout>
  </widget>
