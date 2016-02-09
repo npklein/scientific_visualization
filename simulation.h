@@ -50,8 +50,7 @@
             void solve(int n, fftw_real* vx, fftw_real* vy, fftw_real* vx0, fftw_real* vy0, fftw_real visc, fftw_real dt);
 
             int clamp(float);
-
-            void drag(int , int, int, int ,int);
+            void drag(int mx , int my, int DIM, int winWidth ,int winHeight);
 
         private:
             // member variables

@@ -43,7 +43,6 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     glLoadIdentity();
     visualize();
     glFlush();
-    swapBuffers();
 }
 
 
