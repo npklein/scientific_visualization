@@ -6,7 +6,7 @@
 #include "myglwidget.h"
 #include "visualization.cpp"
 #include <simulation.cpp>              //the numerical simulation FFTW library
-
+#include <cmath>
 
 
 MyGLWidget::MyGLWidget(QWidget *parent)
@@ -63,9 +63,11 @@ void MyGLWidget::mousePressEvent(QMouseEvent *event)
 
 void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    int mx = event->x();// - lastPos.x();
-    int my = event->y();// - lastPos.y();
-    simulation.drag(mx,my, DIM, winWidth, winHeight);
+<<<<<<< HEAD
+    int mx = event->x();// - lastposition gets calculated in drag(), could save a step by using lastPos.x/y but leaving it like this is safer
+    int my = event->y();
+    simulation.drag(mx,my, DIM, winWidth, winHeight);  // Works for Freerk
+    //simulation.drag(mx,my, DIM, winWidth/2, winHeight/2); // Works for Niek
     lastPos = event->pos();
 }
 
@@ -167,15 +169,48 @@ void MyGLWidget::directionColoring(bool checked)
 
 void MyGLWidget::timestep(int position)
 {
-
+    // dt start = 0.4
+    //      case 't': simulation.set_dt(simulation.get_dt() - 0.001); break;
+    //      case 'T': simulation.set_dt(simulation.get_dt() + 0.001); break;
+    static int last_pos_timestep = 500;				//remembers last slider location, statics only get initialized once, after that they keep the new value
+    double new_pos = position - last_pos_timestep;
+    double old_dt = simulation.get_dt();
+    double new_dt = old_dt + new_pos * 0.001; //easier to debug on separate line
+    if (new_dt < 0){
+        new_dt = 0;
+    }
+    simulation.set_dt(new_dt);
+    last_pos_timestep = position;
 }
 
 void MyGLWidget::hedgehogScaling(int position)
 {
-
+    // vec_scale = 1000;
+    //  	  case 'S': vec_scale *= 1.2; break;
+    //        case 's': vec_scale *= 0.8; break;
+    // The scaling goes exponential with keyboard, but with slide can just do linear
+    static int last_pos_hedgehog = 500;				//remembers last slider location
+    int new_pos = position - last_pos_hedgehog;
+    double vec_scale = vec_scale + new_pos * 200; //easier to debug on separate line
+    if (vec_scale < 0){
+        vec_scale = 0;
+    }
+    last_pos_hedgehog = position;
 }
 
 void MyGLWidget::fluidViscosity(int position)
 {
-
+    // visc = 0.001
+    //      case 'V': simulation.set_visc(simulation.get_visc()*5); break;
+    //      case 'v': simulation.set_visc(simulation.get_visc()*0.2); break;
+    // The scaling goes exponential with keyboard, but with slide can just do linear
+    static int last_pos_visc = 500;
+    int new_pos = position - last_pos_visc;
+    double old_visc = simulation.get_visc();
+    double new_visc = old_visc + new_pos * 0.005; //easier to debug on separate line
+    if (new_visc < 0){
+        new_visc = 0;
+    }
+    simulation.set_visc(new_visc);
+    last_pos_visc = position;
 }
