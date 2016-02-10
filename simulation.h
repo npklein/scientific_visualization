@@ -52,7 +52,7 @@
             int clamp(float);
             void drag(int mx , int my, int DIM, int winWidth ,int winHeight);
 
-            void drag(int , int, int, int ,int);
+
 
         private:
             // member variables
