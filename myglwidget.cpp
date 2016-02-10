@@ -6,7 +6,7 @@
 #include "myglwidget.h"
 #include "visualization.cpp"
 #include <simulation.cpp>              //the numerical simulation FFTW library
-
+#include <QGLColormap>
 
 
 MyGLWidget::MyGLWidget(QWidget *parent)
@@ -41,6 +41,17 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    glColor3f(1.0,5.0,5.0);
+    glBegin (GL_QUADS);
+
+    glColor3f (0.0f, 0.0f, 1.0f); // BLUE COLOR LEFT END
+    glVertex3f (0.0f, 0.0f,0.0);
+    glVertex3f (0.0f, 0.0,0.0);
+
+    glColor3f (1.0f, 0.0f, 0.0f); //RED COLOR RIGHT END
+    glVertex3f (0.0, 0.0,0.0);
+    glVertex3f (0.0, 0.0f,0.0);
+    glEnd();
     visualize();
     glFlush();
 }
@@ -75,6 +86,7 @@ void MyGLWidget::visualize()
     int        i, j, idx, idx0, idx1, idx2, idx3; double px0,py0,px1,py1,px2,py2,px3,py3;
     fftw_real  wn = (fftw_real)winWidth / (fftw_real)(DIM + 1);   // Grid cell width
     fftw_real  hn = (fftw_real)winHeight / (fftw_real)(DIM + 1);  // Grid cell heigh
+
 
     if (draw_smoke)
     {
