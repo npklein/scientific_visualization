@@ -63,10 +63,11 @@ void MyGLWidget::mousePressEvent(QMouseEvent *event)
 
 void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    int mx = event->x();// - lastPos.x();
-    int my = event->y();// - lastPos.y();
-    //simulation.drag(mx,my, DIM, winWidth, winHeight);  // Works for Freerk
-    simulation.drag(mx,my, DIM, winWidth/2, winHeight/2); // Works for Niek
+<<<<<<< HEAD
+    int mx = event->x();// - lastposition gets calculated in drag(), could save a step by using lastPos.x/y but leaving it like this is safer
+    int my = event->y();
+    simulation.drag(mx,my, DIM, winWidth, winHeight);  // Works for Freerk
+    //simulation.drag(mx,my, DIM, winWidth/2, winHeight/2); // Works for Niek
     lastPos = event->pos();
 }
 
