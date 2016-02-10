@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>524</width>
-    <height>646</height>
+    <width>669</width>
+    <height>582</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -29,6 +29,26 @@
    <property name="sizeConstraint">
     <enum>QLayout::SetNoConstraint</enum>
    </property>
+   <item row="8" column="0">
+    <widget class="QRadioButton" name="drawingHedgehogsCheckbox">
+     <property name="text">
+      <string>Drawing hedgehogs</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QCheckBox" name="animationCheckbox">
+     <property name="text">
+      <string>Animation</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
    <item row="2" column="0">
     <widget class="QCheckBox" name="directionColoringCheckbox">
      <property name="text">
@@ -55,29 +75,16 @@
       <number>1</number>
      </property>
      <property name="maximum">
-      <number>10</number>
+      <number>1000</number>
      </property>
      <property name="value">
-      <number>5</number>
+      <number>500</number>
      </property>
      <property name="sliderPosition">
-      <number>5</number>
+      <number>500</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="MyGLWidget" name="myGLWidget" native="true">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="mouseTracking">
-      <bool>false</bool>
      </property>
     </widget>
    </item>
@@ -122,24 +129,19 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="0">
-    <widget class="QRadioButton" name="drawingHedgehogsCheckbox">
-     <property name="text">
-      <string>Drawing hedgehogs</string>
-     </property>
-     <property name="checked">
+   <item row="0" column="0">
+    <widget class="MyGLWidget" name="myGLWidget" native="true">
+     <property name="enabled">
       <bool>true</bool>
      </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QCheckBox" name="animationCheckbox">
-     <property name="text">
-      <string>Animation</string>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
      </property>
-     <property name="checked">
-      <bool>true</bool>
+     <property name="mouseTracking">
+      <bool>false</bool>
      </property>
+     <zorder>fluidViscositySlider</zorder>
+     <zorder>hedgehogScalingSlider</zorder>
     </widget>
    </item>
   </layout>
