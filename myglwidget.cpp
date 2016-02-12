@@ -13,7 +13,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
 {
     //--- VISUALIZATION PARAMETERS ---------------------------------------------------------------------
     color_dir = 0;            //use direction color-coding or not
-    vec_scale = 1000;			//scaling of hedgehogs
+    vec_scale = 2000;			//scaling of hedgehogs
     draw_smoke = 1;           //draw the smoke or not
     draw_vecs = 1;            //draw the vector field or not
     scalar_col = 0;           //method for scalar coloring
@@ -38,11 +38,13 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
 {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_TABLE);
+    glEnable(GL_COLOR_TABLE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     visualize();
     glFlush();
+
 }
 
 
@@ -63,11 +65,10 @@ void MyGLWidget::mousePressEvent(QMouseEvent *event)
 
 void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
-<<<<<<< HEAD
     int mx = event->x();// - lastposition gets calculated in drag(), could save a step by using lastPos.x/y but leaving it like this is safer
     int my = event->y();
-    simulation.drag(mx,my, DIM, winWidth, winHeight);  // Works for Freerk
-    //simulation.drag(mx,my, DIM, winWidth/2, winHeight/2); // Works for Niek
+    //simulation.drag(mx,my, DIM, winWidth, winHeight);  // Works for Freerk
+    simulation.drag(mx,my, DIM, winWidth/2, winHeight/2); // Works for Niek
     lastPos = event->pos();
 }
 
@@ -76,6 +77,20 @@ void MyGLWidget::visualize()
     int        i, j, idx, idx0, idx1, idx2, idx3; double px0,py0,px1,py1,px2,py2,px3,py3;
     fftw_real  wn = (fftw_real)winWidth / (fftw_real)(DIM + 1);   // Grid cell width
     fftw_real  hn = (fftw_real)winHeight / (fftw_real)(DIM + 1);  // Grid cell heigh
+
+    if (draw_vecs)
+    {
+      glBegin(GL_LINES);				//draw velocities
+      for (i = 0; i < DIM; i++)
+        for (j = 0; j < DIM; j++)
+        {
+          idx = (j * DIM) + i;
+          direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx],color_dir);
+          glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
+          glVertex2f((wn + (fftw_real)i * wn) + vec_scale * simulation.get_vx()[idx], (hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx]);
+        }
+      glEnd();
+    }
 
     if (draw_smoke)
     {
@@ -101,30 +116,16 @@ void MyGLWidget::visualize()
             py3  = hn + (fftw_real)j * hn;
             idx3 = (j * DIM) + (i + 1);
 
-            set_colormap(simulation.get_rho()[idx0]);	glVertex2f(px0, py0);
-            set_colormap(simulation.get_rho()[idx1]);	glVertex2f(px1, py1);
-            set_colormap(simulation.get_rho()[idx2]);	glVertex2f(px2, py2);
+            set_colormap(simulation.get_rho()[idx0], scalar_col);	glVertex2f(px0, py0);
+            set_colormap(simulation.get_rho()[idx1], scalar_col);	glVertex2f(px1, py1);
+            set_colormap(simulation.get_rho()[idx2], scalar_col);	glVertex2f(px2, py2);
 
-            set_colormap(simulation.get_rho()[idx0]);	glVertex2f(px0, py0);
-            set_colormap(simulation.get_rho()[idx2]);	glVertex2f(px2, py2);
-            set_colormap(simulation.get_rho()[idx3]);	glVertex2f(px3, py3);
+            set_colormap(simulation.get_rho()[idx0], scalar_col);	glVertex2f(px0, py0);
+            set_colormap(simulation.get_rho()[idx2], scalar_col);	glVertex2f(px2, py2);
+            set_colormap(simulation.get_rho()[idx3], scalar_col);	glVertex2f(px3, py3);
         }
     }
     glEnd();
-    }
-
-    if (draw_vecs)
-    {
-      glBegin(GL_LINES);				//draw velocities
-      for (i = 0; i < DIM; i++)
-        for (j = 0; j < DIM; j++)
-        {
-          idx = (j * DIM) + i;
-          direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx],color_dir);
-          glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
-          glVertex2f((wn + (fftw_real)i * wn) + vec_scale * simulation.get_vx()[idx], (hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx]);
-        }
-      glEnd();
     }
 
 }
@@ -145,24 +146,24 @@ void MyGLWidget::do_one_simulation_step()
 
 
 
-void MyGLWidget::showAnimation(bool checked)
+void MyGLWidget::showAnimation()
 {
     simulation.set_frozen(1-simulation.get_frozen());
 }
 
-void MyGLWidget::drawMatter(bool checked)
+void MyGLWidget::drawMatter()
 {
     draw_smoke = 1 - draw_smoke;
     if (draw_smoke==0) draw_vecs = 1;
 }
 
-void MyGLWidget::drawHedgehogs(bool checked)
+void MyGLWidget::drawHedgehogs()
 {
     draw_vecs = 1 - draw_vecs;
                 if (draw_vecs==0) draw_smoke = 1;
 }
 
-void MyGLWidget::directionColoring(bool checked)
+void MyGLWidget::directionColoring()
 {
     color_dir = 1 - color_dir;
 }
@@ -191,7 +192,7 @@ void MyGLWidget::hedgehogScaling(int position)
     // The scaling goes exponential with keyboard, but with slide can just do linear
     static int last_pos_hedgehog = 500;				//remembers last slider location
     int new_pos = position - last_pos_hedgehog;
-    double vec_scale = vec_scale + new_pos * 200; //easier to debug on separate line
+    vec_scale = vec_scale + new_pos * 200; //easier to debug on separate line
     if (vec_scale < 0){
         vec_scale = 0;
     }
@@ -214,3 +215,10 @@ void MyGLWidget::fluidViscosity(int position)
     simulation.set_visc(new_visc);
     last_pos_visc = position;
 }
+
+void MyGLWidget::scalarColoring(QString scalartype){
+    if (scalartype == "rainbow") {scalar_col = 1;}
+    if (scalartype == "color bands") {scalar_col = 2;}
+    if (scalartype == "black&white") {scalar_col = 0;}
+    }
+
