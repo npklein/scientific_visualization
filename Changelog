@@ -4,3 +4,4 @@ v3 -> Extracted visualization code into file named visualization.c
 v4 -> Made a Simulation class for clarity of code
 v5 -> Changed C compiler to CPP to use QT for UI
 v6 -> Use Qt to make the GUI
+v7 -> Added multibox for scalar coloring

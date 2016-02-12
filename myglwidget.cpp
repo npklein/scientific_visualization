@@ -78,6 +78,20 @@ void MyGLWidget::visualize()
     fftw_real  wn = (fftw_real)winWidth / (fftw_real)(DIM + 1);   // Grid cell width
     fftw_real  hn = (fftw_real)winHeight / (fftw_real)(DIM + 1);  // Grid cell heigh
 
+    if (draw_vecs)
+    {
+      glBegin(GL_LINES);				//draw velocities
+      for (i = 0; i < DIM; i++)
+        for (j = 0; j < DIM; j++)
+        {
+          idx = (j * DIM) + i;
+          direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx],color_dir);
+          glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
+          glVertex2f((wn + (fftw_real)i * wn) + vec_scale * simulation.get_vx()[idx], (hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx]);
+        }
+      glEnd();
+    }
+
     if (draw_smoke)
     {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -112,20 +126,6 @@ void MyGLWidget::visualize()
         }
     }
     glEnd();
-    }
-
-    if (draw_vecs)
-    {
-      glBegin(GL_LINES);				//draw velocities
-      for (i = 0; i < DIM; i++)
-        for (j = 0; j < DIM; j++)
-        {
-          idx = (j * DIM) + i;
-          direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx],color_dir);
-          glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
-          glVertex2f((wn + (fftw_real)i * wn) + vec_scale * simulation.get_vx()[idx], (hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx]);
-        }
-      glEnd();
     }
 
 }
