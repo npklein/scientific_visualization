@@ -9,7 +9,6 @@ int   draw_vecs = 1;            //draw the vector field or not
 const int COLOR_BLACKWHITE=0;   //different types of color mapping: black-and-white, rainbow, banded
 const int COLOR_RAINBOW=1;
 const int COLOR_BANDS=2;
-int   scalar_col = 0;           //method for scalar coloring
 //int   frozen = 0;               //toggles on/off the animation
 
 
@@ -33,7 +32,7 @@ void rainbow(float value,float* R,float* G,float* B)
 }
 
 //set_colormap: Sets three different types of colormaps
-void set_colormap(float vy)
+void set_colormap(float vy, int scalar_col)
 {
    float R,G,B;
    R = G = B = 0;
