@@ -34,13 +34,35 @@ void MyGLWidget::initializeGL()
     qglClearColor(Qt::black);
 }
 
+
+
 void MyGLWidget::paintGL() //glutDisplayFunc(display);
 {
+
+
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_TABLE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+
+
+    //glOrtho(0,width,0,height,0,1);
+    glOrtho(0,200,0,20,0,1);
+
+       glMatrixMode(GL_MODELVIEW);
+       glLoadIdentity();
+
+       glBindTexture(GL_TEXTURE_1D, 256);
+       glBegin(GL_QUADS);
+          glVertex2i(20,120);
+          glVertex2i(120,120);
+          glVertex2i(120,100);
+          glVertex2i(20,100);
+       glEnd();
+
+
+
     visualize();
     glFlush();
 }
