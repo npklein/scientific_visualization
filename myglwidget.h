@@ -35,6 +35,8 @@ private slots:
 
     void scalarColoring(QString scalartype);
 
+    void drawBar();
+
 protected:
     void initializeGL();
     void paintGL();
