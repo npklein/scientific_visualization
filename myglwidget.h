@@ -59,4 +59,3 @@ private:
 };
 
 #endif // MYGLWIDGET_H
-
