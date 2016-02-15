@@ -38,45 +38,15 @@ void MyGLWidget::initializeGL()
 
 void MyGLWidget::paintGL() //glutDisplayFunc(display);
 {
-
-
-
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_TABLE);
     glEnable(GL_COLOR_TABLE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-    glColor3f(1.0, 1.0, 1.0);
-//       bitmap_output(1.2, 0.0, 3.5, "MIN", GLUT_BITMAP_9_BY_15);
-//       bitmap_output(3.3, 0.0, 1.3, "MAX", GLUT_BITMAP_9_BY_15);
-    GLfloat wb=.1, lb=2.8;
-    glMatrixMode(GL_MODELVIEW);
-
-    glPushMatrix ();
-    glBegin (GL_QUADS);
-        set_colormap(0,1);
-        glVertex3f(0,winHeight/25,0); //(x,y top left)
-        glVertex3f(0,0,0); //(x,y bottom left)
-
-        set_colormap(10000,1);
-        glVertex3f(winWidth,winHeight/25,0); //(x,y top right)
-        glVertex3f(winWidth,0,0); //(x,y bottom right)
-
-    glEnd ();
-    glPopMatrix ();
-
-
-
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-
-
-
-
+    drawBar();
     visualize();
     glFlush();
-
 }
 
 
@@ -254,3 +224,30 @@ void MyGLWidget::scalarColoring(QString scalartype){
     if (scalartype == "black&white") {scalar_col = 0;}
     }
 
+void MyGLWidget::drawBar(){
+    glPushMatrix ();
+    glBegin (GL_QUADS);
+
+    for (int i = 0; i < 301; i = i + 1){
+        set_colormap((0.005)*i,1);
+        glVertex3f((winWidth/300)*i,winHeight/25,0); //(x,y top left)
+        glVertex3f((winWidth/300)*i,0,0); //(x,y bottom left)
+        glVertex3f((winWidth/300)*(i+1),0,0); //(x,y bottom right)
+        glVertex3f((winWidth/300)*(i+1),winHeight/25,0); //(x,y top right)
+/*
+        set_colormap(0.5,1);
+        glVertex3f(winWidth/3,winHeight/25,0); //(x,y top left)
+        glVertex3f(winWidth/3,0,0); //(x,y bottom left)
+        glVertex3f((winWidth/3)*2,0,0); //(x,y bottom right)
+        glVertex3f((winWidth/3)*2,winHeight/25,0); //(x,y top right)
+
+        set_colormap(0.7,1);
+        glVertex3f((winWidth/3)*2,winHeight/25,0); //(x,y top left)
+        glVertex3f((winWidth/3)*2,0,0); //(x,y bottom left)
+        glVertex3f(winWidth,0,0); //(x,y bottom right)
+        glVertex3f(winWidth,winHeight/25,0); //(x,y top right)*/
+    }
+    glEnd ();
+    glPopMatrix ();
+
+}
