@@ -46,23 +46,20 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     glEnable(GL_COLOR_TABLE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-    glColor3f(1.0, 1.0, 1.0);
-//       bitmap_output(1.2, 0.0, 3.5, "MIN", GLUT_BITMAP_9_BY_15);
-//       bitmap_output(3.3, 0.0, 1.3, "MAX", GLUT_BITMAP_9_BY_15);
-    GLfloat wb=.1, lb=2.8;
     glMatrixMode(GL_MODELVIEW);
 
     glPushMatrix ();
     glBegin (GL_QUADS);
-        set_colormap(0,1);
+    int i;
+    set_colormap(0,1);
         glVertex3f(0,winHeight/25,0); //(x,y top left)
         glVertex3f(0,0,0); //(x,y bottom left)
 
-        set_colormap(10000,1);
-        glVertex3f(winWidth,winHeight/25,0); //(x,y top right)
+        //simulation.get_rho()[sizeof(simulation.get_rho())]
+        set_colormap(1,1);
         glVertex3f(winWidth,0,0); //(x,y bottom right)
-
+        glVertex3f(winWidth,winHeight/25,0); //(x,y top right)
+*/
     glEnd ();
     glPopMatrix ();
 
