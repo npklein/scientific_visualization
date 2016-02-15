@@ -38,42 +38,16 @@ void MyGLWidget::initializeGL()
 
 void MyGLWidget::paintGL() //glutDisplayFunc(display);
 {
-
-
-
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_TABLE);
     glEnable(GL_COLOR_TABLE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_MODELVIEW);
-
-    glPushMatrix ();
-    glBegin (GL_QUADS);
-    int i;
-    set_colormap(0,1);
-        glVertex3f(0,winHeight/25,0); //(x,y top left)
-        glVertex3f(0,0,0); //(x,y bottom left)
-
-        //simulation.get_rho()[sizeof(simulation.get_rho())]
-        set_colormap(1,1);
-        glVertex3f(winWidth,0,0); //(x,y bottom right)
-        glVertex3f(winWidth,winHeight/25,0); //(x,y top right)
-*/
-    glEnd ();
-    glPopMatrix ();
-
-
-
-    glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-
-
-
-
+    drawBar();
     visualize();
     glFlush();
-
 }
 
 
@@ -251,3 +225,30 @@ void MyGLWidget::scalarColoring(QString scalartype){
     if (scalartype == "black&white") {scalar_col = 0;}
     }
 
+void MyGLWidget::drawBar(){
+    glPushMatrix ();
+    glBegin (GL_QUADS);
+
+    for (int i = 0; i < 301; i = i + 1){
+        set_colormap((0.005)*i,scalar_col);
+        glVertex3f((winWidth/300)*i,winHeight/25,0); //(x,y top left)
+        glVertex3f((winWidth/300)*i,0,0); //(x,y bottom left)
+        glVertex3f((winWidth/300)*(i+1),0,0); //(x,y bottom right)
+        glVertex3f((winWidth/300)*(i+1),winHeight/25,0); //(x,y top right)
+/*
+        set_colormap(0.5,1);
+        glVertex3f(winWidth/3,winHeight/25,0); //(x,y top left)
+        glVertex3f(winWidth/3,0,0); //(x,y bottom left)
+        glVertex3f((winWidth/3)*2,0,0); //(x,y bottom right)
+        glVertex3f((winWidth/3)*2,winHeight/25,0); //(x,y top right)
+
+        set_colormap(0.7,1);
+        glVertex3f((winWidth/3)*2,winHeight/25,0); //(x,y top left)
+        glVertex3f((winWidth/3)*2,0,0); //(x,y bottom left)
+        glVertex3f(winWidth,0,0); //(x,y bottom right)
+        glVertex3f(winWidth,winHeight/25,0); //(x,y top right)*/
+    }
+    glEnd ();
+    glPopMatrix ();
+
+}
