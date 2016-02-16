@@ -10,9 +10,7 @@ Window::Window(QWidget *parent) :
     ui(new Ui::Window)
 {
     ui->setupUi(this);
-    ui->scalarColoring->addItem("black&white");
-    ui->scalarColoring->addItem("rainbow");
-    ui->scalarColoring->addItem("color bands");
+
 }
 
 Window::~Window()
@@ -27,4 +25,5 @@ void Window::keyPressEvent(QKeyEvent *e)
     else
         QWidget::keyPressEvent(e);
 }
+
 

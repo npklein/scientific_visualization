@@ -222,6 +222,7 @@ void MyGLWidget::scalarColoring(QString scalartype){
     if (scalartype == "rainbow") {scalar_col = 1;}
     if (scalartype == "color bands") {scalar_col = 2;}
     if (scalartype == "black&white") {scalar_col = 0;}
+    if (scalartype == "heatmap") {scalar_col = 3;}
     }
 
 void MyGLWidget::drawBar(){

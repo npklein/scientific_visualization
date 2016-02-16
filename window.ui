@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>524</width>
+    <width>546</width>
     <height>646</height>
    </rect>
   </property>
@@ -111,7 +111,6 @@
        <property name="mouseTracking">
         <bool>false</bool>
        </property>
-       <zorder>simulationTimestepSlider</zorder>
       </widget>
      </item>
      <item row="4" column="1" colspan="3">
@@ -137,10 +136,31 @@
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QComboBox" name="scalarColoring"/>
+      <widget class="QComboBox" name="scalarColoring">
+       <item>
+        <property name="text">
+         <string>black&amp;white</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>rainbow</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>color bands</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>heatmap</string>
+        </property>
+       </item>
+      </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QCheckBox" name="drawingMatterRadio">
+      <widget class="QCheckBox" name="drawingMatterCheckbox">
        <property name="text">
         <string>Drawing matter</string>
        </property>
@@ -234,7 +254,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>drawingMatterRadio</sender>
+   <sender>drawingMatterCheckbox</sender>
    <signal>clicked()</signal>
    <receiver>myGLWidget</receiver>
    <slot>drawMatter()</slot>
