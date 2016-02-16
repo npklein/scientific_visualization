@@ -37,6 +37,7 @@ private slots:
 
     void drawBar();
 
+    void drawText(double x, double y, double z, QString txt);
 protected:
     void initializeGL();
     void paintGL();
