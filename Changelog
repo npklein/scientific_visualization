@@ -5,3 +5,5 @@ v4 -> Made a Simulation class for clarity of code
 v5 -> Changed C compiler to CPP to use QT for UI
 v6 -> Use Qt to make the GUI
 v7 -> Added multibox for scalar coloring
+v8 -> fixed size color bar
+v9 -> heatmap colormap implemented. Chosen for that heatmap because of reasons in 2nd edition page 154-155

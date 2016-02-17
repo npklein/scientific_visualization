@@ -222,20 +222,34 @@ void MyGLWidget::scalarColoring(QString scalartype){
     if (scalartype == "rainbow") {scalar_col = 1;}
     if (scalartype == "color bands") {scalar_col = 2;}
     if (scalartype == "black&white") {scalar_col = 0;}
+    if (scalartype == "heatmap") {scalar_col = 3;}
     }
+
+void MyGLWidget::drawText(double x, double y, double z, QString txt)
+{
+    glDisable(GL_LIGHTING);
+    glDisable(GL_DEPTH_TEST);
+
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+}
+
+
 
 void MyGLWidget::drawBar(){
     glPushMatrix ();
     glBegin (GL_QUADS);
-
     for (int i = 0; i < 1001; i = i + 1){
         set_colormap(0.001*i,scalar_col);
-        glVertex3f((winWidth/1000)*i,winHeight/25,0); //(x,y top left)
-        glVertex3f((winWidth/1000)*i,0,0); //(x,y bottom left)
-        glVertex3f((winWidth/1000)*(i+1),0,0); //(x,y bottom right)
-        glVertex3f((winWidth/1000)*(i+1),winHeight/25,0); //(x,y top right)
+
+        glVertex3f(15+(0.5*i), 40, 0); //(x,y top left)
+        glVertex3f(15+(0.5*i), 10, 0); //(x,y bottom left)
+        glVertex3f(15+(0.5*(i+1)),10, 0); //(x,y bottom right)
+        glVertex3f(15+(0.5*(i+1)),40, 0); //(x,y top right)
     }
     glEnd ();
     glPopMatrix ();
+
 
 }

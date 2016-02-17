@@ -9,6 +9,7 @@ int   draw_vecs = 1;            //draw the vector field or not
 const int COLOR_BLACKWHITE=0;   //different types of color mapping: black-and-white, rainbow, banded
 const int COLOR_RAINBOW=1;
 const int COLOR_BANDS=2;
+const int COLOR_HEATMAP=3;
 //int   frozen = 0;               //toggles on/off the animation
 
 
@@ -26,9 +27,20 @@ void rainbow(float value,float* R,float* G,float* B)
    if (value<0) value=0; if (value>1) value=1;
    value = (6-2*dx)*value+dx;
 
-   *R = max(0.0f,(3-(float)fabs(value-4)-(float)fabs(value-5))/2);
-   *G = max(0.0f,(4-(float)fabs(value-2)-(float)fabs(value-4))/2);
-   *B = max(0.0f,(3-(float)fabs(value-1)-(float)fabs(value-2))/2);
+   *R = max(0.0f, (3-(float)fabs(value-4)-(float)fabs(value-5))/2);
+   *G = max(0.0f, (4-(float)fabs(value-2)-(float)fabs(value-4))/2);
+   *B = max(0.0f, (3-(float)fabs(value-1)-(float)fabs(value-2))/2);
+}
+
+//heatmap: see 2nd edition page 154-155
+void heatmap(float value,float* R,float* G,float* B)
+{
+    if (value<0) value=0; if (value>1) value=1;
+    //all low start, red high midle, green high end
+    //https://graphsketch.com/?eqn1_color=1&eqn1_eqn=-%28x-1%29^2%2B1&eqn2_color=2&eqn2_eqn=-%28x-1.5%29^2%2B1&eqn3_color=3&eqn3_eqn=&eqn4_color=4&eqn4_eqn=&eqn5_color=5&eqn5_eqn=&eqn6_color=6&eqn6_eqn=&x_min=-10&x_max=10&y_min=-10&y_max=10&x_tick=1&y_tick=1&x_label_freq=5&y_label_freq=5&do_grid=0&do_grid=1&bold_labeled_lines=0&bold_labeled_lines=1&line_width=4&image_w=850&image_h=525
+    *R = max(0.0f, -((value-0.9)*(value-0.9))+1);
+    *G = max(0.0f, -((value-1.5)*(value-1.5))+1);// max(0.0f, -(value-1)*-(value-1)+1);
+    *B = 0;
 }
 
 //set_colormap: Sets three different types of colormaps
@@ -50,7 +62,10 @@ void set_colormap(float vy, int scalar_col)
           vy *= NLEVELS; vy = (int)(vy); vy/= NLEVELS;
 	      rainbow(vy,&R,&G,&B);
 	   }
-
+   else if (scalar_col==COLOR_HEATMAP)
+   {
+       heatmap(vy, &R, &G, &B);
+   }
    glColor3f(R,G,B);
 }
 
