@@ -76,19 +76,12 @@ void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_c
 void direction_to_color(float x, float y, int method)
 {
 	float r,g,b,f;
-	if (method)
-	{
+    if (method)
+    {
 	  f = atan2(y,x) / 3.1415927 + 1;
-	  r = f;
-	  if(r > 1) r = 2 - r;
-	  g = f + .66667;
-      if(g > 2) g -= 2;
-	  if(g > 1) g = 2 - g;
-	  b = f + 2 * .66667;
-	  if(b > 2) b -= 2;
-	  if(b > 1) b = 2 - b;
+      // mehtod acts same way as scalar_col in density
+      set_colormap(f, method, 0, 1);
 	}
 	else
 	{ r = g = b = 1; }
-	glColor3f(r,g,b);
 }

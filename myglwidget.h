@@ -25,8 +25,6 @@ private slots:
 
     void drawHedgehogs();
 
-    void directionColoring();
-
     void timestep(int position);
 
     void hedgehogScaling(int position);
@@ -45,6 +43,8 @@ private slots:
 
     void drawSmoke(fftw_real wn, fftw_real hn);
 
+    void applyColoringToDataset(QString dataset_to_use);
+
 protected:
     void initializeGL();
     void paintGL();
@@ -58,7 +58,8 @@ signals:
 private:
     QTimer timer;
     int   winWidth, winHeight;      //size of the graphics window, in pixels
-    int   color_dir;            //use direction color-coding or not
+    int   velocity_color;            //set direction color-coding type
+    int force_field_color;          // det force field color-coding type
     float vec_scale;			//scaling of hedgehogs
     int   draw_smoke;           //draw the smoke or not
     int   draw_vecs;            //draw the vector field or not
@@ -66,6 +67,7 @@ private:
     int DIM;
     float color_clamp_min;
     float color_clamp_max;
+    std::string dataset;
     QPoint lastPos;
 };
 
