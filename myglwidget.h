@@ -35,9 +35,16 @@ private slots:
 
     void scalarColoring(QString scalartype);
 
+    void clampColorMin(int min_color);
+
+    void clampColorMax(int max_color);
+
     void drawBar();
 
-    void drawText(double x, double y, double z, QString txt);
+    void drawVelocity(fftw_real wn, fftw_real hn);
+
+    void drawSmoke(fftw_real wn, fftw_real hn);
+
 protected:
     void initializeGL();
     void paintGL();
@@ -49,7 +56,6 @@ protected:
 signals:
 
 private:
-    void visualize();
     QTimer timer;
     int   winWidth, winHeight;      //size of the graphics window, in pixels
     int   color_dir;            //use direction color-coding or not
@@ -58,6 +64,8 @@ private:
     int   draw_vecs;            //draw the vector field or not
     int   scalar_col;           //method for scalar coloring
     int DIM;
+    float color_clamp_min;
+    float color_clamp_max;
     QPoint lastPos;
 };
 

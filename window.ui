@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>546</width>
+    <width>580</width>
     <height>646</height>
    </rect>
   </property>
@@ -195,27 +195,41 @@
         <bool>true</bool>
        </property>
        <property name="checked">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="1" colspan="3">
-      <widget class="QSlider" name="colorClamp">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="visible">
-          <bool>false</bool>
+        <bool>true</bool>
        </property>
       </widget>
      </item>
      <item row="9" column="0">
       <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>Color clamp</string>
+        <string>Color clamp min</string>
        </property>
-       <property name="visible">
-          <bool>false</bool>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QSlider" name="colorClampMinSlider">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="2">
+      <widget class="QSlider" name="colorClampMaxSlider">
+       <property name="value">
+        <number>0</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="invertedAppearance">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="3">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Color clamp max</string>
        </property>
       </widget>
      </item>
@@ -246,6 +260,8 @@
     <slot>drawMatter()</slot>
     <slot>showAnimation()</slot>
     <slot>scalarColoring(QString)</slot>
+    <slot>clampColorMin(int)</slot>
+    <slot>clampColorMax(int)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -398,7 +414,7 @@
   <connection>
    <sender>advancedOptionsButton</sender>
    <signal>clicked(bool)</signal>
-   <receiver>colorClamp</receiver>
+   <receiver>colorClampMinSlider</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -406,8 +422,72 @@
      <y>592</y>
     </hint>
     <hint type="destinationlabel">
-     <x>294</x>
-     <y>619</y>
+     <x>281</x>
+     <y>632</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>advancedOptionsButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>colorClampMaxSlider</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>145</x>
+     <y>582</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>334</x>
+     <y>622</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>colorClampMinSlider</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>clampColorMin(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>223</x>
+     <y>616</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>268</x>
+     <y>399</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>colorClampMaxSlider</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>clampColorMax(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>409</x>
+     <y>624</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>397</x>
+     <y>378</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>advancedOptionsButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>label_5</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>67</x>
+     <y>592</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>494</x>
+     <y>630</y>
     </hint>
    </hints>
   </connection>

@@ -18,6 +18,8 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     draw_vecs = 1;            //draw the vector field or not
     scalar_col = 0;           //method for scalar coloring
     DIM = 100;
+    color_clamp_min = 0.0;        // The lower bound value to clamp color map at
+    color_clamp_max = 1.0;        // The higher bound value to clamp color map at
     simulation.init_simulation(DIM);
     QTimer *timer = new QTimer;
     timer->start(1);
@@ -45,7 +47,16 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     drawBar();
-    visualize();
+    fftw_real  wn = (fftw_real)winWidth / (fftw_real)(DIM + 1);   // Grid cell width
+    fftw_real  hn = (fftw_real)winHeight / (fftw_real)(DIM + 1);  // Grid cell heigh
+    if (draw_vecs)
+    {
+        drawVelocity(wn, hn);
+    }
+    if (draw_smoke)
+    {
+        drawSmoke(wn, hn);
+    }
     glFlush();
 }
 
@@ -74,28 +85,23 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
     lastPos = event->pos();
 }
 
-void MyGLWidget::visualize()
+void MyGLWidget::drawVelocity(fftw_real wn, fftw_real hn)
 {
-    int        i, j, idx, idx0, idx1, idx2, idx3; double px0,py0,px1,py1,px2,py2,px3,py3;
-    fftw_real  wn = (fftw_real)winWidth / (fftw_real)(DIM + 1);   // Grid cell width
-    fftw_real  hn = (fftw_real)winHeight / (fftw_real)(DIM + 1);  // Grid cell heigh
-
-    if (draw_vecs)
-    {
-      glBegin(GL_LINES);				//draw velocities
-      for (i = 0; i < DIM; i++)
+    int  i, j, idx;
+    glBegin(GL_LINES);				//draw velocities
+    for (i = 0; i < DIM; i++)
         for (j = 0; j < DIM; j++)
         {
-          idx = (j * DIM) + i;
-          direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx],color_dir);
-          glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
-          glVertex2f((wn + (fftw_real)i * wn) + vec_scale * simulation.get_vx()[idx], (hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx]);
+            idx = (j * DIM) + i;
+            direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx],color_dir);
+            glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
+            glVertex2f((wn + (fftw_real)i * wn) + vec_scale * simulation.get_vx()[idx], (hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx]);
         }
-      glEnd();
-    }
+    glEnd();
+}
 
-    if (draw_smoke)
-    {
+void MyGLWidget::drawSmoke(fftw_real wn, fftw_real hn){
+    int  i, j, idx, idx0, idx1, idx2, idx3; double px0,py0,px1,py1,px2,py2,px3,py3;
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glBegin(GL_TRIANGLES);
     for (j = 0; j < DIM - 1; j++)			//draw smoke
@@ -118,18 +124,22 @@ void MyGLWidget::visualize()
             py3  = hn + (fftw_real)j * hn;
             idx3 = (j * DIM) + (i + 1);
 
-            set_colormap(simulation.get_rho()[idx0], scalar_col);	glVertex2f(px0, py0);
-            set_colormap(simulation.get_rho()[idx1], scalar_col);	glVertex2f(px1, py1);
-            set_colormap(simulation.get_rho()[idx2], scalar_col);	glVertex2f(px2, py2);
+            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min, color_clamp_max);
+            glVertex2f(px0, py0);
+            set_colormap(simulation.get_rho()[idx1], scalar_col, color_clamp_min, color_clamp_max);
+            glVertex2f(px1, py1);
+            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min, color_clamp_max);
+            glVertex2f(px2, py2);
 
-            set_colormap(simulation.get_rho()[idx0], scalar_col);	glVertex2f(px0, py0);
-            set_colormap(simulation.get_rho()[idx2], scalar_col);	glVertex2f(px2, py2);
-            set_colormap(simulation.get_rho()[idx3], scalar_col);	glVertex2f(px3, py3);
+            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min, color_clamp_max);
+            glVertex2f(px0, py0);
+            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min, color_clamp_max);
+            glVertex2f(px2, py2);
+            set_colormap(simulation.get_rho()[idx3], scalar_col, color_clamp_min, color_clamp_max);
+            glVertex2f(px3, py3);
         }
     }
     glEnd();
-    }
-
 }
 
 void MyGLWidget::do_one_simulation_step()
@@ -141,7 +151,7 @@ void MyGLWidget::do_one_simulation_step()
                          simulation.get_vy0(), simulation.get_visc(), simulation.get_dt());
         // Note to self: * in *simulation.get_vx() because simulation.get_vx() returns 'double *' and diffuse_matter needs 'double'
         simulation.diffuse_matter(DIM, simulation.get_vx(), simulation.get_vy(),
-                                 simulation.get_rho(), simulation.get_rho0(), simulation.get_dt());
+                                  simulation.get_rho(), simulation.get_rho0(), simulation.get_dt());
         updateGL();
     }
 }
@@ -162,7 +172,7 @@ void MyGLWidget::drawMatter()
 void MyGLWidget::drawHedgehogs()
 {
     draw_vecs = 1 - draw_vecs;
-                if (draw_vecs==0) draw_smoke = 1;
+    if (draw_vecs==0) draw_smoke = 1;
 }
 
 void MyGLWidget::directionColoring()
@@ -218,38 +228,42 @@ void MyGLWidget::fluidViscosity(int position)
     last_pos_visc = position;
 }
 
+void MyGLWidget::clampColorMin(int min_color)
+{
+    if (min_color > 0){
+        color_clamp_min = min_color/100.0;
+    }
+}
+void MyGLWidget::clampColorMax(int max_color)
+{
+    if (max_color > 0){
+        color_clamp_max = 1-(max_color/100.0);
+    }
+}
+
 void MyGLWidget::scalarColoring(QString scalartype){
     if (scalartype == "rainbow") {scalar_col = 1;}
     if (scalartype == "color bands") {scalar_col = 2;}
     if (scalartype == "black&white") {scalar_col = 0;}
     if (scalartype == "heatmap") {scalar_col = 3;}
-    }
-
-void MyGLWidget::drawText(double x, double y, double z, QString txt)
-{
-    glDisable(GL_LIGHTING);
-    glDisable(GL_DEPTH_TEST);
-
-
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_LIGHTING);
 }
-
 
 
 void MyGLWidget::drawBar(){
-    glPushMatrix ();
-    glBegin (GL_QUADS);
-    for (int i = 0; i < 1001; i = i + 1){
-        set_colormap(0.001*i,scalar_col);
+    if (draw_smoke==1){
+        glPushMatrix ();
+        glBegin (GL_QUADS);
+        for (int i = 0; i < 1001; i = i + 1){
+            set_colormap(0.001*i,scalar_col, color_clamp_min, color_clamp_max);
 
-        glVertex3f(15+(0.5*i), 40, 0); //(x,y top left)
-        glVertex3f(15+(0.5*i), 10, 0); //(x,y bottom left)
-        glVertex3f(15+(0.5*(i+1)),10, 0); //(x,y bottom right)
-        glVertex3f(15+(0.5*(i+1)),40, 0); //(x,y top right)
+            glVertex3f(15+(0.5*i), 40, 0); //(x,y top left)
+            glVertex3f(15+(0.5*i), 10, 0); //(x,y bottom left)
+            glVertex3f(15+(0.5*(i+1)),10, 0); //(x,y bottom right)
+            glVertex3f(15+(0.5*(i+1)),40, 0); //(x,y top right)
+        }
+        glEnd ();
+        glPopMatrix ();
+
     }
-    glEnd ();
-    glPopMatrix ();
-
-
 }
+
