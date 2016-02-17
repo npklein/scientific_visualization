@@ -12,7 +12,6 @@
 MyGLWidget::MyGLWidget(QWidget *parent)
 {
     //--- VISUALIZATION PARAMETERS ---------------------------------------------------------------------
-    color_dir = 0;            //use direction color-coding or not
     vec_scale = 2000;			//scaling of hedgehogs
     draw_smoke = 1;           //draw the smoke or not
     draw_vecs = 1;            //draw the vector field or not
@@ -20,6 +19,9 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     DIM = 100;
     color_clamp_min = 0.0;        // The lower bound value to clamp color map at
     color_clamp_max = 1.0;        // The higher bound value to clamp color map at
+    velocity_color = 1;
+    force_field_color = 1;
+    dataset = "fluid density";
     simulation.init_simulation(DIM);
     QTimer *timer = new QTimer;
     timer->start(1);
@@ -93,7 +95,7 @@ void MyGLWidget::drawVelocity(fftw_real wn, fftw_real hn)
         for (j = 0; j < DIM; j++)
         {
             idx = (j * DIM) + i;
-            direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx],color_dir);
+            direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color);
             glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
             glVertex2f((wn + (fftw_real)i * wn) + vec_scale * simulation.get_vx()[idx], (hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx]);
         }
@@ -101,7 +103,7 @@ void MyGLWidget::drawVelocity(fftw_real wn, fftw_real hn)
 }
 
 void MyGLWidget::drawSmoke(fftw_real wn, fftw_real hn){
-    int  i, j, idx, idx0, idx1, idx2, idx3; double px0,py0,px1,py1,px2,py2,px3,py3;
+    int  i, j, idx0, idx1, idx2, idx3; double px0,py0,px1,py1,px2,py2,px3,py3;
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glBegin(GL_TRIANGLES);
     for (j = 0; j < DIM - 1; j++)			//draw smoke
@@ -175,11 +177,6 @@ void MyGLWidget::drawHedgehogs()
     if (draw_vecs==0) draw_smoke = 1;
 }
 
-void MyGLWidget::directionColoring()
-{
-    color_dir = 1 - color_dir;
-}
-
 void MyGLWidget::timestep(int position)
 {
     // dt start = 0.4
@@ -242,28 +239,84 @@ void MyGLWidget::clampColorMax(int max_color)
 }
 
 void MyGLWidget::scalarColoring(QString scalartype){
-    if (scalartype == "rainbow") {scalar_col = 1;}
-    if (scalartype == "color bands") {scalar_col = 2;}
-    if (scalartype == "black&white") {scalar_col = 0;}
-    if (scalartype == "heatmap") {scalar_col = 3;}
+    if (scalartype == "rainbow") {
+        if (dataset == "fluid density"){
+            scalar_col = 1;
+        }
+        else if (dataset == "fluid velocity magnitude"){
+            velocity_color = 1;
+        }
+        else if (dataset == "force field magnitude"){
+            force_field_color = 1;
+        }
+    }
+    else if (scalartype == "color bands") {
+        if (dataset == "fluid density"){
+            scalar_col = 2;
+        }
+        else if (dataset == "fluid velocity magnitude"){
+            velocity_color = 2;
+        }
+        else if (dataset == "force field magnitude"){
+            force_field_color = 2;
+        }
+    }
+    else if (scalartype == "black&white") {
+        if (dataset == "fluid density"){
+            scalar_col = 0;
+        }
+        else if (dataset == "fluid velocity magnitude"){
+            velocity_color = 0;
+        }
+        else if (dataset == "force field magnitude"){
+            force_field_color = 0;
+        }
+    }
+    else if (scalartype == "heatmap") {
+        if (dataset == "fluid density"){
+            scalar_col = 3;
+        }
+        else if (dataset == "fluid velocity magnitude"){
+            velocity_color = 3;
+        }
+        else if (dataset == "force field magnitude"){
+            force_field_color = 3;
+        }
+    }
 }
 
 
+void MyGLWidget::applyColoringToDataset(QString dataset_to_use){
+    dataset = dataset_to_use.toStdString();
+}
+
+
+
 void MyGLWidget::drawBar(){
-    if (draw_smoke==1){
-        glPushMatrix ();
-        glBegin (GL_QUADS);
-        for (int i = 0; i < 1001; i = i + 1){
-            set_colormap(0.001*i,scalar_col, color_clamp_min, color_clamp_max);
-
-            glVertex3f(15+(0.5*i), 40, 0); //(x,y top left)
-            glVertex3f(15+(0.5*i), 10, 0); //(x,y bottom left)
-            glVertex3f(15+(0.5*(i+1)),10, 0); //(x,y bottom right)
-            glVertex3f(15+(0.5*(i+1)),40, 0); //(x,y top right)
+    glPushMatrix ();
+    glBegin (GL_QUADS);
+    if (draw_smoke == 1){
+    for (int i = 0; i < 1001; i = i + 1){
+        set_colormap(0.001*i,scalar_col, color_clamp_min, color_clamp_max);
+        glVertex3f(15+(0.5*i), 20, 0); //(x,y top left)
+        glVertex3f(15+(0.5*i), 10, 0); //(x,y bottom left)
+        glVertex3f(15+(0.5*(i+1)),10, 0); //(x,y bottom right)
+        glVertex3f(15+(0.5*(i+1)),40, 0); //(x,y top right)
         }
-        glEnd ();
-        glPopMatrix ();
-
     }
+    if (draw_vecs == 1){
+    for (int i = 0; i < 1001; i = i + 1){
+        set_colormap(0.001*i,velocity_color, color_clamp_min, color_clamp_max);
+        glVertex3f(15+(0.5*i), 50, 0); //(x,y top left)
+        glVertex3f(15+(0.5*i), 40, 0); //(x,y bottom left)
+        glVertex3f(15+(0.5*(i+1)),40, 0); //(x,y bottom right)
+        glVertex3f(15+(0.5*(i+1)),70, 0); //(x,y top right)
+    }
+   }
+
+
+
+    glEnd ();
+    glPopMatrix ();
 }
 
