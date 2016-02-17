@@ -35,9 +35,12 @@ private slots:
 
     void scalarColoring(QString scalartype);
 
+    void clampColorMin(int min_color);
+    void clampColorMax(int max_color);
+
+
     void drawBar();
 
-    void drawText(double x, double y, double z, QString txt);
 protected:
     void initializeGL();
     void paintGL();
@@ -58,6 +61,8 @@ private:
     int   draw_vecs;            //draw the vector field or not
     int   scalar_col;           //method for scalar coloring
     int DIM;
+    float color_clamp_min;
+    float color_clamp_max;
     QPoint lastPos;
 };
 

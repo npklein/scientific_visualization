@@ -18,6 +18,8 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     draw_vecs = 1;            //draw the vector field or not
     scalar_col = 0;           //method for scalar coloring
     DIM = 100;
+    color_clamp_min = 0.0;        // The lower bound value to clamp color map at
+    color_clamp_max = 1.0;        // The higher bound value to clamp color map at
     simulation.init_simulation(DIM);
     QTimer *timer = new QTimer;
     timer->start(1);
@@ -118,13 +120,19 @@ void MyGLWidget::visualize()
             py3  = hn + (fftw_real)j * hn;
             idx3 = (j * DIM) + (i + 1);
 
-            set_colormap(simulation.get_rho()[idx0], scalar_col);	glVertex2f(px0, py0);
-            set_colormap(simulation.get_rho()[idx1], scalar_col);	glVertex2f(px1, py1);
-            set_colormap(simulation.get_rho()[idx2], scalar_col);	glVertex2f(px2, py2);
+            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min, color_clamp_max);
+            glVertex2f(px0, py0);
+            set_colormap(simulation.get_rho()[idx1], scalar_col, color_clamp_min, color_clamp_max);
+            glVertex2f(px1, py1);
+            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min, color_clamp_max);
+            glVertex2f(px2, py2);
 
-            set_colormap(simulation.get_rho()[idx0], scalar_col);	glVertex2f(px0, py0);
-            set_colormap(simulation.get_rho()[idx2], scalar_col);	glVertex2f(px2, py2);
-            set_colormap(simulation.get_rho()[idx3], scalar_col);	glVertex2f(px3, py3);
+            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min, color_clamp_max);
+            glVertex2f(px0, py0);
+            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min, color_clamp_max);
+            glVertex2f(px2, py2);
+            set_colormap(simulation.get_rho()[idx3], scalar_col, color_clamp_min, color_clamp_max);
+            glVertex2f(px3, py3);
         }
     }
     glEnd();
@@ -218,6 +226,19 @@ void MyGLWidget::fluidViscosity(int position)
     last_pos_visc = position;
 }
 
+void MyGLWidget::clampColorMin(int min_color)
+{
+    if (min_color > 0){
+        color_clamp_min = min_color/100.0;
+    }
+}
+void MyGLWidget::clampColorMax(int max_color)
+{
+    if (max_color > 0){
+        color_clamp_max = 1-(max_color/100.0);
+    }
+}
+
 void MyGLWidget::scalarColoring(QString scalartype){
     if (scalartype == "rainbow") {scalar_col = 1;}
     if (scalartype == "color bands") {scalar_col = 2;}
@@ -225,23 +246,13 @@ void MyGLWidget::scalarColoring(QString scalartype){
     if (scalartype == "heatmap") {scalar_col = 3;}
     }
 
-void MyGLWidget::drawText(double x, double y, double z, QString txt)
-{
-    glDisable(GL_LIGHTING);
-    glDisable(GL_DEPTH_TEST);
-
-
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_LIGHTING);
-}
-
-
 
 void MyGLWidget::drawBar(){
+    if (draw_smoke==1){
     glPushMatrix ();
     glBegin (GL_QUADS);
     for (int i = 0; i < 1001; i = i + 1){
-        set_colormap(0.001*i,scalar_col);
+        set_colormap(0.001*i,scalar_col, color_clamp_min, color_clamp_max);
 
         glVertex3f(15+(0.5*i), 40, 0); //(x,y top left)
         glVertex3f(15+(0.5*i), 10, 0); //(x,y bottom left)
@@ -251,5 +262,6 @@ void MyGLWidget::drawBar(){
     glEnd ();
     glPopMatrix ();
 
-
 }
+}
+
