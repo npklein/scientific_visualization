@@ -36,10 +36,14 @@ private slots:
     void scalarColoring(QString scalartype);
 
     void clampColorMin(int min_color);
+
     void clampColorMax(int max_color);
 
-
     void drawBar();
+
+    void drawVelocity(fftw_real wn, fftw_real hn);
+
+    void drawSmoke(fftw_real wn, fftw_real hn);
 
 protected:
     void initializeGL();
@@ -52,7 +56,6 @@ protected:
 signals:
 
 private:
-    void visualize();
     QTimer timer;
     int   winWidth, winHeight;      //size of the graphics window, in pixels
     int   color_dir;            //use direction color-coding or not
