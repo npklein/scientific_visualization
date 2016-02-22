@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>546</width>
+    <width>580</width>
     <height>646</height>
    </rect>
   </property>
@@ -28,6 +28,13 @@
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="1">
     <layout class="QGridLayout" name="gridLayout_2">
+     <item row="9" column="1">
+      <widget class="QSlider" name="colorClampMinSlider">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
      <item row="2" column="1">
       <widget class="QCheckBox" name="drawingMatterCheckbox">
        <property name="text">
@@ -48,37 +55,6 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="3">
-      <widget class="QCheckBox" name="directionColoringCheckbox">
-       <property name="text">
-        <string>Direction coloring</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QComboBox" name="scalarColoring">
-       <item>
-        <property name="text">
-         <string>black&amp;white</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>rainbow</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>color bands</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>heatmap</string>
-        </property>
-       </item>
-      </widget>
-     </item>
      <item row="0" column="0" colspan="4">
       <widget class="MyGLWidget" name="myGLWidget" native="true">
        <property name="enabled">
@@ -89,23 +65,6 @@
        </property>
        <property name="mouseTracking">
         <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QCheckBox" name="animationCheckbox">
-       <property name="text">
-        <string>Animation</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Fluid viscosity</string>
        </property>
       </widget>
      </item>
@@ -131,6 +90,16 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="0">
+      <widget class="QCheckBox" name="animationCheckbox">
+       <property name="text">
+        <string>Animation</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
      <item row="7" column="1" colspan="3">
       <widget class="QSlider" name="hedgehogScalingSlider">
        <property name="toolTip">
@@ -147,6 +116,13 @@
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Fluid viscosity</string>
        </property>
       </widget>
      </item>
@@ -186,7 +162,34 @@
        </property>
       </widget>
      </item>
-     <item row="8" column="0">
+     <item row="9" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Color clamp min</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="2">
+      <widget class="QSlider" name="colorClampMaxSlider">
+       <property name="value">
+        <number>0</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="invertedAppearance">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="3">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Color clamp max</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
       <widget class="QPushButton" name="advancedOptionsButton">
        <property name="text">
         <string>Advanced options</string>
@@ -195,28 +198,51 @@
         <bool>true</bool>
        </property>
        <property name="checked">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
       </widget>
      </item>
-     <item row="9" column="1" colspan="3">
-      <widget class="QSlider" name="colorClamp">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="visible">
-          <bool>false</bool>
-       </property>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="scalarColoring">
+       <item>
+        <property name="text">
+         <string>black&amp;white</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>rainbow</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>color bands</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>heatmap</string>
+        </property>
+       </item>
       </widget>
      </item>
-     <item row="9" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>Color clamp</string>
-       </property>
-       <property name="visible">
-          <bool>false</bool>
-       </property>
+     <item row="1" column="2">
+      <widget class="QComboBox" name="applyColorTo">
+       <item>
+        <property name="text">
+         <string>fluid density</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>fluid velocity magnitude</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>force field magnitude</string>
+        </property>
+       </item>
       </widget>
      </item>
     </layout>
@@ -246,6 +272,9 @@
     <slot>drawMatter()</slot>
     <slot>showAnimation()</slot>
     <slot>scalarColoring(QString)</slot>
+    <slot>clampColorMin(int)</slot>
+    <slot>clampColorMax(int)</slot>
+    <slot>applyColoringToDataset(QString)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -259,7 +288,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>96</x>
-     <y>434</y>
+     <y>460</y>
     </hint>
     <hint type="destinationlabel">
      <x>57</x>
@@ -274,8 +303,8 @@
    <slot>fluidViscosity(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>450</x>
-     <y>528</y>
+     <x>441</x>
+     <y>564</y>
     </hint>
     <hint type="destinationlabel">
      <x>161</x>
@@ -290,28 +319,12 @@
    <slot>drawMatter()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>268</x>
-     <y>460</y>
+     <x>259</x>
+     <y>494</y>
     </hint>
     <hint type="destinationlabel">
      <x>103</x>
      <y>367</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>directionColoringCheckbox</sender>
-   <signal>clicked()</signal>
-   <receiver>myGLWidget</receiver>
-   <slot>directionColoring()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>533</x>
-     <y>460</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>27</x>
-     <y>372</y>
     </hint>
    </hints>
   </connection>
@@ -322,8 +335,8 @@
    <slot>hedgehogScaling(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>482</x>
-     <y>562</y>
+     <x>473</x>
+     <y>598</y>
     </hint>
     <hint type="destinationlabel">
      <x>190</x>
@@ -338,8 +351,8 @@
    <slot>timestep(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>528</x>
-     <y>494</y>
+     <x>519</x>
+     <y>530</y>
     </hint>
     <hint type="destinationlabel">
      <x>248</x>
@@ -354,8 +367,8 @@
    <slot>drawHedgehogs()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>400</x>
-     <y>460</y>
+     <x>406</x>
+     <y>494</y>
     </hint>
     <hint type="destinationlabel">
      <x>336</x>
@@ -370,7 +383,7 @@
    <slot>scalarColoring(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>94</x>
+     <x>238</x>
      <y>464</y>
     </hint>
     <hint type="destinationlabel">
@@ -387,7 +400,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>56</x>
-     <y>585</y>
+     <y>483</y>
     </hint>
     <hint type="destinationlabel">
      <x>99</x>
@@ -398,16 +411,96 @@
   <connection>
    <sender>advancedOptionsButton</sender>
    <signal>clicked(bool)</signal>
-   <receiver>colorClamp</receiver>
+   <receiver>colorClampMinSlider</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>133</x>
-     <y>592</y>
+     <y>490</y>
     </hint>
     <hint type="destinationlabel">
-     <x>294</x>
-     <y>619</y>
+     <x>281</x>
+     <y>632</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>advancedOptionsButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>colorClampMaxSlider</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>145</x>
+     <y>480</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>334</x>
+     <y>622</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>colorClampMinSlider</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>clampColorMin(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>223</x>
+     <y>616</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>268</x>
+     <y>399</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>colorClampMaxSlider</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>clampColorMax(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>409</x>
+     <y>624</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>397</x>
+     <y>378</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>advancedOptionsButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>label_5</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>67</x>
+     <y>490</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>494</x>
+     <y>630</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>applyColorTo</sender>
+   <signal>activated(QString)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>applyColoringToDataset(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>309</x>
+     <y>450</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>310</x>
+     <y>411</y>
     </hint>
    </hints>
   </connection>
