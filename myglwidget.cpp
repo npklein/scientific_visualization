@@ -7,7 +7,7 @@
 #include "visualization.cpp"
 #include <simulation.cpp>              //the numerical simulation FFTW library
 #include <cmath>
-
+#include "Point3d.h"
 
 MyGLWidget::MyGLWidget(QWidget *parent)
 {
@@ -26,7 +26,6 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     QTimer *timer = new QTimer;
     timer->start(1);
     QObject::connect(timer,SIGNAL(timeout()),this,SLOT(do_one_simulation_step()));
-
 }
 
 MyGLWidget::~MyGLWidget()
@@ -90,16 +89,39 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 void MyGLWidget::drawVelocity(fftw_real wn, fftw_real hn)
 {
     int  i, j, idx;
-    glBegin(GL_LINES);				//draw velocities
-    for (i = 0; i < DIM; i++)
+    // glBegin(GL_LINES);				//draw velocities
+    /*for (i = 0; i < DIM; i++)
         for (j = 0; j < DIM; j++)
         {
             idx = (j * DIM) + i;
             direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color);
             glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
             glVertex2f((wn + (fftw_real)i * wn) + vec_scale * simulation.get_vx()[idx], (hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx]);
+            glPopMatrix();
+        }*/
+    glPushMatrix();
+
+    glBegin(GL_TRIANGLES);				//draw velocities
+    for (i = 0; i < DIM; i++)
+        for (j = 0; j < DIM; j++)
+        {
+            idx = (j * DIM) + i;
+            direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color);
+            glVertex3f( wn + (fftw_real)i * wn, hn + (fftw_real)j * hn,0);
+            glVertex3f( (wn + (fftw_real)i * wn) + vec_scale * simulation.get_vx()[idx], (hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx],0);
+            glVertex3f((wn + (fftw_real)i * wn) + vec_scale * simulation.get_vx()[idx], hn + (fftw_real)j * hn,0);
+
+
+           // glVertex3f( 225.0f, 300.0f, 0.0f);
+            //glVertex3f(175.0f,300.0f, 0.0f);
+            //glVertex3f( 175.0f,200.0f, 0.0f);
+
+            //glVertex3f( 225.0f, 300.0f, 0.0f);
+            //glVertex3f(225.0f,200.0f, 0.0f);
+            //glVertex3f( 175.0f,200.0f, 0.0f);
+            //glEnd();
         }
-    glEnd();
+    glPopMatrix();
 }
 
 void MyGLWidget::drawSmoke(fftw_real wn, fftw_real hn){
@@ -142,6 +164,22 @@ void MyGLWidget::drawSmoke(fftw_real wn, fftw_real hn){
         }
     }
     glEnd();
+}
+
+float MyGLWidget::direction2angle(const Point3d& d)			//Converts a 2D vector into an orientation (angle).
+{														//The angle is in the [0,360] degrees interval
+    Point3d x = d; x.normalize();
+
+    float cosa = x.x;
+    float sina = x.y;
+
+    float a;
+    if (sina>=0)
+        a = acos(cosa);
+    else
+        a = 2*M_PI - acos(cosa);
+
+    return 180*a/M_PI;
 }
 
 void MyGLWidget::do_one_simulation_step()
@@ -296,23 +334,23 @@ void MyGLWidget::drawBar(){
     glPushMatrix ();
     glBegin (GL_QUADS);
     if (draw_smoke == 1){
-    for (int i = 0; i < 1001; i = i + 1){
-        set_colormap(0.001*i,scalar_col, color_clamp_min, color_clamp_max);
-        glVertex3f(15+(0.5*i), 20, 0); //(x,y top left)
-        glVertex3f(15+(0.5*i), 10, 0); //(x,y bottom left)
-        glVertex3f(15+(0.5*(i+1)),10, 0); //(x,y bottom right)
-        glVertex3f(15+(0.5*(i+1)),40, 0); //(x,y top right)
+        for (int i = 0; i < 1001; i = i + 1){
+            set_colormap(0.001*i,scalar_col, color_clamp_min, color_clamp_max);
+            glVertex3f(15+(0.5*i), 40, 0); //(x,y top left)
+            glVertex3f(15+(0.5*i), 10, 0); //(x,y bottom left)
+            glVertex3f(15+(0.5*(i+1)),10, 0); //(x,y bottom right)
+            glVertex3f(15+(0.5*(i+1)),40, 0); //(x,y top right)
         }
     }
     if (draw_vecs == 1){
-    for (int i = 0; i < 1001; i = i + 1){
-        set_colormap(0.001*i,velocity_color, color_clamp_min, color_clamp_max);
-        glVertex3f(15+(0.5*i), 50, 0); //(x,y top left)
-        glVertex3f(15+(0.5*i), 40, 0); //(x,y bottom left)
-        glVertex3f(15+(0.5*(i+1)),40, 0); //(x,y bottom right)
-        glVertex3f(15+(0.5*(i+1)),70, 0); //(x,y top right)
+        for (int i = 0; i < 1001; i = i + 1){
+            set_colormap(0.001*i,velocity_color, color_clamp_min, color_clamp_max);
+            glVertex3f(15+(0.5*i), 70, 0); //(x,y top left)
+            glVertex3f(15+(0.5*i), 40, 0); //(x,y bottom left)
+            glVertex3f(15+(0.5*(i+1)),40, 0); //(x,y bottom right)
+            glVertex3f(15+(0.5*(i+1)),70, 0); //(x,y top right)
+        }
     }
-   }
 
 
 
