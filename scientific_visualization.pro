@@ -15,8 +15,7 @@ SOURCES += \
 HEADERS += \
     window.h \
     myglwidget.h \
-    simulation.h \
-    Point3d.h
+    simulation.h
 
 INCLUDEPATH += fftw-2.1.5/include /usr/local/include
 LIBS += -L"$$_PRO_FILE_PWD_/fftw-2.1.5/lib" -lrfftw -lfftw -framework OpenGL -framework GLUT

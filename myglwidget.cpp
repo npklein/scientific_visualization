@@ -7,7 +7,6 @@
 #include "visualization.cpp"
 #include <simulation.cpp>              //the numerical simulation FFTW library
 #include <cmath>
-#include "Point3d.h"
 
 MyGLWidget::MyGLWidget(QWidget *parent)
 {
