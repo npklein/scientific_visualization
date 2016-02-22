@@ -166,22 +166,6 @@ void MyGLWidget::drawSmoke(fftw_real wn, fftw_real hn){
     glEnd();
 }
 
-float MyGLWidget::direction2angle(const Point3d& d)			//Converts a 2D vector into an orientation (angle).
-{														//The angle is in the [0,360] degrees interval
-    Point3d x = d; x.normalize();
-
-    float cosa = x.x;
-    float sina = x.y;
-
-    float a;
-    if (sina>=0)
-        a = acos(cosa);
-    else
-        a = 2*M_PI - acos(cosa);
-
-    return 180*a/M_PI;
-}
-
 void MyGLWidget::do_one_simulation_step()
 {
     if (!simulation.get_frozen())
@@ -195,7 +179,6 @@ void MyGLWidget::do_one_simulation_step()
         updateGL();
     }
 }
-
 
 
 void MyGLWidget::showAnimation()
