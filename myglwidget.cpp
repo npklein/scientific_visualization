@@ -90,16 +90,17 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 void MyGLWidget::drawVelocity(fftw_real wn, fftw_real hn)
 {
     int  i, j, idx;
-    // glBegin(GL_LINES);				//draw velocities
-    /*for (i = 0; i < DIM; i++)
+    glBegin(GL_LINES);				//draw velocities
+    for (i = 0; i < DIM; i++)
         for (j = 0; j < DIM; j++)
         {
             idx = (j * DIM) + i;
             direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color);
             glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
             glVertex2f((wn + (fftw_real)i * wn) + vec_scale * simulation.get_vx()[idx], (hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx]);
-            glPopMatrix();
-        }*/
+        }
+    glEnd();
+    /*
     glPushMatrix();
 
     glBegin(GL_TRIANGLES);				//draw velocities
@@ -122,7 +123,7 @@ void MyGLWidget::drawVelocity(fftw_real wn, fftw_real hn)
             //glVertex3f( 175.0f,200.0f, 0.0f);
             //glEnd();
         }
-    glPopMatrix();
+    glPopMatrix();*/
 }
 
 void MyGLWidget::drawSmoke(fftw_real wn, fftw_real hn){
