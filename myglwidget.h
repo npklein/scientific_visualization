@@ -70,7 +70,7 @@ private:
     int   draw_vecs;            //draw the vector field or not
     int   scalar_col;           //method for scalar coloring
     int DIM;
-    int colorBands;
+    int color_bands;
     float color_clamp_min;
     float color_clamp_max;
     std::string dataset;
