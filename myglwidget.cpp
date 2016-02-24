@@ -20,7 +20,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     color_clamp_max = 1.0;        // The higher bound value to clamp color map at
     velocity_color = 1;
     force_field_color = 1;
-    colorBands = 256;
+    color_bands = 256;
     dataset = "fluid density";
     simulation.init_simulation(DIM);
     QTimer *timer = new QTimer;
@@ -96,7 +96,7 @@ void MyGLWidget::drawVelocity(fftw_real wn, fftw_real hn)
         for (j = 0; j < DIM; j++)
         {
             idx = (j * DIM) + i;
-            direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color, colorBands);
+            direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color, color_bands);
             glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
             glVertex2f((wn + (fftw_real)i * wn) + vec_scale * simulation.get_vx()[idx], (hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx]);
         }
@@ -151,18 +151,18 @@ void MyGLWidget::drawSmoke(fftw_real wn, fftw_real hn){
             py3  = hn + (fftw_real)j * hn;
             idx3 = (j * DIM) + (i + 1);
 
-            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min, color_clamp_max, colorBands);
+            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min, color_clamp_max, color_bands);
             glVertex2f(px0, py0);
-            set_colormap(simulation.get_rho()[idx1], scalar_col, color_clamp_min, color_clamp_max, colorBands);
+            set_colormap(simulation.get_rho()[idx1], scalar_col, color_clamp_min, color_clamp_max, color_bands);
             glVertex2f(px1, py1);
-            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min, color_clamp_max, colorBands);
+            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min, color_clamp_max, color_bands);
             glVertex2f(px2, py2);
 
-            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min, color_clamp_max, colorBands);
+            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min, color_clamp_max, color_bands);
             glVertex2f(px0, py0);
-            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min, color_clamp_max, colorBands);
+            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min, color_clamp_max, color_bands);
             glVertex2f(px2, py2);
-            set_colormap(simulation.get_rho()[idx3], scalar_col, color_clamp_min, color_clamp_max, colorBands);
+            set_colormap(simulation.get_rho()[idx3], scalar_col, color_clamp_min, color_clamp_max, color_bands);
             glVertex2f(px3, py3);
         }
     }
@@ -312,7 +312,7 @@ void MyGLWidget::drawBar(){
     glBegin (GL_QUADS);
     if (draw_smoke == 1){
         for (int i = 0; i < 1001; i = i + 1){
-            set_colormap(0.001*i,scalar_col, color_clamp_min, color_clamp_max,colorBands);
+            set_colormap(0.001*i,scalar_col, color_clamp_min, color_clamp_max,color_bands);
             glVertex3f(15+(0.5*i), 40, 0); //(x,y top left)
             glVertex3f(15+(0.5*i), 10, 0); //(x,y bottom left)
             glVertex3f(15+(0.5*(i+1)),10, 0); //(x,y bottom right)
@@ -321,7 +321,7 @@ void MyGLWidget::drawBar(){
     }
     if (draw_vecs == 1){
         for (int i = 0; i < 1001; i = i + 1){
-            set_colormap(0.001*i,velocity_color, color_clamp_min, color_clamp_max,colorBands);
+            set_colormap(0.001*i,velocity_color, color_clamp_min, color_clamp_max,color_bands);
             glVertex3f(15+(0.5*i), 70, 0); //(x,y top left)
             glVertex3f(15+(0.5*i), 40, 0); //(x,y bottom left)
             glVertex3f(15+(0.5*(i+1)),40, 0); //(x,y bottom right)
@@ -340,17 +340,17 @@ void MyGLWidget::OGL_Draw_Text(){
     glDisable(GL_DEPTH_TEST);
 
     //qglColor(Qt::white);
-    set_colormap(1-0.001,scalar_col, color_clamp_min, color_clamp_max,colorBands);
+    set_colormap(1-0.001,scalar_col, color_clamp_min, color_clamp_max,color_bands);
     renderText(20, 15, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
     //qglColor(Qt::black);
-    set_colormap(1-color_clamp_max,scalar_col, color_clamp_min, color_clamp_max,colorBands);
+    set_colormap(1-color_clamp_max,scalar_col, color_clamp_min, color_clamp_max,color_bands);
     renderText(490, 15, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
 
     //QString maxCol = QString::number(color_clamp_max);
 
-    set_colormap(1-0.001,velocity_color, color_clamp_min, color_clamp_max,colorBands);
+    set_colormap(1-0.001,velocity_color, color_clamp_min, color_clamp_max,color_bands);
     renderText(20, 45, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render top bar left
-    set_colormap(1-color_clamp_max,velocity_color, color_clamp_min, color_clamp_max,colorBands);
+    set_colormap(1-color_clamp_max,velocity_color, color_clamp_min, color_clamp_max,color_bands);
     //renderText(490, 45, 0, maxCol, QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
     renderText(490, 45, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
 
@@ -360,6 +360,6 @@ void MyGLWidget::OGL_Draw_Text(){
 
 }
 
-void MyGLWidget::setColorBands(int newColorBands){
-    colorBands = newColorBands;
+void MyGLWidget::setColorBands(int new_color_bands){
+    color_bands = new_color_bands;
 }
