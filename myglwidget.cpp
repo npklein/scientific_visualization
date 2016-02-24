@@ -44,6 +44,7 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     glEnable(GL_COLOR_TABLE);
     glEnable(GL_COLOR_TABLE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     drawBar();
@@ -57,6 +58,7 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     {
         drawSmoke(wn, hn);
     }
+    OGL_Draw_Text();
     glFlush();
 }
 
@@ -80,7 +82,7 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     int mx = event->x();// - lastposition gets calculated in drag(), could save a step by using lastPos.x/y but leaving it like this is safer
     int my = event->y();
-    //simulation.drag(mx,my, DIM, winWidth, winHeight);  // Works for Freerk
+    //simulation.drag(mx,my, DIM, winWidth, winHeight);  // Works for Freerk when using external display
     simulation.drag(mx,my, DIM, winWidth/2, winHeight/2); // Works for Niek
     lastPos = event->pos();
 }
@@ -165,22 +167,6 @@ void MyGLWidget::drawSmoke(fftw_real wn, fftw_real hn){
     glEnd();
 }
 
-float MyGLWidget::direction2angle(const Point3d& d)			//Converts a 2D vector into an orientation (angle).
-{														//The angle is in the [0,360] degrees interval
-    Point3d x = d; x.normalize();
-
-    float cosa = x.x;
-    float sina = x.y;
-
-    float a;
-    if (sina>=0)
-        a = acos(cosa);
-    else
-        a = 2*M_PI - acos(cosa);
-
-    return 180*a/M_PI;
-}
-
 void MyGLWidget::do_one_simulation_step()
 {
     if (!simulation.get_frozen())
@@ -194,7 +180,6 @@ void MyGLWidget::do_one_simulation_step()
         updateGL();
     }
 }
-
 
 
 void MyGLWidget::showAnimation()
@@ -327,7 +312,9 @@ void MyGLWidget::applyColoringToDataset(QString dataset_to_use){
     dataset = dataset_to_use.toStdString();
 }
 
-
+// Color map explained
+// http://www.glprogramming.com/red/chapter04.html just above table 4.2
+// The first float is the offset color to start the map of R,G,B from
 
 void MyGLWidget::drawBar(){
     glPushMatrix ();
@@ -351,9 +338,35 @@ void MyGLWidget::drawBar(){
         }
     }
 
-
-
     glEnd ();
     glPopMatrix ();
+
 }
+
+void MyGLWidget::OGL_Draw_Text(){
+    //glPushMatrix();
+    //glDisable(GL_LIGHTING);
+    glDisable(GL_DEPTH_TEST);
+
+    //qglColor(Qt::white);
+    set_colormap(1-0.001,scalar_col, color_clamp_min, color_clamp_max);
+    renderText(20, 15, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
+    //qglColor(Qt::black);
+    set_colormap(1-color_clamp_max,scalar_col, color_clamp_min, color_clamp_max);
+    renderText(490, 15, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
+
+    //QString maxCol = QString::number(color_clamp_max);
+
+    set_colormap(1-0.001,velocity_color, color_clamp_min, color_clamp_max);
+    renderText(20, 45, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render top bar left
+    set_colormap(1-color_clamp_max,velocity_color, color_clamp_min, color_clamp_max);
+    //renderText(490, 45, 0, maxCol, QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
+    renderText(490, 45, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
+
+    glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_LIGHTING);
+    //glPopMatrix();
+
+}
+
 

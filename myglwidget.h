@@ -6,7 +6,6 @@
 #include <QGLWidget>
 #include <QTimer>
 #include <rfftw.h>              //the numerical simulation FFTW library
-#include "Point3d.h"
 
 class MyGLWidget : public QGLWidget
 {
@@ -38,6 +37,9 @@ private slots:
 
     void clampColorMax(int max_color);
 
+    //void OGL_Draw_Text(QString text,float x,float y, float z, float red, float green, float blue);
+    void OGL_Draw_Text();
+
     void drawBar();
 
     void drawVelocity(fftw_real wn, fftw_real hn);
@@ -45,8 +47,6 @@ private slots:
     void drawSmoke(fftw_real wn, fftw_real hn);
 
     void applyColoringToDataset(QString dataset_to_use);
-
-    static float direction2angle(const Point3d& d);
 
 protected:
     void initializeGL();
