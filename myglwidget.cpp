@@ -58,6 +58,7 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     {
         drawSmoke(wn, hn);
     }
+    OGL_Draw_Text();
     glFlush();
 }
 
@@ -81,8 +82,8 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     int mx = event->x();// - lastposition gets calculated in drag(), could save a step by using lastPos.x/y but leaving it like this is safer
     int my = event->y();
-    simulation.drag(mx,my, DIM, winWidth, winHeight);  // Works for Freerk
-    //simulation.drag(mx,my, DIM, winWidth/2, winHeight/2); // Works for Niek
+    //simulation.drag(mx,my, DIM, winWidth, winHeight);  // Works for Freerk when using external display
+    simulation.drag(mx,my, DIM, winWidth/2, winHeight/2); // Works for Niek
     lastPos = event->pos();
 }
 
@@ -311,7 +312,9 @@ void MyGLWidget::applyColoringToDataset(QString dataset_to_use){
     dataset = dataset_to_use.toStdString();
 }
 
-
+// Color map explained
+// http://www.glprogramming.com/red/chapter04.html just above table 4.2
+// The first float is the offset color to start the map of R,G,B from
 
 void MyGLWidget::drawBar(){
     glPushMatrix ();
@@ -335,9 +338,32 @@ void MyGLWidget::drawBar(){
         }
     }
 
-
-
     glEnd ();
     glPopMatrix ();
+
 }
+
+void MyGLWidget::OGL_Draw_Text(){
+    //glPushMatrix();
+    //glDisable(GL_LIGHTING);
+    glDisable(GL_DEPTH_TEST);
+
+    //qglColor(Qt::white);
+    set_colormap(1-0.001,scalar_col, color_clamp_min, color_clamp_max);
+    renderText(20, 15, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
+    //qglColor(Qt::black);
+    set_colormap(1-1,scalar_col, color_clamp_min, color_clamp_max);
+    renderText(490, 15, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
+
+    set_colormap(1-0.001,velocity_color, color_clamp_min, color_clamp_max);
+    renderText(20, 45, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render top bar left
+    set_colormap(1-1,velocity_color, color_clamp_min, color_clamp_max);
+    renderText(490, 45, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
+
+    glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_LIGHTING);
+    //glPopMatrix();
+
+}
+
 

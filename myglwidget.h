@@ -37,6 +37,9 @@ private slots:
 
     void clampColorMax(int max_color);
 
+    //void OGL_Draw_Text(QString text,float x,float y, float z, float red, float green, float blue);
+    void OGL_Draw_Text();
+
     void drawBar();
 
     void drawVelocity(fftw_real wn, fftw_real hn);
