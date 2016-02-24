@@ -48,6 +48,8 @@ private slots:
 
     void applyColoringToDataset(QString dataset_to_use);
 
+    void setColorBands(int colorBands);
+
 protected:
     void initializeGL();
     void paintGL();
@@ -68,6 +70,7 @@ private:
     int   draw_vecs;            //draw the vector field or not
     int   scalar_col;           //method for scalar coloring
     int DIM;
+    int colorBands;
     float color_clamp_min;
     float color_clamp_max;
     std::string dataset;
