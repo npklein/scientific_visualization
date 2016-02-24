@@ -3,8 +3,7 @@
 //--- VISUALIZATION PARAMETERS ---------------------------------------------------------------------
 const int COLOR_BLACKWHITE=0;   //different types of color mapping: black-and-white, rainbow, banded
 const int COLOR_RAINBOW=1;
-const int COLOR_BANDS=2;
-const int COLOR_HEATMAP=3;
+const int COLOR_HEATMAP=2;
 
 Simulation simulation;
 
@@ -37,7 +36,7 @@ void heatmap(float value,float* R,float* G,float* B)
 }
 
 //set_colormap: Sets three different types of colormaps
-void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_clamp_max)
+void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_clamp_max, int color_bands)
 {
    float R,G,B;
    R = G = B = 0;
@@ -48,6 +47,9 @@ void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_c
    if (vy > color_clamp_max){
        vy = color_clamp_max;
    }
+
+   vy *= color_bands; vy = (int)(vy); vy/= color_bands;
+
    if (scalar_col==COLOR_BLACKWHITE)
    {
        R = G = B = vy;
@@ -56,12 +58,6 @@ void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_c
    {
        rainbow(vy,&R,&G,&B);
    }
-   else if (scalar_col==COLOR_BANDS)
-       {
-          const int NLEVELS = 7;
-          vy *= NLEVELS; vy = (int)(vy); vy/= NLEVELS;
-	      rainbow(vy,&R,&G,&B);
-	   }
    else if (scalar_col==COLOR_HEATMAP)
    {
        heatmap(vy, &R, &G, &B);
@@ -73,14 +69,14 @@ void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_c
 //direction_to_color: Set the current color by mapping a direction vector (x,y), using
 //                    the color mapping method 'method'. If method==1, map the vector direction
 //                    using a rainbow colormap. If method==0, simply use the white color
-void direction_to_color(float x, float y, int method)
+void direction_to_color(float x, float y, int method, int color_bands)
 {
 	float r,g,b,f;
     if (method)
     {
 	  f = atan2(y,x) / 3.1415927 + 1;
       // mehtod acts same way as scalar_col in density
-      set_colormap(f, method, 0, 1);
+      set_colormap(f, method, 0, 1,color_bands);
 	}
 	else
 	{ r = g = b = 1; }
