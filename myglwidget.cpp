@@ -352,12 +352,15 @@ void MyGLWidget::OGL_Draw_Text(){
     set_colormap(1-0.001,scalar_col, color_clamp_min, color_clamp_max);
     renderText(20, 15, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
     //qglColor(Qt::black);
-    set_colormap(1-1,scalar_col, color_clamp_min, color_clamp_max);
+    set_colormap(1-color_clamp_max,scalar_col, color_clamp_min, color_clamp_max);
     renderText(490, 15, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
+
+    //QString maxCol = QString::number(color_clamp_max);
 
     set_colormap(1-0.001,velocity_color, color_clamp_min, color_clamp_max);
     renderText(20, 45, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render top bar left
-    set_colormap(1-1,velocity_color, color_clamp_min, color_clamp_max);
+    set_colormap(1-color_clamp_max,velocity_color, color_clamp_min, color_clamp_max);
+    //renderText(490, 45, 0, maxCol, QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
     renderText(490, 45, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
 
     glEnable(GL_DEPTH_TEST);
