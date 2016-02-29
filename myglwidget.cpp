@@ -12,7 +12,8 @@
 MyGLWidget::MyGLWidget(QWidget *parent)
 {
     //--- VISUALIZATION PARAMETERS ---------------------------------------------------------------------
-    vec_scale = 2000;			//scaling of hedgehogs
+    hedgehog_scale = 2000;			//scaling of hedgehogs
+    arrow_scale = 1000;			//scaling of hedgehogs
     draw_smoke = 1;           //draw the smoke or not
     draw_vecs = 1;            //draw the vector field or not
     scalar_col = 0;           //method for scalar coloring
@@ -113,10 +114,14 @@ void MyGLWidget::drawArrow(float i, float j, float wn, float hn){
     int idx = (j * DIM) + i;
     Vector vector = Vector(wn + (fftw_real)i * wn, //x1
                                   hn + (fftw_real)j * hn, //y1
-                                  (wn + (fftw_real)i * wn) + vec_scale * simulation.get_vx()[idx], //x2
-                                  (hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx]);//y2
+                                  (wn + (fftw_real)i * wn) + arrow_scale * simulation.get_vx()[idx], //x2
+                                  (hn + (fftw_real)j * hn) + arrow_scale * simulation.get_vy()[idx]);//y2
+    Vector vector_color = Vector(wn + (fftw_real)i * wn, //x1
+                                  hn + (fftw_real)j * hn, //y1
+                                  (wn + (fftw_real)i * wn) + simulation.get_vx()[idx]*1000, //x2
+                                  (hn + (fftw_real)j * hn) + simulation.get_vy()[idx]*1000);//y2
     float angle = vector.normalize().direction2angle();
-    set_colormap( vector.length()/10, velocity_color, color_clamp_min, color_clamp_max, color_bands);
+    set_colormap(vector_color.length()/15, velocity_color, color_clamp_min, color_clamp_max, color_bands);
     // have to rotate before begin triangles
     //glRotated(angle,0,0,1);
     //glTranslatef(wn + (fftw_real)i * wn,(hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx],0);
@@ -149,7 +154,7 @@ void MyGLWidget::drawHedgehog(float i, float j, float wn, float hn){
     int idx = (j * DIM) + i;
     direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color, color_bands);
     glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
-    glVertex2f((wn + (fftw_real)i * wn) + vec_scale * simulation.get_vx()[idx], (hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx]);
+    glVertex2f((wn + (fftw_real)i * wn) + hedgehog_scale * simulation.get_vx()[idx], (hn + (fftw_real)j * hn) + hedgehog_scale * simulation.get_vy()[idx]);
     glEnd();
 }
 
@@ -255,13 +260,30 @@ void MyGLWidget::hedgehogScaling(int position)
     //  	  case 'S': vec_scale *= 1.2; break;
     //        case 's': vec_scale *= 0.8; break;
     // The scaling goes exponential with keyboard, but with slide can just do linear
-    static int last_pos_hedgehog = 500;				//remembers last slider location
-    int new_pos = position - last_pos_hedgehog;
-    vec_scale = vec_scale + new_pos * 200; //easier to debug on separate line
-    if (vec_scale < 0){
-        vec_scale = 0;
+    if (glyphs == "hedgehogs"){
+        static int last_pos_hedgehog = 500;				//remembers last slider location
+        int new_pos = position - last_pos_hedgehog;
+        hedgehog_scale = hedgehog_scale + new_pos * 200; //easier to debug on separate line
+        if (hedgehog_scale < 0){
+            hedgehog_scale = 0;
+        }
+        if (hedgehog_scale > 4000){
+            hedgehog_scale = 4000;
+        }
+        last_pos_hedgehog = position;
     }
-    last_pos_hedgehog = position;
+    if (glyphs == "arrows"){
+        static int last_pos_arrow = 500;				//remembers last slider location
+        int new_pos = position - last_pos_arrow;
+        arrow_scale = arrow_scale + new_pos*2; //easier to debug on separate line
+        if (arrow_scale < 0){
+            arrow_scale = 0;
+        }
+        if (arrow_scale > 2000){
+            arrow_scale = 2000;
+        }
+        last_pos_arrow = position;
+    }
 }
 
 void MyGLWidget::fluidViscosity(int position)
