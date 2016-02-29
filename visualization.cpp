@@ -81,3 +81,4 @@ void direction_to_color(float x, float y, int method, int color_bands)
 	else
 	{ r = g = b = 1; }
 }
+
