@@ -6,7 +6,7 @@
 #include <QGLWidget>
 #include <QTimer>
 #include <rfftw.h>              //the numerical simulation FFTW library
-
+#include "vector.h"
 class MyGLWidget : public QGLWidget
 {
     Q_OBJECT
@@ -50,6 +50,14 @@ private slots:
 
     void setColorBands(int colorBands);
 
+    void drawHedgehog(float i, float j, float wn, float hn);
+
+    void drawArrow(float j, float i, float wn, float hn);
+
+    void setGlyphType(QString glyps);
+
+    void scaleColor(bool new_scale_color);
+
 protected:
     void initializeGL();
     void paintGL();
@@ -71,10 +79,12 @@ private:
     int   scalar_col;           //method for scalar coloring
     int DIM;
     int color_bands;
+    bool scale_color;
     float color_clamp_min;
     float color_clamp_max;
     std::string dataset;
     QPoint lastPos;
+    QString glyphs;
 };
 
 #endif // MYGLWIDGET_H

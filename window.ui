@@ -28,27 +28,30 @@
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="1">
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="9" column="0">
-      <widget class="QLabel" name="label_4">
+     <item row="1" column="3">
+      <widget class="QLabel" name="label_6">
        <property name="text">
-        <string>Color clamp min</string>
+        <string>Color bands</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Fluid viscosity</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QPushButton" name="advancedOptionsButton">
-       <property name="text">
-        <string>Advanced options</string>
-       </property>
-       <property name="checkable">
+     <item row="0" column="0" colspan="4">
+      <widget class="MyGLWidget" name="myGLWidget" native="true">
+       <property name="enabled">
         <bool>true</bool>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="mouseTracking">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QCheckBox" name="drawingHedgehogsCheckbox">
+       <property name="text">
+        <string>Drawing hedgehogs</string>
        </property>
        <property name="checked">
         <bool>true</bool>
@@ -74,6 +77,115 @@
        </property>
       </widget>
      </item>
+     <item row="2" column="0">
+      <widget class="QPushButton" name="advancedOptionsButton">
+       <property name="text">
+        <string>Advanced options</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QComboBox" name="applyColorTo">
+       <item>
+        <property name="text">
+         <string>fluid density</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>fluid velocity magnitude</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>force field magnitude</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Fluid viscosity</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Color clamp min</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QSpinBox" name="spinBox">
+       <property name="minimum">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <number>256</number>
+       </property>
+       <property name="value">
+        <number>256</number>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QSlider" name="colorClampMinSlider">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="scalarColoring">
+       <item>
+        <property name="text">
+         <string>black&amp;white</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>rainbow</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>heatmap</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="9" column="3">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Color clamp max</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Timestep</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QCheckBox" name="drawingMatterCheckbox">
+       <property name="text">
+        <string>Drawing matter</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="0">
       <widget class="QCheckBox" name="animationCheckbox">
        <property name="text">
@@ -81,26 +193,6 @@
        </property>
        <property name="checked">
         <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="2">
-      <widget class="QSlider" name="colorClampMaxSlider">
-       <property name="value">
-        <number>0</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="invertedAppearance">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Hedgehog scaling</string>
        </property>
       </widget>
      </item>
@@ -126,6 +218,19 @@
        </property>
       </widget>
      </item>
+     <item row="9" column="2">
+      <widget class="QSlider" name="colorClampMaxSlider">
+       <property name="value">
+        <number>0</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="invertedAppearance">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
      <item row="6" column="1" colspan="3">
       <widget class="QSlider" name="fluidViscositySlider">
        <property name="toolTip">
@@ -148,115 +253,38 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="2">
-      <widget class="QCheckBox" name="drawingHedgehogsCheckbox">
+     <item row="7" column="0">
+      <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>Drawing hedgehogs</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
+        <string>Hedgehog scaling</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QComboBox" name="scalarColoring">
+     <item row="10" column="1">
+      <widget class="QComboBox" name="velocityGlyphType">
        <item>
         <property name="text">
-         <string>black&amp;white</string>
+         <string>hedgehogs</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>rainbow</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>heatmap</string>
+         <string>arrows</string>
         </property>
        </item>
       </widget>
      </item>
-     <item row="0" column="0" colspan="4">
-      <widget class="MyGLWidget" name="myGLWidget" native="true">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="cursor">
-        <cursorShape>PointingHandCursor</cursorShape>
-       </property>
-       <property name="mouseTracking">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="1">
-      <widget class="QSlider" name="colorClampMinSlider">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QCheckBox" name="drawingMatterCheckbox">
+     <item row="10" column="0">
+      <widget class="QLabel" name="label_7">
        <property name="text">
-        <string>Drawing matter</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
+        <string>VeclocityGlyphType</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label">
+     <item row="10" column="2">
+      <widget class="QCheckBox" name="checkBox">
        <property name="text">
-        <string>Timestep</string>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="3">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>Color clamp max</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QComboBox" name="applyColorTo">
-       <item>
-        <property name="text">
-         <string>fluid density</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>fluid velocity magnitude</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>force field magnitude</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QSpinBox" name="spinBox">
-       <property name="minimum">
-        <number>2</number>
-       </property>
-       <property name="maximum">
-        <number>256</number>
-       </property>
-       <property name="value">
-        <number>256</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QLabel" name="label_6">
-       <property name="text">
-        <string>Color bands</string>
+        <string>Scale colors</string>
        </property>
       </widget>
      </item>
@@ -291,6 +319,8 @@
     <slot>clampColorMax(int)</slot>
     <slot>applyColoringToDataset(QString)</slot>
     <slot>setColorBands(int)</slot>
+    <slot>setGlyphType(QString)</slot>
+    <slot>scaleColor(bool)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -303,8 +333,8 @@
    <slot>showAnimation()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>112</x>
-     <y>456</y>
+     <x>128</x>
+     <y>421</y>
     </hint>
     <hint type="destinationlabel">
      <x>57</x>
@@ -319,8 +349,8 @@
    <slot>fluidViscosity(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>441</x>
-     <y>564</y>
+     <x>609</x>
+     <y>529</y>
     </hint>
     <hint type="destinationlabel">
      <x>161</x>
@@ -336,7 +366,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>301</x>
-     <y>492</y>
+     <y>457</y>
     </hint>
     <hint type="destinationlabel">
      <x>103</x>
@@ -351,8 +381,8 @@
    <slot>hedgehogScaling(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>473</x>
-     <y>598</y>
+     <x>615</x>
+     <y>563</y>
     </hint>
     <hint type="destinationlabel">
      <x>190</x>
@@ -367,8 +397,8 @@
    <slot>timestep(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>519</x>
-     <y>530</y>
+     <x>615</x>
+     <y>495</y>
     </hint>
     <hint type="destinationlabel">
      <x>248</x>
@@ -384,11 +414,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>506</x>
-     <y>492</y>
+     <y>457</y>
     </hint>
     <hint type="destinationlabel">
-     <x>336</x>
-     <y>407</y>
+     <x>354</x>
+     <y>391</y>
     </hint>
    </hints>
   </connection>
@@ -400,11 +430,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>295</x>
-     <y>460</y>
+     <y>425</y>
     </hint>
     <hint type="destinationlabel">
-     <x>97</x>
-     <y>407</y>
+     <x>115</x>
+     <y>391</y>
     </hint>
    </hints>
   </connection>
@@ -415,12 +445,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>56</x>
-     <y>483</y>
+     <x>68</x>
+     <y>465</y>
     </hint>
     <hint type="destinationlabel">
-     <x>99</x>
-     <y>628</y>
+     <x>117</x>
+     <y>597</y>
     </hint>
    </hints>
   </connection>
@@ -431,12 +461,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>133</x>
-     <y>490</y>
+     <x>145</x>
+     <y>465</y>
     </hint>
     <hint type="destinationlabel">
-     <x>281</x>
-     <y>632</y>
+     <x>296</x>
+     <y>597</y>
     </hint>
    </hints>
   </connection>
@@ -447,12 +477,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>145</x>
-     <y>480</y>
+     <x>157</x>
+     <y>465</y>
     </hint>
     <hint type="destinationlabel">
-     <x>334</x>
-     <y>622</y>
+     <x>501</x>
+     <y>597</y>
     </hint>
    </hints>
   </connection>
@@ -463,12 +493,12 @@
    <slot>clampColorMin(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>223</x>
-     <y>616</y>
+     <x>296</x>
+     <y>597</y>
     </hint>
     <hint type="destinationlabel">
-     <x>268</x>
-     <y>399</y>
+     <x>286</x>
+     <y>391</y>
     </hint>
    </hints>
   </connection>
@@ -479,8 +509,8 @@
    <slot>clampColorMax(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>409</x>
-     <y>624</y>
+     <x>501</x>
+     <y>597</y>
     </hint>
     <hint type="destinationlabel">
      <x>397</x>
@@ -495,12 +525,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>67</x>
-     <y>490</y>
+     <x>79</x>
+     <y>465</y>
     </hint>
     <hint type="destinationlabel">
      <x>611</x>
-     <y>632</y>
+     <y>597</y>
     </hint>
    </hints>
   </connection>
@@ -511,12 +541,12 @@
    <slot>applyColoringToDataset(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>309</x>
-     <y>450</y>
+     <x>500</x>
+     <y>425</y>
     </hint>
     <hint type="destinationlabel">
-     <x>310</x>
-     <y>411</y>
+     <x>328</x>
+     <y>391</y>
     </hint>
    </hints>
   </connection>
@@ -527,12 +557,44 @@
    <slot>setColorBands(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>554</x>
-     <y>480</y>
+     <x>611</x>
+     <y>459</y>
     </hint>
     <hint type="destinationlabel">
-     <x>554</x>
-     <y>426</y>
+     <x>572</x>
+     <y>391</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>velocityGlyphType</sender>
+   <signal>activated(QString)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setGlyphType(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>193</x>
+     <y>616</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>193</x>
+     <y>379</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>scaleColor(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>360</x>
+     <y>618</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>340</x>
+     <y>380</y>
     </hint>
    </hints>
   </connection>
