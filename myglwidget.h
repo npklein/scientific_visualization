@@ -73,7 +73,7 @@ private:
     int   winWidth, winHeight;      //size of the graphics window, in pixels
     int   velocity_color;            //set direction color-coding type
     int force_field_color;          // det force field color-coding type
-    float vec_scale;			//scaling of hedgehogs
+    float hedgehog_scale;			//scaling of hedgehogs
     int   draw_smoke;           //draw the smoke or not
     int   draw_vecs;            //draw the vector field or not
     int   scalar_col;           //method for scalar coloring
@@ -82,6 +82,7 @@ private:
     bool scale_color;
     float color_clamp_min;
     float color_clamp_max;
+    float arrow_scale;
     std::string dataset;
     QPoint lastPos;
     QString glyphs;
