@@ -125,7 +125,7 @@ void MyGLWidget::drawArrow(float j, float i, float wn, float hn){
     glTranslatef(wn*i,hn*j, 0);
     glRotated(angle,0,0,1);
     //glScaled(vector.length()/20,vector.length()/20,0);
-    glScaled(vector.length()/5,vector.length()/5,0);
+    glScaled(log(vector.length()+1)/15,log(vector.length()+1)/5,0);
     glBegin(GL_TRIANGLES);
     glVertex2f(-100, 50);
     glVertex2f(100, 50);
