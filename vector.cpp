@@ -42,7 +42,7 @@ float Vector::direction2angle()			//Converts a 2D vector into an orientation (an
 {														//The angle is in the [0,360] degrees interval
 
     double result;
-    result = atan2 (X,-Y) * 180 / M_PI;
+    result = atan2 (X,-Y) * (180 / M_PI);
     return result;
 
 }

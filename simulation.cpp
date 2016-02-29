@@ -6,6 +6,8 @@ Simulation::Simulation() {
     dt = 0.4;				//simulation time step
     visc = 0.001;				//fluid viscosity
     frozen = 0;               //toggles on/off the animation
+    rho_min = 0;
+    rho_max = 1;
 }
 
 //Destructor
@@ -27,31 +29,6 @@ fftw_real* Simulation::get_vy0() const {return vy0;}
 void Simulation::set_frozen(int new_frozen){frozen = new_frozen;}
 void Simulation::set_dt(double new_dt){dt = new_dt;}
 void Simulation::set_visc(float new_visc){visc = new_visc;}
-
-
-
-float Simulation::get_rho_max(int DIM)
-{
-    fftw_real* rho = get_rho();
-    float rho_max = 0;
-    for (int i = 0; i < DIM*DIM; i++){
-        if (rho[i] > rho_max){
-            rho_max = rho[i];
-        }
-    }
-    return rho_max;
-}
-float Simulation::get_rho_min(int DIM)
-{
-    fftw_real* rho = get_rho();
-    float rho_min = 1;
-    for (int i = 0; i < DIM*DIM; i++){
-        if (rho[i] < rho_min){
-            rho_min = rho[i];
-        }
-    }
-    return rho_min;
-}
 
 //init_simulation: Initialize simulation data structures as a function of the grid size 'n'.
 //                 Although the simulation takes place on a 2D grid, we allocate all data structures as 1D arrays,
@@ -168,7 +145,14 @@ void Simulation::diffuse_matter(int n, fftw_real *vx, fftw_real *vy, fftw_real *
         t = y0-j0;
         j0 = (n+(j0%n))%n;
         j1 = (j0+1)%n;
-        rho[i+n*j] = (1-s)*((1-t)*rho0[i0+n*j0]+t*rho0[i0+n*j1])+s*((1-t)*rho0[i1+n*j0]+t*rho0[i1+n*j1]);
+        float rho_value = (1-s)*((1-t)*rho0[i0+n*j0]+t*rho0[i0+n*j1])+s*((1-t)*rho0[i1+n*j0]+t*rho0[i1+n*j1]);
+        rho[i+n*j] = rho_value;
+        if (rho_value < rho_min){
+            rho_min = rho_value;
+        }
+        else if (rho_value > rho_max){
+            rho_max = rho_value;
+        }
     }
 }
 
