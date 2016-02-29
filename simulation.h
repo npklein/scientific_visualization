@@ -32,6 +32,9 @@
             void set_visc(float);
             void set_dt(double);
 
+
+            float get_rho_max(int DIM);
+            float get_rho_min(int DIM);
             //init_simulation: Initialize simulation data structures as a function of the grid size 'n'.
             //                 Although the simulation takes place on a 2D grid, we allocate all data structures as 1D arrays,
             //                 for compatibility with the FFTW numerical library.

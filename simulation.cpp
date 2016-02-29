@@ -9,7 +9,7 @@ Simulation::Simulation() {
 }
 
 //Destructor
-Simulation::~Simulation(){};
+Simulation::~Simulation(){}
 
 //Accessor Functions
 int Simulation::get_frozen() const{return frozen;}
@@ -29,6 +29,29 @@ void Simulation::set_dt(double new_dt){dt = new_dt;}
 void Simulation::set_visc(float new_visc){visc = new_visc;}
 
 
+
+float Simulation::get_rho_max(int DIM)
+{
+    fftw_real* rho = get_rho();
+    float rho_max = 0;
+    for (int i = 0; i < DIM*DIM; i++){
+        if (rho[i] > rho_max){
+            rho_max = rho[i];
+        }
+    }
+    return rho_max;
+}
+float Simulation::get_rho_min(int DIM)
+{
+    fftw_real* rho = get_rho();
+    float rho_min = 1;
+    for (int i = 0; i < DIM*DIM; i++){
+        if (rho[i] < rho_min){
+            rho_min = rho[i];
+        }
+    }
+    return rho_min;
+}
 
 //init_simulation: Initialize simulation data structures as a function of the grid size 'n'.
 //                 Although the simulation takes place on a 2D grid, we allocate all data structures as 1D arrays,
