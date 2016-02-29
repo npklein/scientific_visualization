@@ -41,16 +41,10 @@ Vector Vector::normalize(){
 float Vector::direction2angle()			//Converts a 2D vector into an orientation (angle).
 {														//The angle is in the [0,360] degrees interval
 
-    float cosa = X;
-    float sina = Y;
+    double result;
+    result = atan2 (Y,X) * 180 / M_PI;
+    return result;
 
-    float a;
-    if (sina>=0)
-        a = acos(cosa);
-    else
-        a = 2*M_PI - acos(cosa);
-
-    return 180*a/M_PI;
 }
 
 Vector::~Vector(void)
