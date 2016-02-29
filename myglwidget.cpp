@@ -17,7 +17,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     draw_vecs = 1;            //draw the vector field or not
     scalar_col = 0;           //method for scalar coloring
     scale_color = false;    // if true, the lowest current value in the screen is the lowest in the color map, same for highest
-    DIM = 100;
+    DIM = 50;
     color_clamp_min = 0.0;        // The lower bound value to clamp color map at
     color_clamp_max = 1.0;        // The higher bound value to clamp color map at
     velocity_color = 1;
@@ -102,14 +102,14 @@ void MyGLWidget::drawVelocity(fftw_real wn, fftw_real hn)
                 drawHedgehog(i, j, wn, hn);
             }
             if (glyphs == "arrows"){
-                if (i % 5 == 0 && j % 5 == 0){
+                //if (i % 5 == 0 && j % 5 == 0){
                     drawArrow(i, j, wn, hn);
-                }
+                //}
             }
         }
 }
 
-void MyGLWidget::drawArrow(float j, float i, float wn, float hn){
+void MyGLWidget::drawArrow(float i, float j, float wn, float hn){
     int idx = (j * DIM) + i;
     direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color, color_bands);
     Vector vector = Vector(wn + (fftw_real)i * wn, //x1
