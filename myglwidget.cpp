@@ -17,7 +17,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     draw_vecs = 1;            //draw the vector field or not
     scalar_col = 0;           //method for scalar coloring
     scale_color = false;    // if true, the lowest current value in the screen is the lowest in the color map, same for highest
-    DIM = 100;
+    DIM = 50;
     color_clamp_min = 0.0;        // The lower bound value to clamp color map at
     color_clamp_max = 1.0;        // The higher bound value to clamp color map at
     velocity_color = 1;
@@ -102,21 +102,21 @@ void MyGLWidget::drawVelocity(fftw_real wn, fftw_real hn)
                 drawHedgehog(i, j, wn, hn);
             }
             if (glyphs == "arrows"){
-                if (i % 5 == 0 && j % 5 == 0){
+               // if (i % 5 == 0 && j % 5 == 0){
                     drawArrow(i, j, wn, hn);
-                }
+               // }
             }
         }
 }
 
-void MyGLWidget::drawArrow(float j, float i, float wn, float hn){
+void MyGLWidget::drawArrow(float i, float j, float wn, float hn){
     int idx = (j * DIM) + i;
-    direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color, color_bands);
     Vector vector = Vector(wn + (fftw_real)i * wn, //x1
                                   hn + (fftw_real)j * hn, //y1
                                   (wn + (fftw_real)i * wn) + vec_scale * simulation.get_vx()[idx], //x2
                                   (hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx]);//y2
-    float angle = vector.direction2angle();
+    float angle = vector.normalize().direction2angle();
+    set_colormap( vector.length()/10, velocity_color, color_clamp_min, color_clamp_max, color_bands);
     // have to rotate before begin triangles
     //glRotated(angle,0,0,1);
     //glTranslatef(wn + (fftw_real)i * wn,(hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx],0);
@@ -125,7 +125,7 @@ void MyGLWidget::drawArrow(float j, float i, float wn, float hn){
     glTranslatef(wn*i,hn*j, 0);
     glRotated(angle,0,0,1);
     //glScaled(vector.length()/20,vector.length()/20,0);
-    glScaled(log(vector.length()+1)/15,log(vector.length()+1)/5,0);
+    glScaled(log(vector.length()+1)/35,log(vector.length()+1)/15,0);
     glBegin(GL_TRIANGLES);
     glVertex2f(-100, 50);
     glVertex2f(100, 50);
@@ -178,19 +178,18 @@ void MyGLWidget::drawSmoke(fftw_real wn, fftw_real hn){
             px3  = wn + (fftw_real)(i + 1) * wn;
             py3  = hn + (fftw_real)j * hn;
             idx3 = (j * DIM) + (i + 1);
-
-            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min, color_clamp_max, color_bands, scale_color);
+            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min, color_clamp_max, color_bands);
             glVertex2f(px0, py0);
-            set_colormap(simulation.get_rho()[idx1], scalar_col, color_clamp_min, color_clamp_max, color_bands, scale_color);
+            set_colormap(simulation.get_rho()[idx1], scalar_col, color_clamp_min, color_clamp_max, color_bands);
             glVertex2f(px1, py1);
-            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min, color_clamp_max, color_bands, scale_color);
+            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min, color_clamp_max, color_bands);
             glVertex2f(px2, py2);
 
-            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min, color_clamp_max, color_bands, scale_color);
+            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min, color_clamp_max, color_bands);
             glVertex2f(px0, py0);
-            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min, color_clamp_max, color_bands, scale_color);
+            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min, color_clamp_max, color_bands);
             glVertex2f(px2, py2);
-            set_colormap(simulation.get_rho()[idx3], scalar_col, color_clamp_min, color_clamp_max, color_bands, scale_color);
+            set_colormap(simulation.get_rho()[idx3], scalar_col, color_clamp_min, color_clamp_max, color_bands);
             glVertex2f(px3, py3);
         }
     }
@@ -345,7 +344,7 @@ void MyGLWidget::drawBar(){
     glBegin (GL_QUADS);
     if (draw_smoke == 1){
         for (int i = 0; i < 1001; i = i + 1){
-            set_colormap(0.001*i,scalar_col, color_clamp_min, color_clamp_max, color_bands, scale_color);
+            set_colormap(0.001*i,scalar_col, color_clamp_min, color_clamp_max, color_bands);
             glVertex3f(15+(0.5*i), 40, 0); //(x,y top left)
             glVertex3f(15+(0.5*i), 10, 0); //(x,y bottom left)
             glVertex3f(15+(0.5*(i+1)),10, 0); //(x,y bottom right)
@@ -354,7 +353,7 @@ void MyGLWidget::drawBar(){
     }
     if (draw_vecs == 1){
         for (int i = 0; i < 1001; i = i + 1){
-            set_colormap(0.001*i,velocity_color, color_clamp_min, color_clamp_max, color_bands, scale_color);
+            set_colormap(0.001*i,velocity_color, color_clamp_min, color_clamp_max, color_bands);
             glVertex3f(15+(0.5*i), 70, 0); //(x,y top left)
             glVertex3f(15+(0.5*i), 40, 0); //(x,y bottom left)
             glVertex3f(15+(0.5*(i+1)),40, 0); //(x,y bottom right)
@@ -373,17 +372,17 @@ void MyGLWidget::OGL_Draw_Text(){
     glDisable(GL_DEPTH_TEST);
 
     //qglColor(Qt::white);
-    set_colormap(1-0.001,scalar_col, color_clamp_min, color_clamp_max,color_bands, scale_color);
+    set_colormap(1-0.001,scalar_col, color_clamp_min, color_clamp_max,color_bands);
     renderText(20, 15, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
     //qglColor(Qt::black);
-    set_colormap(1-color_clamp_max,scalar_col, color_clamp_min, color_clamp_max,color_bands, scale_color);
+    set_colormap(1-color_clamp_max,scalar_col, color_clamp_min, color_clamp_max,color_bands);
     renderText(490, 15, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
 
     //QString maxCol = QString::number(color_clamp_max);
 
-    set_colormap(1-0.001,velocity_color, color_clamp_min, color_clamp_max,color_bands, scale_color);
+    set_colormap(1-0.001,velocity_color, color_clamp_min, color_clamp_max,color_bands);
     renderText(20, 45, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render top bar left
-    set_colormap(1-color_clamp_max,velocity_color, color_clamp_min, color_clamp_max,color_bands, scale_color);
+    set_colormap(1-color_clamp_max,velocity_color, color_clamp_min, color_clamp_max,color_bands);
     //renderText(490, 45, 0, maxCol, QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
     renderText(490, 45, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
 

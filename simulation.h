@@ -55,6 +55,9 @@
             int clamp(float);
             void drag(int mx , int my, int DIM, int winWidth ,int winHeight);
 
+            float rho_min;
+            float rho_max;
+
         private:
             // member variables
             int n;
