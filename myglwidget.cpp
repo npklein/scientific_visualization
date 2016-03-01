@@ -14,8 +14,8 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     //--- VISUALIZATION PARAMETERS ---------------------------------------------------------------------
     hedgehog_scale = 2000;			//scaling of hedgehogs
     arrow_scale = 1000;			//scaling of hedgehogs
-    draw_smoke = 1;           //draw the smoke or not
-    draw_vecs = 1;            //draw the vector field or not
+    draw_smoke = true;           //draw the smoke or not
+    draw_vecs = true;            //draw the vector field or not
     scalar_col = 0;           //method for scalar coloring
     scale_color = false;    // if true, the lowest current value in the screen is the lowest in the color map, same for highest
     DIM = 50;
@@ -49,10 +49,9 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
 {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_TABLE);
-    glEnable(GL_COLOR_TABLE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    //glLoadIdentity();
     drawBar();
     fftw_real  wn = (fftw_real)winWidth / (fftw_real)(DIM + 1);   // Grid cell width
     fftw_real  hn = (fftw_real)winHeight / (fftw_real)(DIM + 1);  // Grid cell heigh
@@ -74,9 +73,12 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
 
 void MyGLWidget::resizeGL(int width, int height)
 {
-    glViewport(0.0f, 0.0f, (GLfloat)width, (GLfloat)height);
+    // removing below had no effect on what is drawn, so better to not use to lower complexity
+    //glViewport(0.0f, 0.0f, (GLfloat)10, (GLfloat)10);
+    //glLoadIdentity();
+
+    // below necesarry for getting stuff drawn
     glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
     gluOrtho2D(0.0, (GLdouble)width, 0.0, (GLdouble)height);
     winWidth = width; winHeight = height;
 }
@@ -240,21 +242,24 @@ void MyGLWidget::do_one_simulation_step()
 }
 
 
-void MyGLWidget::showAnimation()
+void MyGLWidget::showAnimation(bool new_frozen)
 {
-    simulation.set_frozen(1-simulation.get_frozen());
+    // ! because if the checkbox = true, frozen should be set to false
+    simulation.set_frozen(!new_frozen);
 }
 
-void MyGLWidget::drawMatter()
+void MyGLWidget::drawMatter(bool new_draw_smoke)
 {
-    draw_smoke = 1 - draw_smoke;
-    if (draw_smoke==0) draw_vecs = 1;
+    draw_smoke = new_draw_smoke;
+    if (!new_draw_smoke) {
+        draw_vecs = true;
+    }
 }
 
-void MyGLWidget::drawHedgehogs()
+void MyGLWidget::drawHedgehogs(bool new_draw_vecs)
 {
-    draw_vecs = 1 - draw_vecs;
-    if (draw_vecs==0) draw_smoke = 1;
+    draw_vecs = new_draw_vecs;
+    if (!draw_vecs) draw_smoke = true;
 }
 
 void MyGLWidget::drawGrid(bool new_draw_grid)
@@ -399,7 +404,7 @@ void MyGLWidget::applyColoringToDataset(QString dataset_to_use){
 void MyGLWidget::drawBar(){
     glPushMatrix ();
     glBegin (GL_QUADS);
-    if (draw_smoke == 1){
+    if (draw_smoke){
         for (int i = 0; i < 1001; i = i + 1){
             set_colormap(0.001*i,scalar_col, color_clamp_min, color_clamp_max, color_bands);
             glVertex3f(15+(0.5*i), 40, 0); //(x,y top left)
@@ -408,7 +413,7 @@ void MyGLWidget::drawBar(){
             glVertex3f(15+(0.5*(i+1)),40, 0); //(x,y top right)
         }
     }
-    if (draw_vecs == 1){
+    if (draw_vecs){
         for (int i = 0; i < 1001; i = i + 1){
             set_colormap(0.001*i,velocity_color, color_clamp_min, color_clamp_max, color_bands);
             glVertex3f(15+(0.5*i), 70, 0); //(x,y top left)
@@ -427,22 +432,22 @@ void MyGLWidget::OGL_Draw_Text(){
     //glPushMatrix();
     //glDisable(GL_LIGHTING);
     glDisable(GL_DEPTH_TEST);
-
-    //qglColor(Qt::white);
-    set_colormap(1-0.001,scalar_col, color_clamp_min, color_clamp_max,color_bands);
-    renderText(20, 15, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
-    //qglColor(Qt::black);
-    set_colormap(1-color_clamp_max,scalar_col, color_clamp_min, color_clamp_max,color_bands);
-    renderText(490, 15, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
-
+    if (draw_smoke){
+        //qglColor(Qt::white);
+        set_colormap(1-0.001,scalar_col, color_clamp_min, color_clamp_max,color_bands);
+        renderText(20, 15, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
+        //qglColor(Qt::black);
+        set_colormap(1-color_clamp_max,scalar_col, color_clamp_min, color_clamp_max,color_bands);
+        renderText(490, 15, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
+}
     //QString maxCol = QString::number(color_clamp_max);
-
-    set_colormap(1-0.001,velocity_color, color_clamp_min, color_clamp_max,color_bands);
-    renderText(20, 45, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render top bar left
-    set_colormap(1-color_clamp_max,velocity_color, color_clamp_min, color_clamp_max,color_bands);
-    //renderText(490, 45, 0, maxCol, QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
-    renderText(490, 45, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
-
+    if (draw_vecs){
+        set_colormap(1-0.001,velocity_color, color_clamp_min, color_clamp_max,color_bands);
+        renderText(20, 45, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render top bar left
+        set_colormap(1-color_clamp_max,velocity_color, color_clamp_min, color_clamp_max,color_bands);
+        //renderText(490, 45, 0, maxCol, QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
+        renderText(490, 45, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
+}
     glEnable(GL_DEPTH_TEST);
     //glEnable(GL_LIGHTING);
     //glPopMatrix();
