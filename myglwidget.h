@@ -52,11 +52,19 @@ private slots:
 
     void drawHedgehog(float i, float j, float wn, float hn);
 
-    void drawArrow(float j, float i, float wn, float hn);
+    void drawArrow(float angle, float length);
 
     void setGlyphType(QString glyps);
 
     void scaleColor(bool new_scale_color);
+
+    void drawGridLines(int DIM, int wn, int hn);
+
+    void setDim(int new_DIM);
+
+    void drawGrid(bool new_draw_grid);
+
+    void setGridSize(int position);
 
 protected:
     void initializeGL();
@@ -78,8 +86,10 @@ private:
     int   draw_vecs;            //draw the vector field or not
     int   scalar_col;           //method for scalar coloring
     int DIM;
+    int grid_scale;
     int color_bands;
     bool scale_color;
+    bool draw_grid;
     float color_clamp_min;
     float color_clamp_max;
     float arrow_scale;

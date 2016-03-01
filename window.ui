@@ -28,65 +28,26 @@
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="1">
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="1" column="3">
-      <widget class="QLabel" name="label_6">
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Color bands</string>
+        <string>Fluid viscosity</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="0" colspan="4">
-      <widget class="MyGLWidget" name="myGLWidget" native="true">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="cursor">
-        <cursorShape>PointingHandCursor</cursorShape>
-       </property>
-       <property name="mouseTracking">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QCheckBox" name="drawingHedgehogsCheckbox">
-       <property name="text">
-        <string>Drawing hedgehogs</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="1" colspan="3">
-      <widget class="QSlider" name="hedgehogScalingSlider">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;hedgehogscaling&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
+     <item row="11" column="1">
+      <widget class="QSpinBox" name="dimensionsSpinbox">
        <property name="minimum">
-        <number>1</number>
+        <number>10</number>
        </property>
        <property name="maximum">
-        <number>1000</number>
-       </property>
-       <property name="value">
         <number>500</number>
        </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+       <property name="singleStep">
+        <number>2</number>
        </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QPushButton" name="advancedOptionsButton">
-       <property name="text">
-        <string>Advanced options</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
+       <property name="value">
+        <number>50</number>
        </property>
       </widget>
      </item>
@@ -109,70 +70,13 @@
        </item>
       </widget>
      </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="label_2">
+     <item row="2" column="2">
+      <widget class="QCheckBox" name="drawingHedgehogsCheckbox">
        <property name="text">
-        <string>Fluid viscosity</string>
+        <string>Drawing hedgehogs</string>
        </property>
-      </widget>
-     </item>
-     <item row="9" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>Color clamp min</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QSpinBox" name="spinBox">
-       <property name="minimum">
-        <number>2</number>
-       </property>
-       <property name="maximum">
-        <number>256</number>
-       </property>
-       <property name="value">
-        <number>256</number>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="1">
-      <widget class="QSlider" name="colorClampMinSlider">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QComboBox" name="scalarColoring">
-       <item>
-        <property name="text">
-         <string>black&amp;white</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>rainbow</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>heatmap</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="9" column="3">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>Color clamp max</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Timestep</string>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -186,13 +90,36 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QCheckBox" name="animationCheckbox">
+     <item row="2" column="0">
+      <widget class="QPushButton" name="advancedOptionsButton">
        <property name="text">
-        <string>Animation</string>
+        <string>Advanced options</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
        <property name="checked">
         <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Color bands</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="4">
+      <widget class="MyGLWidget" name="myGLWidget" native="true">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="mouseTracking">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -218,16 +145,10 @@
        </property>
       </widget>
      </item>
-     <item row="9" column="2">
-      <widget class="QSlider" name="colorClampMaxSlider">
-       <property name="value">
-        <number>0</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="invertedAppearance">
-        <bool>true</bool>
+     <item row="10" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>VeclocityGlyphType</string>
        </property>
       </widget>
      </item>
@@ -260,6 +181,101 @@
        </property>
       </widget>
      </item>
+     <item row="9" column="3">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Color clamp max</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Timestep</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QCheckBox" name="animationCheckbox">
+       <property name="text">
+        <string>Animation</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="2">
+      <widget class="QSlider" name="colorClampMaxSlider">
+       <property name="value">
+        <number>0</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="invertedAppearance">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="scalarColoring">
+       <item>
+        <property name="text">
+         <string>black&amp;white</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>rainbow</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>heatmap</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QSpinBox" name="spinBox">
+       <property name="minimum">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <number>256</number>
+       </property>
+       <property name="value">
+        <number>256</number>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1" colspan="3">
+      <widget class="QSlider" name="hedgehogScalingSlider">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;hedgehogscaling&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>1000</number>
+       </property>
+       <property name="value">
+        <number>500</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="2">
+      <widget class="QCheckBox" name="checkBox">
+       <property name="text">
+        <string>Scale colors</string>
+       </property>
+      </widget>
+     </item>
      <item row="10" column="1">
       <widget class="QComboBox" name="velocityGlyphType">
        <item>
@@ -274,17 +290,57 @@
        </item>
       </widget>
      </item>
-     <item row="10" column="0">
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>VeclocityGlyphType</string>
+     <item row="9" column="1">
+      <widget class="QSlider" name="colorClampMinSlider">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
-     <item row="10" column="2">
-      <widget class="QCheckBox" name="checkBox">
+     <item row="9" column="0">
+      <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>Scale colors</string>
+        <string>Color clamp min</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="0">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>Dimensions</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="3">
+      <widget class="QCheckBox" name="showGridCheckbox">
+       <property name="text">
+        <string>Show grid</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="2">
+      <widget class="QLabel" name="gridSizeLabel">
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string>Grid size</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="3">
+      <widget class="QSlider" name="gridSizeSlider">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>10</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
@@ -321,6 +377,9 @@
     <slot>setColorBands(int)</slot>
     <slot>setGlyphType(QString)</slot>
     <slot>scaleColor(bool)</slot>
+    <slot>setDim(int)</slot>
+    <slot>drawGrid(bool)</slot>
+    <slot>setGridSize(int)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -333,8 +392,8 @@
    <slot>showAnimation()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>128</x>
-     <y>421</y>
+     <x>144</x>
+     <y>386</y>
     </hint>
     <hint type="destinationlabel">
      <x>57</x>
@@ -349,12 +408,12 @@
    <slot>fluidViscosity(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>609</x>
-     <y>529</y>
+     <x>610</x>
+     <y>495</y>
     </hint>
     <hint type="destinationlabel">
-     <x>161</x>
-     <y>373</y>
+     <x>179</x>
+     <y>356</y>
     </hint>
    </hints>
   </connection>
@@ -366,11 +425,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>301</x>
-     <y>457</y>
+     <y>422</y>
     </hint>
     <hint type="destinationlabel">
-     <x>103</x>
-     <y>367</y>
+     <x>121</x>
+     <y>356</y>
     </hint>
    </hints>
   </connection>
@@ -381,12 +440,12 @@
    <slot>hedgehogScaling(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>615</x>
-     <y>563</y>
+     <x>610</x>
+     <y>529</y>
     </hint>
     <hint type="destinationlabel">
-     <x>190</x>
-     <y>358</y>
+     <x>208</x>
+     <y>356</y>
     </hint>
    </hints>
   </connection>
@@ -397,12 +456,12 @@
    <slot>timestep(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>615</x>
-     <y>495</y>
+     <x>610</x>
+     <y>461</y>
     </hint>
     <hint type="destinationlabel">
-     <x>248</x>
-     <y>374</y>
+     <x>266</x>
+     <y>356</y>
     </hint>
    </hints>
   </connection>
@@ -413,12 +472,12 @@
    <slot>drawHedgehogs()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>506</x>
-     <y>457</y>
+     <x>501</x>
+     <y>423</y>
     </hint>
     <hint type="destinationlabel">
-     <x>354</x>
-     <y>391</y>
+     <x>372</x>
+     <y>356</y>
     </hint>
    </hints>
   </connection>
@@ -430,11 +489,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>295</x>
-     <y>425</y>
+     <y>390</y>
     </hint>
     <hint type="destinationlabel">
-     <x>115</x>
-     <y>391</y>
+     <x>133</x>
+     <y>356</y>
     </hint>
    </hints>
   </connection>
@@ -445,12 +504,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>68</x>
-     <y>465</y>
+     <x>80</x>
+     <y>430</y>
     </hint>
     <hint type="destinationlabel">
-     <x>117</x>
-     <y>597</y>
+     <x>135</x>
+     <y>562</y>
     </hint>
    </hints>
   </connection>
@@ -461,12 +520,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>145</x>
-     <y>465</y>
+     <x>157</x>
+     <y>430</y>
     </hint>
     <hint type="destinationlabel">
      <x>296</x>
-     <y>597</y>
+     <y>562</y>
     </hint>
    </hints>
   </connection>
@@ -477,12 +536,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>157</x>
-     <y>465</y>
+     <x>162</x>
+     <y>430</y>
     </hint>
     <hint type="destinationlabel">
-     <x>501</x>
-     <y>597</y>
+     <x>496</x>
+     <y>563</y>
     </hint>
    </hints>
   </connection>
@@ -494,11 +553,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>296</x>
-     <y>597</y>
+     <y>562</y>
     </hint>
     <hint type="destinationlabel">
-     <x>286</x>
-     <y>391</y>
+     <x>304</x>
+     <y>356</y>
     </hint>
    </hints>
   </connection>
@@ -509,12 +568,12 @@
    <slot>clampColorMax(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>501</x>
-     <y>597</y>
+     <x>496</x>
+     <y>563</y>
     </hint>
     <hint type="destinationlabel">
-     <x>397</x>
-     <y>378</y>
+     <x>415</x>
+     <y>356</y>
     </hint>
    </hints>
   </connection>
@@ -525,12 +584,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>79</x>
-     <y>465</y>
+     <x>91</x>
+     <y>430</y>
     </hint>
     <hint type="destinationlabel">
-     <x>611</x>
-     <y>597</y>
+     <x>606</x>
+     <y>563</y>
     </hint>
    </hints>
   </connection>
@@ -541,12 +600,12 @@
    <slot>applyColoringToDataset(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>500</x>
-     <y>425</y>
+     <x>495</x>
+     <y>391</y>
     </hint>
     <hint type="destinationlabel">
-     <x>328</x>
-     <y>391</y>
+     <x>346</x>
+     <y>356</y>
     </hint>
    </hints>
   </connection>
@@ -557,12 +616,12 @@
    <slot>setColorBands(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>611</x>
-     <y>459</y>
+     <x>606</x>
+     <y>425</y>
     </hint>
     <hint type="destinationlabel">
-     <x>572</x>
-     <y>391</y>
+     <x>590</x>
+     <y>356</y>
     </hint>
    </hints>
   </connection>
@@ -573,12 +632,12 @@
    <slot>setGlyphType(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>193</x>
-     <y>616</y>
+     <x>295</x>
+     <y>597</y>
     </hint>
     <hint type="destinationlabel">
-     <x>193</x>
-     <y>379</y>
+     <x>211</x>
+     <y>356</y>
     </hint>
    </hints>
   </connection>
@@ -589,12 +648,204 @@
    <slot>scaleColor(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>360</x>
-     <y>618</y>
+     <x>501</x>
+     <y>594</y>
     </hint>
     <hint type="destinationlabel">
-     <x>340</x>
-     <y>380</y>
+     <x>358</x>
+     <y>356</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dimensionsSpinbox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setDim(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>180</x>
+     <y>621</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>226</x>
+     <y>347</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>advancedOptionsButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>label_7</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>80</x>
+     <y>410</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>37</x>
+     <y>584</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>advancedOptionsButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>label_8</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>19</x>
+     <y>416</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>29</x>
+     <y>618</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>advancedOptionsButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>velocityGlyphType</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>24</x>
+     <y>424</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>583</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>advancedOptionsButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>dimensionsSpinbox</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>74</x>
+     <y>413</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>193</x>
+     <y>610</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>advancedOptionsButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>checkBox</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>70</x>
+     <y>414</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>398</x>
+     <y>590</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dimensionsSpinbox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setDim(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>276</x>
+     <y>619</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>265</x>
+     <y>236</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>advancedOptionsButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>showGridCheckbox</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>61</x>
+     <y>420</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>560</x>
+     <y>593</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>showGridCheckbox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>drawGrid(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>615</x>
+     <y>593</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>458</x>
+     <y>243</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>advancedOptionsButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>gridSizeLabel</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>80</x>
+     <y>415</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>423</x>
+     <y>619</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>advancedOptionsButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>gridSizeSlider</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>48</x>
+     <y>419</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>529</x>
+     <y>619</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>gridSizeSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setGridSize(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>523</x>
+     <y>625</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>433</x>
+     <y>288</y>
     </hint>
    </hints>
   </connection>
