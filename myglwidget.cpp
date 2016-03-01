@@ -23,7 +23,9 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     color_clamp_max = 1.0;        // The higher bound value to clamp color map at
     velocity_color = 1;
     force_field_color = 1;
+    grid_scale = 1;             // when drawing the grid, the size per cell is grid_scale * cell size, so with 50x50 grid with grid_scale = 10, 5 cells will be drawn
     color_bands = 256;
+    draw_grid = false;
     glyphs = "hedgehogs";
     dataset = "fluid density";
     simulation.init_simulation(DIM);
@@ -49,12 +51,14 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     glEnable(GL_COLOR_TABLE);
     glEnable(GL_COLOR_TABLE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     drawBar();
     fftw_real  wn = (fftw_real)winWidth / (fftw_real)(DIM + 1);   // Grid cell width
     fftw_real  hn = (fftw_real)winHeight / (fftw_real)(DIM + 1);  // Grid cell heigh
+    if (draw_grid){
+        drawGridLines(DIM, wn, hn);
+    }
     if (draw_vecs)
     {
         drawVelocity(wn, hn);
@@ -92,7 +96,7 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
     lastPos = event->pos();
 }
 
-void MyGLWidget::drawVelocity(fftw_real wn, fftw_real hn)
+/*void MyGLWidget::DrawGradient(fftw_real wn, fftw_real hn)
 {
     int  i, j;
 
@@ -108,29 +112,49 @@ void MyGLWidget::drawVelocity(fftw_real wn, fftw_real hn)
                // }
             }
         }
+}*/
+
+
+void MyGLWidget::drawVelocity(fftw_real wn, fftw_real hn)
+{
+    int  i, j, idx;
+
+    for (i = 0; i < DIM; i++)
+        for (j = 0; j < DIM; j++)
+        {
+            if (glyphs == "hedgehogs"){
+                drawHedgehog(i, j, wn, hn);
+            }
+            if (glyphs == "arrows"){
+                // if (i % 5 == 0 && j % 5 == 0){
+                idx = (j * DIM) + i;
+                Vector vector = Vector(wn + (fftw_real)i * wn, //x1
+                                       hn + (fftw_real)j * hn, //y1
+                                       (wn + (fftw_real)i * wn) + arrow_scale * simulation.get_vx()[idx], //x2
+                                       (hn + (fftw_real)j * hn) + arrow_scale * simulation.get_vy()[idx]);//y2
+                Vector vector_color = Vector(wn + (fftw_real)i * wn, //x1
+                                             hn + (fftw_real)j * hn, //y1
+                                             (wn + (fftw_real)i * wn) + simulation.get_vx()[idx]*1000, //x2
+                                             (hn + (fftw_real)j * hn) + simulation.get_vy()[idx]*1000);//y2
+                float angle = vector.normalize().direction2angle();
+                set_colormap(vector_color.length()/15, velocity_color, color_clamp_min, color_clamp_max, color_bands);
+                glPushMatrix();
+
+                glTranslatef(wn*i,hn*j, 0);
+                glRotated(angle,0,0,1);
+                drawArrow(angle, vector.length());
+                // }
+            }
+        }
 }
 
-void MyGLWidget::drawArrow(float i, float j, float wn, float hn){
-    int idx = (j * DIM) + i;
-    Vector vector = Vector(wn + (fftw_real)i * wn, //x1
-                                  hn + (fftw_real)j * hn, //y1
-                                  (wn + (fftw_real)i * wn) + arrow_scale * simulation.get_vx()[idx], //x2
-                                  (hn + (fftw_real)j * hn) + arrow_scale * simulation.get_vy()[idx]);//y2
-    Vector vector_color = Vector(wn + (fftw_real)i * wn, //x1
-                                  hn + (fftw_real)j * hn, //y1
-                                  (wn + (fftw_real)i * wn) + simulation.get_vx()[idx]*1000, //x2
-                                  (hn + (fftw_real)j * hn) + simulation.get_vy()[idx]*1000);//y2
-    float angle = vector.normalize().direction2angle();
-    set_colormap(vector_color.length()/15, velocity_color, color_clamp_min, color_clamp_max, color_bands);
+void MyGLWidget::drawArrow(float angle, float length){
     // have to rotate before begin triangles
     //glRotated(angle,0,0,1);
     //glTranslatef(wn + (fftw_real)i * wn,(hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx],0);
-    glPushMatrix();
 
-    glTranslatef(wn*i,hn*j, 0);
-    glRotated(angle,0,0,1);
     //glScaled(vector.length()/20,vector.length()/20,0);
-    glScaled(log(vector.length()+1)/35,log(vector.length()+1)/15,0);
+    glScaled(log(length+1)/35,log(length+1)/15,0);
     glBegin(GL_TRIANGLES);
     glVertex2f(-100, 50);
     glVertex2f(100, 50);
@@ -233,6 +257,11 @@ void MyGLWidget::drawHedgehogs()
     if (draw_vecs==0) draw_smoke = 1;
 }
 
+void MyGLWidget::drawGrid(bool new_draw_grid)
+{
+    draw_grid = new_draw_grid;
+}
+
 void MyGLWidget::scaleColor(bool new_scale_color)
 {
     scale_color = new_scale_color;
@@ -253,6 +282,12 @@ void MyGLWidget::timestep(int position)
     simulation.set_dt(new_dt);
     last_pos_timestep = position;
 }
+
+void MyGLWidget::setGridSize(int position)
+{
+    grid_scale = position;
+}
+
 
 void MyGLWidget::hedgehogScaling(int position)
 {
@@ -418,6 +453,24 @@ void MyGLWidget::setColorBands(int new_color_bands){
     color_bands = new_color_bands;
 }
 
+void MyGLWidget::setDim(int new_DIM){
+    DIM = new_DIM;
+    simulation.init_simulation(DIM);
+}
+
+
 void MyGLWidget::setGlyphType(QString new_glyphs){
     glyphs = new_glyphs;
+}
+
+void MyGLWidget::drawGridLines(int DIM, int wn, int hn){
+    glBegin(GL_LINES);
+    for(int i=0;i<=DIM/grid_scale;i++) {
+        glColor3f(1,1,1);
+        glVertex2f(i*wn*grid_scale,0);
+        glVertex2f(i*wn*grid_scale,DIM*hn*grid_scale);
+        glVertex2f(0,i*hn*grid_scale);
+        glVertex2f(DIM*wn*grid_scale,i*hn*grid_scale);
+    };
+    glEnd();
 }
