@@ -52,7 +52,7 @@ private slots:
 
     void drawHedgehog(float i, float j, float wn, float hn);
 
-    void drawArrow(float angle, float length);
+    void drawArrow(float length, fftw_real cellWidth, fftw_real cellHeigth);
 
     void setGlyphType(QString glyps);
 
@@ -78,7 +78,7 @@ signals:
 
 private:
     QTimer timer;
-    int   winWidth, winHeight;      //size of the graphics window, in pixels
+    int   windowWidth, windowHeight;      //size of the graphics window, in pixels
     int   velocity_color;            //set direction color-coding type
     int force_field_color;          // det force field color-coding type
     float hedgehog_scale;			//scaling of hedgehogs
