@@ -52,7 +52,7 @@ private slots:
 
     void drawHedgehog(float i, float j, float wn, float hn);
 
-    void drawArrow(Vector vector, fftw_real cellWidth, fftw_real cellHeigth, int i, int j);
+    void drawArrow(Vector vector, fftw_real cellWidth, fftw_real cellHeigth, int i, int j, float vy);
 
     void setGlyphType(QString glyps);
 
@@ -67,6 +67,7 @@ private slots:
     void setGridSize(int position);
 
     void drawGradient(fftw_real cellWidth, fftw_real cellHeigth);
+
     void setDrawGradient(bool new_gradient);
 
 protected:
