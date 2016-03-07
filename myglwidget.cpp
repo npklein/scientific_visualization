@@ -28,6 +28,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     draw_grid = false;
     glyphs = "hedgehogs";
     dataset = "fluid density";
+    gradient = false;
     simulation.init_simulation(DIM);
     QTimer *timer = new QTimer;
     timer->start(1);
@@ -66,6 +67,9 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     {
         drawSmoke(cellWidth, cellHeight);
     }
+    if (gradient){
+        drawGradient(cellWidth, cellHeight);
+    }
     OGL_Draw_Text();
     glFlush();
 }
@@ -96,24 +100,82 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
     lastPos = event->pos();
 }
 
-/*void MyGLWidget::DrawGradient(fftw_real wn, fftw_real hn)
+
+void MyGLWidget::drawGradient(fftw_real cell_width, fftw_real cell_height)
 {
     int  i, j;
-
+/*
     for (i = 0; i < DIM; i++)
         for (j = 0; j < DIM; j++)
         {
-            if (glyphs == "hedgehogs"){
-                drawHedgehog(i, j, wn, hn);
+            float center_rho =  simulation.get_rho()[(j * DIM) + i];
+            float upper_left_rho =  simulation.get_rho()[((j-1) * DIM) + (i-1)];
+            if (upper_left_rho > center_rho){
+                Vector vector = Vector(cell_width + (fftw_real)i * cell_width,
+                                       cell_height + (fftw_real)j * cell_height,
+                                       cell_width + (fftw_real)(i-1) * cell_width,
+                                       cell_height + (fftw_real)(j-1) * cell_height);
+                drawArrow(vector, cell_width, cell_height, i, j);
             }
-            if (glyphs == "arrows"){
-               // if (i % 5 == 0 && j % 5 == 0){
-                    drawArrow(i, j, wn, hn);
-               // }
+            float left_rho =  simulation.get_rho()[((j-1) * DIM) + i];
+            if (left_rho > center_rho){
+                Vector vector = Vector(cell_width + (fftw_real)i * cell_width,
+                                       cell_height + (fftw_real)j * cell_height,
+                                       cell_width + (fftw_real)i * cell_width,
+                                       cell_height + (fftw_real)(j-1) * cell_height);
+                drawArrow(vector, cell_width, cell_height, i, j);
+            }
+            float lower_left_rho =  simulation.get_rho()[((j-1) * DIM) + (i+1)];
+            if (lower_left_rho > center_rho){
+                Vector vector = Vector(cell_width + (fftw_real)i * cell_width,
+                                       cell_height + (fftw_real)j * cell_height,
+                                       cell_width + (fftw_real)(i+1) * cell_width,
+                                       cell_height + (fftw_real)(j-1) * cell_height);
+                drawArrow(vector, cell_width, cell_height, i, j);
+            }
+            float up_rho =  simulation.get_rho()[(j * DIM) + (i-1)];
+            if (up_rho > center_rho){
+                Vector vector = Vector(cell_width + (fftw_real)i * cell_width,
+                                       cell_height + (fftw_real)j * cell_height,
+                                       cell_width + (fftw_real)(i-1) * cell_width,
+                                       cell_height + (fftw_real)j * cell_height);
+                drawArrow(vector, cell_width, cell_height, i, j);
+            }
+            float below_rho =  simulation.get_rho()[(j * DIM) + (i+1)];
+            if (below_rho > center_rho){
+                Vector vector = Vector(cell_width + (fftw_real)i * cell_width,
+                                       cell_height + (fftw_real)j * cell_height,
+                                       cell_width + (fftw_real)(i+1) * cell_width,
+                                       cell_height + (fftw_real)j * cell_height);
+                drawArrow(vector, cell_width, cell_height, i, j);
+            }
+            float upper_right_rho =  simulation.get_rho()[((j+1) * DIM) + (i-1)];
+            if (upper_right_rho > center_rho){
+                Vector vector = Vector(cell_width + (fftw_real)i * cell_width,
+                                       cell_height + (fftw_real)j * cell_height,
+                                       cell_width + (fftw_real)(i-1) * cell_width,
+                                       cell_height + (fftw_real)(j+1) * cell_height);
+                drawArrow(vector, cell_width, cell_height, i, j);
+            }
+            float right_rho =  simulation.get_rho()[((j+1) * DIM) + (i)];
+            if (right_rho > center_rho){
+                Vector vector = Vector(cell_width + (fftw_real)i * cell_width,
+                                       cell_height + (fftw_real)j * cell_height,
+                                       cell_width + (fftw_real)i * cell_width,
+                                       cell_height + (fftw_real)(j+1) * cell_height);
+                drawArrow(vector, cell_width, cell_height, i, j);
+            }
+            float lower_right_rho =  simulation.get_rho()[((j+1) * DIM) + (i+1)];
+            if (lower_right_rho > center_rho){
+                Vector vector = Vector(cell_width + (fftw_real)i * cell_width,
+                                       cell_height + (fftw_real)j * cell_height,
+                                       cell_width + (fftw_real)(i+1) * cell_width,
+                                       cell_height + (fftw_real)(j+1) * cell_height);
+                drawArrow(vector, cell_width, cell_height, i, j);
             }
         }
-}*/
-
+        */
+}
 
 void MyGLWidget::drawVelocity(fftw_real cell_width, fftw_real cell_height)
 {
@@ -132,24 +194,21 @@ void MyGLWidget::drawVelocity(fftw_real cell_width, fftw_real cell_height)
                                        cell_height + (fftw_real)j * cell_height, //y1
                                        (cell_width + (fftw_real)i * cell_width) + arrow_scale * simulation.get_vx()[idx], //x2
                                        (cell_height + (fftw_real)j * cell_height) + arrow_scale * simulation.get_vy()[idx]);//y2
-                Vector vector_color = Vector(cell_width + (fftw_real)i * cell_width, //x1
-                                             cell_height + (fftw_real)j * cell_height, //y1
-                                             (cell_width + (fftw_real)i * cell_width) + simulation.get_vx()[idx]*1000, //x2
-                                             (cell_height + (fftw_real)j * cell_height) + simulation.get_vy()[idx]*1000);//y2
-                float angle = vector.normalize().direction2angle();
-                set_colormap(vector_color.length()/15, velocity_color, color_clamp_min, color_clamp_max, color_bands);
-                glPushMatrix();
-                glTranslatef(cell_width*i,cell_height*j, 0);
-                glRotated(angle,0,0,1);
-                drawArrow(vector.length(), cell_width, cell_height);
-                // }
+
+                drawArrow(vector, cell_width, cell_height, i, j);
             }
         }
 }
 
-void MyGLWidget::drawArrow(float length, fftw_real cell_width, fftw_real cell_height){
+void MyGLWidget::drawArrow(Vector vector, fftw_real cell_width, fftw_real cell_height, int i, int j){
     // draw an error the size of a cell, scale according to vector length
-    glScaled(log(length+1)/10,log(length+1)/5,0);
+    float angle = vector.normalize().direction2angle();
+
+    set_colormap(vector.length()/15, velocity_color, color_clamp_min, color_clamp_max, color_bands);
+    glPushMatrix();
+    glTranslatef(cell_width*i,cell_height*j, 0);
+    glRotated(angle,0,0,1);
+    glScaled(log(vector.length()+1)/10,log(vector.length()+1)/5,0);
     glBegin(GL_TRIANGLES);
     float size_right = (cell_width/4)*3.0;
     float size_left = cell_width/4.0;
@@ -187,9 +246,9 @@ void MyGLWidget::drawSmoke(fftw_real cell_width, fftw_real cell_height){
     int  i, j, idx0, idx1, idx2, idx3; double px0,py0,px1,py1,px2,py2,px3,py3;
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glBegin(GL_TRIANGLES);
-    for (j = 0; j < DIM - 1; j++)			//draw smoke
+    for (i = 0; i < DIM - 1; i++)			//draw smoke
     {
-        for (i = 0; i < DIM - 1; i++)
+        for (j = 0; j < DIM - 1; j++)
         {
             px0  = cell_width + (fftw_real)i * cell_width;
             py0  = cell_height + (fftw_real)j * cell_height;
@@ -475,4 +534,8 @@ void MyGLWidget::drawGridLines(int DIM, int wn, int hn){
         glVertex2f(DIM*wn*grid_scale,i*hn*grid_scale);
     };
     glEnd();
+}
+
+void MyGLWidget::setDrawGradient(bool new_gradient){
+    gradient = new_gradient;
 }

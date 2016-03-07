@@ -28,16 +28,43 @@
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="1">
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="12" column="2">
-      <widget class="QLabel" name="gridSizeLabel">
-       <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
-       </property>
+     <item row="1" column="2">
+      <widget class="QComboBox" name="applyColorTo">
+       <item>
+        <property name="text">
+         <string>fluid density</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>|fluid velocity|</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>|force field|</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="12" column="0">
+      <widget class="QLabel" name="label_8">
        <property name="text">
-        <string>Grid size</string>
+        <string>Dimensions</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </widget>
+     </item>
+     <item row="10" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Color clamp min</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Fluid viscosity</string>
        </property>
       </widget>
      </item>
@@ -48,10 +75,16 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="0">
-      <widget class="QLabel" name="label_2">
+     <item row="12" column="2">
+      <widget class="QLabel" name="gridSizeLabel">
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
        <property name="text">
-        <string>Fluid viscosity</string>
+        <string>Grid size</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -81,29 +114,6 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="QCheckBox" name="drawingMatterCheckbox">
-       <property name="text">
-        <string>Draw matter</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QPushButton" name="advancedOptionsButton">
-       <property name="text">
-        <string>Advanced options</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
      <item row="12" column="3">
       <widget class="QSlider" name="gridSizeSlider">
        <property name="minimum">
@@ -117,23 +127,13 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="3">
-      <widget class="QLabel" name="label_6">
+     <item row="3" column="1">
+      <widget class="QCheckBox" name="drawingMatterCheckbox">
        <property name="text">
-        <string>Color bands</string>
+        <string>Draw matter</string>
        </property>
-      </widget>
-     </item>
-     <item row="0" column="0" colspan="4">
-      <widget class="MyGLWidget" name="myGLWidget" native="true">
-       <property name="enabled">
+       <property name="checked">
         <bool>true</bool>
-       </property>
-       <property name="cursor">
-        <cursorShape>PointingHandCursor</cursorShape>
-       </property>
-       <property name="mouseTracking">
-        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -159,17 +159,17 @@
        </property>
       </widget>
      </item>
-     <item row="11" column="0">
-      <widget class="QLabel" name="label_7">
+     <item row="1" column="3">
+      <widget class="QLabel" name="label_6">
        <property name="text">
-        <string>VeclocityGlyphType</string>
+        <string>Color bands</string>
        </property>
       </widget>
      </item>
-     <item row="7" column="1" colspan="3">
-      <widget class="QSlider" name="fluidViscositySlider">
+     <item row="8" column="1" colspan="3">
+      <widget class="QSlider" name="hedgehogScalingSlider">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fluid viscosity&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;hedgehogscaling&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="minimum">
         <number>1</number>
@@ -180,25 +180,74 @@
        <property name="value">
         <number>500</number>
        </property>
-       <property name="sliderPosition">
-        <number>500</number>
-       </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
-     <item row="8" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Glyph scaling</string>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="scalarColoring">
+       <item>
+        <property name="text">
+         <string>black&amp;white</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>rainbow</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>heatmap</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="10" column="1">
+      <widget class="QSlider" name="colorClampMinSlider">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
-     <item row="10" column="3">
-      <widget class="QLabel" name="label_5">
+     <item row="0" column="0" colspan="4">
+      <widget class="MyGLWidget" name="myGLWidget" native="true">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="mouseTracking">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QPushButton" name="advancedOptionsButton">
        <property name="text">
-        <string>Color clamp max</string>
+        <string>Advanced options</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="2">
+      <widget class="QCheckBox" name="checkBox">
+       <property name="text">
+        <string>Scale colors</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>VeclocityGlyphType</string>
        </property>
       </widget>
      </item>
@@ -206,6 +255,13 @@
       <widget class="QLabel" name="label">
        <property name="text">
         <string>Timestep</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="3">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Color clamp max</string>
        </property>
       </widget>
      </item>
@@ -232,25 +288,6 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QComboBox" name="scalarColoring">
-       <item>
-        <property name="text">
-         <string>black&amp;white</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>rainbow</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>heatmap</string>
-        </property>
-       </item>
-      </widget>
-     </item>
      <item row="3" column="3">
       <widget class="QSpinBox" name="spinBox">
        <property name="minimum">
@@ -264,10 +301,10 @@
        </property>
       </widget>
      </item>
-     <item row="8" column="1" colspan="3">
-      <widget class="QSlider" name="hedgehogScalingSlider">
+     <item row="7" column="1" colspan="3">
+      <widget class="QSlider" name="fluidViscositySlider">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;hedgehogscaling&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fluid viscosity&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="minimum">
         <number>1</number>
@@ -278,15 +315,11 @@
        <property name="value">
         <number>500</number>
        </property>
+       <property name="sliderPosition">
+        <number>500</number>
+       </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="11" column="2">
-      <widget class="QCheckBox" name="checkBox">
-       <property name="text">
-        <string>Scale colors</string>
        </property>
       </widget>
      </item>
@@ -304,44 +337,18 @@
        </item>
       </widget>
      </item>
-     <item row="10" column="1">
-      <widget class="QSlider" name="colorClampMinSlider">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="0">
-      <widget class="QLabel" name="label_4">
+     <item row="8" column="0">
+      <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>Color clamp min</string>
+        <string>Glyph scaling</string>
        </property>
       </widget>
      </item>
-     <item row="12" column="0">
-      <widget class="QLabel" name="label_8">
+     <item row="13" column="0">
+      <widget class="QCheckBox" name="drawGradientCheckbox">
        <property name="text">
-        <string>Dimensions</string>
+        <string>Draw gradient</string>
        </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QComboBox" name="applyColorTo">
-       <item>
-        <property name="text">
-         <string>fluid density</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>|fluid velocity|</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>|force field|</string>
-        </property>
-       </item>
       </widget>
      </item>
     </layout>
@@ -380,6 +387,8 @@
     <slot>setDim(int)</slot>
     <slot>drawGrid(bool)</slot>
     <slot>setGridSize(int)</slot>
+    <slot>drawDispersion(bool)</slot>
+    <slot>setDrawGradient(bool)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -392,8 +401,8 @@
    <slot>showAnimation(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>144</x>
-     <y>461</y>
+     <x>160</x>
+     <y>435</y>
     </hint>
     <hint type="destinationlabel">
      <x>57</x>
@@ -408,8 +417,8 @@
    <slot>fluidViscosity(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>610</x>
-     <y>570</y>
+     <x>615</x>
+     <y>543</y>
     </hint>
     <hint type="destinationlabel">
      <x>179</x>
@@ -424,8 +433,8 @@
    <slot>drawMatter(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>301</x>
-     <y>497</y>
+     <x>318</x>
+     <y>471</y>
     </hint>
     <hint type="destinationlabel">
      <x>121</x>
@@ -440,8 +449,8 @@
    <slot>hedgehogScaling(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>610</x>
-     <y>604</y>
+     <x>615</x>
+     <y>577</y>
     </hint>
     <hint type="destinationlabel">
      <x>208</x>
@@ -456,8 +465,8 @@
    <slot>timestep(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>610</x>
-     <y>536</y>
+     <x>615</x>
+     <y>509</y>
     </hint>
     <hint type="destinationlabel">
      <x>266</x>
@@ -472,8 +481,8 @@
    <slot>drawHedgehogs(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>501</x>
-     <y>498</y>
+     <x>469</x>
+     <y>471</y>
     </hint>
     <hint type="destinationlabel">
      <x>372</x>
@@ -488,8 +497,8 @@
    <slot>scalarColoring(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>295</x>
-     <y>465</y>
+     <x>312</x>
+     <y>439</y>
     </hint>
     <hint type="destinationlabel">
      <x>133</x>
@@ -504,12 +513,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>80</x>
-     <y>505</y>
+     <x>92</x>
+     <y>479</y>
     </hint>
     <hint type="destinationlabel">
-     <x>135</x>
-     <y>637</y>
+     <x>153</x>
+     <y>611</y>
     </hint>
    </hints>
   </connection>
@@ -520,12 +529,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>157</x>
-     <y>505</y>
+     <x>162</x>
+     <y>479</y>
     </hint>
     <hint type="destinationlabel">
-     <x>296</x>
-     <y>637</y>
+     <x>313</x>
+     <y>611</y>
     </hint>
    </hints>
   </connection>
@@ -537,11 +546,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>162</x>
-     <y>505</y>
+     <y>479</y>
     </hint>
     <hint type="destinationlabel">
-     <x>496</x>
-     <y>638</y>
+     <x>464</x>
+     <y>611</y>
     </hint>
    </hints>
   </connection>
@@ -552,8 +561,8 @@
    <slot>clampColorMin(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>296</x>
-     <y>637</y>
+     <x>313</x>
+     <y>611</y>
     </hint>
     <hint type="destinationlabel">
      <x>304</x>
@@ -568,8 +577,8 @@
    <slot>clampColorMax(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>496</x>
-     <y>638</y>
+     <x>464</x>
+     <y>611</y>
     </hint>
     <hint type="destinationlabel">
      <x>415</x>
@@ -584,12 +593,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>91</x>
-     <y>505</y>
+     <x>103</x>
+     <y>479</y>
     </hint>
     <hint type="destinationlabel">
      <x>611</x>
-     <y>638</y>
+     <y>611</y>
     </hint>
    </hints>
   </connection>
@@ -600,8 +609,8 @@
    <slot>applyColoringToDataset(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>495</x>
-     <y>466</y>
+     <x>463</x>
+     <y>439</y>
     </hint>
     <hint type="destinationlabel">
      <x>346</x>
@@ -617,7 +626,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>611</x>
-     <y>500</y>
+     <y>473</y>
     </hint>
     <hint type="destinationlabel">
      <x>590</x>
@@ -632,8 +641,8 @@
    <slot>setGlyphType(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>295</x>
-     <y>672</y>
+     <x>312</x>
+     <y>647</y>
     </hint>
     <hint type="destinationlabel">
      <x>211</x>
@@ -648,8 +657,8 @@
    <slot>scaleColor(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>501</x>
-     <y>669</y>
+     <x>469</x>
+     <y>643</y>
     </hint>
     <hint type="destinationlabel">
      <x>358</x>
@@ -664,8 +673,8 @@
    <slot>setDim(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>180</x>
-     <y>696</y>
+     <x>309</x>
+     <y>679</y>
     </hint>
     <hint type="destinationlabel">
      <x>226</x>
@@ -680,12 +689,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>80</x>
-     <y>485</y>
+     <x>92</x>
+     <y>479</y>
     </hint>
     <hint type="destinationlabel">
-     <x>37</x>
-     <y>659</y>
+     <x>55</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -696,12 +705,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>19</x>
-     <y>491</y>
+     <x>31</x>
+     <y>479</y>
     </hint>
     <hint type="destinationlabel">
-     <x>29</x>
-     <y>693</y>
+     <x>47</x>
+     <y>679</y>
     </hint>
    </hints>
   </connection>
@@ -712,12 +721,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>24</x>
-     <y>499</y>
+     <x>36</x>
+     <y>479</y>
     </hint>
     <hint type="destinationlabel">
-     <x>248</x>
-     <y>658</y>
+     <x>312</x>
+     <y>647</y>
     </hint>
    </hints>
   </connection>
@@ -728,12 +737,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>74</x>
-     <y>488</y>
+     <x>86</x>
+     <y>479</y>
     </hint>
     <hint type="destinationlabel">
-     <x>193</x>
-     <y>685</y>
+     <x>309</x>
+     <y>679</y>
     </hint>
    </hints>
   </connection>
@@ -744,12 +753,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>70</x>
-     <y>489</y>
+     <x>82</x>
+     <y>479</y>
     </hint>
     <hint type="destinationlabel">
-     <x>398</x>
-     <y>665</y>
+     <x>469</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -760,8 +769,8 @@
    <slot>setDim(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>276</x>
-     <y>694</y>
+     <x>309</x>
+     <y>679</y>
     </hint>
     <hint type="destinationlabel">
      <x>265</x>
@@ -776,12 +785,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>61</x>
-     <y>495</y>
+     <x>73</x>
+     <y>479</y>
     </hint>
     <hint type="destinationlabel">
-     <x>565</x>
-     <y>668</y>
+     <x>620</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -793,7 +802,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>620</x>
-     <y>668</y>
+     <y>643</y>
     </hint>
     <hint type="destinationlabel">
      <x>458</x>
@@ -808,12 +817,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>80</x>
-     <y>490</y>
+     <x>92</x>
+     <y>479</y>
     </hint>
     <hint type="destinationlabel">
-     <x>423</x>
-     <y>694</y>
+     <x>460</x>
+     <y>679</y>
     </hint>
    </hints>
   </connection>
@@ -824,12 +833,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>48</x>
-     <y>494</y>
+     <x>60</x>
+     <y>479</y>
     </hint>
     <hint type="destinationlabel">
-     <x>534</x>
-     <y>694</y>
+     <x>615</x>
+     <y>678</y>
     </hint>
    </hints>
   </connection>
@@ -840,12 +849,44 @@
    <slot>setGridSize(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>528</x>
-     <y>700</y>
+     <x>615</x>
+     <y>678</y>
     </hint>
     <hint type="destinationlabel">
      <x>433</x>
      <y>288</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>advancedOptionsButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>drawGradientCheckbox</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>37</x>
+     <y>470</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>96</x>
+     <y>702</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>drawGradientCheckbox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setDrawGradient(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>72</x>
+     <y>698</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>79</x>
+     <y>389</y>
     </hint>
    </hints>
   </connection>
