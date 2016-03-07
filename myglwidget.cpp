@@ -101,7 +101,6 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
     lastPos = event->pos();
 }
 
-
 void MyGLWidget::drawGradient(fftw_real cell_width, fftw_real cell_height)
 {
     int  i, j;
@@ -110,71 +109,28 @@ void MyGLWidget::drawGradient(fftw_real cell_width, fftw_real cell_height)
         for (j = 0; j < DIM; j++)
         {
             float center_rho =  simulation.get_rho()[(j * DIM) + i];
-            float upper_left_rho =  simulation.get_rho()[((j-1) * DIM) + (i-1)];
-
-            if (upper_left_rho - center_rho > 0.2){
-                Vector vector = Vector(cell_width + (fftw_real)i * cell_width,
-                                       cell_height + (fftw_real)j * cell_height,
-                                       cell_width + (fftw_real)(i-1) * cell_width,
-                                       cell_height + (fftw_real)(j-1) * cell_height);
-                drawArrow(vector, cell_width, cell_height, i, j, upper_left_rho-center_rho);
-            }
             float left_rho =  simulation.get_rho()[((j-1) * DIM) + i];
-            if (left_rho - center_rho > 0.2){
-                Vector vector = Vector(cell_width + (fftw_real)i * cell_width,
-                                       cell_height + (fftw_real)j * cell_height,
-                                       cell_width + (fftw_real)i * cell_width,
-                                       cell_height + (fftw_real)(j-1) * cell_height);
-                drawArrow(vector, cell_width, cell_height, i, j, left_rho-center_rho);
-            }
-            float lower_left_rho =  simulation.get_rho()[((j-1) * DIM) + (i+1)];
-            if (lower_left_rho - center_rho > 0.2){
-                Vector vector = Vector(cell_width + (fftw_real)i * cell_width,
-                                       cell_height + (fftw_real)j * cell_height,
-                                       cell_width + (fftw_real)(i+1) * cell_width,
-                                       cell_height + (fftw_real)(j-1) * cell_height);
-                drawArrow(vector, cell_width, cell_height, i, j, lower_left_rho-center_rho);
-            }
             float up_rho =  simulation.get_rho()[(j * DIM) + (i-1)];
-            if (up_rho - center_rho > 0.2){
-                Vector vector = Vector(cell_width + (fftw_real)i * cell_width,
-                                       cell_height + (fftw_real)j * cell_height,
-                                       cell_width + (fftw_real)(i-1) * cell_width,
-                                       cell_height + (fftw_real)j * cell_height);
-                drawArrow(vector, cell_width, cell_height, i, j, up_rho-center_rho);
-            }
             float below_rho =  simulation.get_rho()[(j * DIM) + (i+1)];
-            if (below_rho - center_rho > 0.2){
-                Vector vector = Vector(cell_width + (fftw_real)i * cell_width,
-                                       cell_height + (fftw_real)j * cell_height,
-                                       cell_width + (fftw_real)(i+1) * cell_width,
-                                       cell_height + (fftw_real)j * cell_height);
-                drawArrow(vector, cell_width, cell_height, i, j, below_rho-center_rho);
-            }
-            float upper_right_rho =  simulation.get_rho()[((j+1) * DIM) + (i-1)];
-            if (upper_right_rho - center_rho > 0.2){
-                Vector vector = Vector(cell_width + (fftw_real)i * cell_width,
-                                       cell_height + (fftw_real)j * cell_height,
-                                       cell_width + (fftw_real)(i-1) * cell_width,
-                                       cell_height + (fftw_real)(j+1) * cell_height);
-                drawArrow(vector, cell_width, cell_height, i, j, upper_right_rho-center_rho);
-            }
             float right_rho =  simulation.get_rho()[((j+1) * DIM) + (i)];
-            if (right_rho - center_rho > 0.2){
-                Vector vector = Vector(cell_width + (fftw_real)i * cell_width,
-                                       cell_height + (fftw_real)j * cell_height,
-                                       cell_width + (fftw_real)i * cell_width,
-                                       cell_height + (fftw_real)(j+1) * cell_height);
-                drawArrow(vector, cell_width, cell_height, i, j,right_rho-center_rho);
+            float gradient_left = center_rho - left_rho;
+            float gradient_up = center_rho - up_rho;
+            float gradient_below = center_rho - below_rho;
+            float gradient_right = center_rho - right_rho;
+            float gradient_max = 0;
+            if (gradient_left > gradient_max){
+                gradient_max = gradient_left;
             }
-            float lower_right_rho =  simulation.get_rho()[((j+1) * DIM) + (i+1)];
-            if (lower_right_rho - center_rho > 0.2){
-                Vector vector = Vector(cell_width + (fftw_real)i * cell_width,
-                                       cell_height + (fftw_real)j * cell_height,
-                                       cell_width + (fftw_real)(i+1) * cell_width,
-                                       cell_height + (fftw_real)(j+1) * cell_height);
-                drawArrow(vector, cell_width, cell_height, i, j, lower_right_rho-center_rho);
+            if (gradient_up > gradient_max){
+                gradient_max = gradient_up;
             }
+            if(gradient_right > gradient_max){
+                gradient_max = gradient_right;
+            }
+            if(gradient_below > gradient_max){
+                gradient_max = gradient_below;
+            }
+
         }
 }
 
