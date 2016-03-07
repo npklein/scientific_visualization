@@ -5,7 +5,7 @@ Simulation::Simulation() {
     // default values member variables
     dt = 0.4;				//simulation time step
     visc = 0.001;				//fluid viscosity
-    frozen = 0;               //toggles on/off the animation
+    frozen = false;               //toggles on/off the animation
     rho_min = 0;
     rho_max = 1;
 }
@@ -14,7 +14,7 @@ Simulation::Simulation() {
 Simulation::~Simulation(){}
 
 //Accessor Functions
-int Simulation::get_frozen() const{return frozen;}
+bool Simulation::get_frozen() const{return frozen;}
 double Simulation::get_dt() const{return dt;}
 float Simulation::get_visc() const{return visc;}
 fftw_real* Simulation::get_fx() const{return fx;}
@@ -26,7 +26,7 @@ fftw_real* Simulation::get_vy() const {return vy;}
 fftw_real* Simulation::get_vx0() const {return vx0;}
 fftw_real* Simulation::get_vy0() const {return vy0;}
 //Mutator functions
-void Simulation::set_frozen(int new_frozen){frozen = new_frozen;}
+void Simulation::set_frozen(bool new_frozen){frozen = new_frozen;}
 void Simulation::set_dt(double new_dt){dt = new_dt;}
 void Simulation::set_visc(float new_visc){visc = new_visc;}
 

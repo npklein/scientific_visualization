@@ -16,7 +16,7 @@
             ~Simulation();
 
             //Accessor Functions (to get and set member variables)
-            int get_frozen() const;
+            bool get_frozen() const;
             double get_dt() const;				//simulation time step
             float get_visc() const;				//fluid viscosity
             fftw_real* get_rho() const;
@@ -28,7 +28,7 @@
             fftw_real* get_vx0() const;
             fftw_real* get_vy0() const;
             //Mutator functions
-            void set_frozen(int);
+            void set_frozen(bool);
             void set_visc(float);
             void set_dt(double);
 

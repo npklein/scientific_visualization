@@ -15,6 +15,8 @@ class Window : public QWidget
     Q_OBJECT
 
 public:
+    void setDrawingHedgehogsCheckbox(bool setDrawingHedgehogs);
+    void setDrawingMatterCheckbox(bool setDrawingMatter);
     explicit Window(QWidget *parent = 0);
     ~Window();
 

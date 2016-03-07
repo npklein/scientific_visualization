@@ -19,11 +19,11 @@ public slots:
     void do_one_simulation_step(void);
 
 private slots:
-    void showAnimation();
+    void showAnimation(bool new_frozen);
 
-    void drawMatter();
+    void drawMatter(bool);
 
-    void drawHedgehogs();
+    void drawHedgehogs(bool);
 
     void timestep(int position);
 
@@ -52,7 +52,7 @@ private slots:
 
     void drawHedgehog(float i, float j, float wn, float hn);
 
-    void drawArrow(float angle, float length);
+    void drawArrow(float length, fftw_real cellWidth, fftw_real cellHeigth);
 
     void setGlyphType(QString glyps);
 
@@ -78,12 +78,12 @@ signals:
 
 private:
     QTimer timer;
-    int   winWidth, winHeight;      //size of the graphics window, in pixels
+    int   windowWidth, windowHeight;      //size of the graphics window, in pixels
     int   velocity_color;            //set direction color-coding type
     int force_field_color;          // det force field color-coding type
     float hedgehog_scale;			//scaling of hedgehogs
-    int   draw_smoke;           //draw the smoke or not
-    int   draw_vecs;            //draw the vector field or not
+    bool   draw_smoke;           //draw the smoke or not
+    bool   draw_vecs;            //draw the vector field or not
     int   scalar_col;           //method for scalar coloring
     int DIM;
     int grid_scale;
@@ -93,6 +93,7 @@ private:
     float color_clamp_min;
     float color_clamp_max;
     float arrow_scale;
+    QWidget *window;
     std::string dataset;
     QPoint lastPos;
     QString glyphs;
