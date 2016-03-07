@@ -14,8 +14,8 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     //--- VISUALIZATION PARAMETERS ---------------------------------------------------------------------
     hedgehog_scale = 2000;			//scaling of hedgehogs
     arrow_scale = 1000;			//scaling of hedgehogs
-    draw_smoke = 1;           //draw the smoke or not
-    draw_vecs = 1;            //draw the vector field or not
+    draw_smoke = true;           //draw the smoke or not
+    draw_vecs = true;            //draw the vector field or not
     scalar_col = 0;           //method for scalar coloring
     scale_color = false;    // if true, the lowest current value in the screen is the lowest in the color map, same for highest
     DIM = 50;
@@ -49,23 +49,22 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
 {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_TABLE);
-    glEnable(GL_COLOR_TABLE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    //glLoadIdentity();
     drawBar();
-    fftw_real  wn = (fftw_real)winWidth / (fftw_real)(DIM + 1);   // Grid cell width
-    fftw_real  hn = (fftw_real)winHeight / (fftw_real)(DIM + 1);  // Grid cell heigh
+    fftw_real  cellWidth = (fftw_real)windowWidth / (fftw_real)(DIM + 1);   // Grid cell width
+    fftw_real  cellHeight = (fftw_real)windowHeight / (fftw_real)(DIM + 1);  // Grid cell heigh
     if (draw_grid){
-        drawGridLines(DIM, wn, hn);
+        drawGridLines(DIM, cellWidth, cellHeight);
     }
     if (draw_vecs)
     {
-        drawVelocity(wn, hn);
+        drawVelocity(cellWidth, cellHeight);
     }
     if (draw_smoke)
     {
-        drawSmoke(wn, hn);
+        drawSmoke(cellWidth, cellHeight);
     }
     OGL_Draw_Text();
     glFlush();
@@ -74,11 +73,12 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
 
 void MyGLWidget::resizeGL(int width, int height)
 {
-    glViewport(0.0f, 0.0f, (GLfloat)width, (GLfloat)height);
+    // removing below had no effect on what is drawn, so better to not use to lower complexity
+    //glViewport(0.0f, 0.0f, (GLfloat)width, (GLfloat)height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(0.0, (GLdouble)width, 0.0, (GLdouble)height);
-    winWidth = width; winHeight = height;
+    windowWidth = width; windowHeight = height;
 }
 
 
@@ -92,7 +92,7 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
     int mx = event->x();// - lastposition gets calculated in drag(), could save a step by using lastPos.x/y but leaving it like this is safer
     int my = event->y();
     //simulation.drag(mx,my, DIM, winWidth, winHeight);  // Works for Freerk when using external display
-    simulation.drag(mx,my, DIM, winWidth/2, winHeight/2); // Works for Niek
+    simulation.drag(mx,my, DIM, windowWidth/2, windowHeight/2); // Works for Niek
     lastPos = event->pos();
 }
 
@@ -115,7 +115,7 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 }*/
 
 
-void MyGLWidget::drawVelocity(fftw_real wn, fftw_real hn)
+void MyGLWidget::drawVelocity(fftw_real cell_width, fftw_real cell_height)
 {
     int  i, j, idx;
 
@@ -123,68 +123,67 @@ void MyGLWidget::drawVelocity(fftw_real wn, fftw_real hn)
         for (j = 0; j < DIM; j++)
         {
             if (glyphs == "hedgehogs"){
-                drawHedgehog(i, j, wn, hn);
+                drawHedgehog(i, j, cell_width, cell_height);
             }
             if (glyphs == "arrows"){
                 // if (i % 5 == 0 && j % 5 == 0){
                 idx = (j * DIM) + i;
-                Vector vector = Vector(wn + (fftw_real)i * wn, //x1
-                                       hn + (fftw_real)j * hn, //y1
-                                       (wn + (fftw_real)i * wn) + arrow_scale * simulation.get_vx()[idx], //x2
-                                       (hn + (fftw_real)j * hn) + arrow_scale * simulation.get_vy()[idx]);//y2
-                Vector vector_color = Vector(wn + (fftw_real)i * wn, //x1
-                                             hn + (fftw_real)j * hn, //y1
-                                             (wn + (fftw_real)i * wn) + simulation.get_vx()[idx]*1000, //x2
-                                             (hn + (fftw_real)j * hn) + simulation.get_vy()[idx]*1000);//y2
+                Vector vector = Vector(cell_width + (fftw_real)i * cell_width, //x1
+                                       cell_height + (fftw_real)j * cell_height, //y1
+                                       (cell_width + (fftw_real)i * cell_width) + arrow_scale * simulation.get_vx()[idx], //x2
+                                       (cell_height + (fftw_real)j * cell_height) + arrow_scale * simulation.get_vy()[idx]);//y2
+                Vector vector_color = Vector(cell_width + (fftw_real)i * cell_width, //x1
+                                             cell_height + (fftw_real)j * cell_height, //y1
+                                             (cell_width + (fftw_real)i * cell_width) + simulation.get_vx()[idx]*1000, //x2
+                                             (cell_height + (fftw_real)j * cell_height) + simulation.get_vy()[idx]*1000);//y2
                 float angle = vector.normalize().direction2angle();
                 set_colormap(vector_color.length()/15, velocity_color, color_clamp_min, color_clamp_max, color_bands);
                 glPushMatrix();
-
-                glTranslatef(wn*i,hn*j, 0);
+                glTranslatef(cell_width*i,cell_height*j, 0);
                 glRotated(angle,0,0,1);
-                drawArrow(angle, vector.length());
+                drawArrow(vector.length(), cell_width, cell_height);
                 // }
             }
         }
 }
 
-void MyGLWidget::drawArrow(float angle, float length){
-    // have to rotate before begin triangles
-    //glRotated(angle,0,0,1);
-    //glTranslatef(wn + (fftw_real)i * wn,(hn + (fftw_real)j * hn) + vec_scale * simulation.get_vy()[idx],0);
-
-    //glScaled(vector.length()/20,vector.length()/20,0);
-    glScaled(log(length+1)/35,log(length+1)/15,0);
+void MyGLWidget::drawArrow(float length, fftw_real cell_width, fftw_real cell_height){
+    // draw an error the size of a cell, scale according to vector length
+    glScaled(log(length+1)/10,log(length+1)/5,0);
     glBegin(GL_TRIANGLES);
-    glVertex2f(-100, 50);
-    glVertex2f(100, 50);
-    glVertex2f(0, 100);
+    float size_right = (cell_width/4)*3.0;
+    float size_left = cell_width/4.0;
+    float half_cell_height = cell_height/2.0;
+    // arrow head, whole cell width, 1/3 of cell heigth
+    glVertex2f(0, half_cell_height);            //base1
+    glVertex2f(cell_width/2, cell_height);       //tip
+    glVertex2f(cell_width, half_cell_height);    //base2
+    // arrow tail (made up of 2 triangles)
+    glVertex2f(size_right, half_cell_height);
+    glVertex2f(size_left, 0);
+    glVertex2f(size_left, half_cell_height);
+    glVertex2f(size_right, 0);
+    glVertex2f(size_right, half_cell_height);
+    glVertex2f(size_left, 0);
 
-    glVertex2f(-50, 0);
-    glVertex2f(-50, 50);
-    glVertex2f(50, 50);
 
 
-    glVertex2f(-50, 0);
-    glVertex2f(50, 0);
-    glVertex2f(50, 50);
     glEnd();
     glPopMatrix(); // now it's at normal scale again
     glLoadIdentity(); // needed to stop the rotating, otherwise rotates the entire drawing
 }
 
-void MyGLWidget::drawHedgehog(float i, float j, float wn, float hn){
+void MyGLWidget::drawHedgehog(float i, float j, float cell_width, float cell_height){
     glBegin(GL_LINES);				//draw velocities
     int idx = (j * DIM) + i;
     direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color, color_bands);
-    glVertex2f(wn + (fftw_real)i * wn, hn + (fftw_real)j * hn);
-    glVertex2f((wn + (fftw_real)i * wn) + hedgehog_scale * simulation.get_vx()[idx], (hn + (fftw_real)j * hn) + hedgehog_scale * simulation.get_vy()[idx]);
+    glVertex2f(cell_width + (fftw_real)i * cell_width, cell_height + (fftw_real)j * cell_height);
+    glVertex2f((cell_width + (fftw_real)i * cell_width) + hedgehog_scale * simulation.get_vx()[idx], (cell_height + (fftw_real)j * cell_height) + hedgehog_scale * simulation.get_vy()[idx]);
     glEnd();
 }
 
 
-
-void MyGLWidget::drawSmoke(fftw_real wn, fftw_real hn){
+void MyGLWidget::drawSmoke(fftw_real cell_width, fftw_real cell_height){
     int  i, j, idx0, idx1, idx2, idx3; double px0,py0,px1,py1,px2,py2,px3,py3;
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glBegin(GL_TRIANGLES);
@@ -192,20 +191,20 @@ void MyGLWidget::drawSmoke(fftw_real wn, fftw_real hn){
     {
         for (i = 0; i < DIM - 1; i++)
         {
-            px0  = wn + (fftw_real)i * wn;
-            py0  = hn + (fftw_real)j * hn;
+            px0  = cell_width + (fftw_real)i * cell_width;
+            py0  = cell_height + (fftw_real)j * cell_height;
             idx0 = (j * DIM) + i;
 
-            px1  = wn + (fftw_real)i * wn;
-            py1  = hn + (fftw_real)(j + 1) * hn;
+            px1  = cell_width + (fftw_real)i * cell_width;
+            py1  = cell_height + (fftw_real)(j + 1) * cell_height;
             idx1 = ((j + 1) * DIM) + i;
 
-            px2  = wn + (fftw_real)(i + 1) * wn;
-            py2  = hn + (fftw_real)(j + 1) * hn;
+            px2  = cell_width + (fftw_real)(i + 1) * cell_width;
+            py2  = cell_height + (fftw_real)(j + 1) * cell_height;
             idx2 = ((j + 1) * DIM) + (i + 1);
 
-            px3  = wn + (fftw_real)(i + 1) * wn;
-            py3  = hn + (fftw_real)j * hn;
+            px3  = cell_width + (fftw_real)(i + 1) * cell_width;
+            py3  = cell_height + (fftw_real)j * cell_height;
             idx3 = (j * DIM) + (i + 1);
             set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min, color_clamp_max, color_bands);
             glVertex2f(px0, py0);
@@ -240,21 +239,24 @@ void MyGLWidget::do_one_simulation_step()
 }
 
 
-void MyGLWidget::showAnimation()
+void MyGLWidget::showAnimation(bool new_frozen)
 {
-    simulation.set_frozen(1-simulation.get_frozen());
+    // ! because if the checkbox = true, frozen should be set to false
+    simulation.set_frozen(!new_frozen);
 }
 
-void MyGLWidget::drawMatter()
+void MyGLWidget::drawMatter(bool new_draw_smoke)
 {
-    draw_smoke = 1 - draw_smoke;
-    if (draw_smoke==0) draw_vecs = 1;
+    draw_smoke = new_draw_smoke;
+    if (!new_draw_smoke) {
+        draw_vecs = true;
+    }
 }
 
-void MyGLWidget::drawHedgehogs()
+void MyGLWidget::drawHedgehogs(bool new_draw_vecs)
 {
-    draw_vecs = 1 - draw_vecs;
-    if (draw_vecs==0) draw_smoke = 1;
+    draw_vecs = new_draw_vecs;
+    if (!draw_vecs) draw_smoke = true;
 }
 
 void MyGLWidget::drawGrid(bool new_draw_grid)
@@ -399,7 +401,7 @@ void MyGLWidget::applyColoringToDataset(QString dataset_to_use){
 void MyGLWidget::drawBar(){
     glPushMatrix ();
     glBegin (GL_QUADS);
-    if (draw_smoke == 1){
+    if (draw_smoke){
         for (int i = 0; i < 1001; i = i + 1){
             set_colormap(0.001*i,scalar_col, color_clamp_min, color_clamp_max, color_bands);
             glVertex3f(15+(0.5*i), 40, 0); //(x,y top left)
@@ -408,7 +410,7 @@ void MyGLWidget::drawBar(){
             glVertex3f(15+(0.5*(i+1)),40, 0); //(x,y top right)
         }
     }
-    if (draw_vecs == 1){
+    if (draw_vecs){
         for (int i = 0; i < 1001; i = i + 1){
             set_colormap(0.001*i,velocity_color, color_clamp_min, color_clamp_max, color_bands);
             glVertex3f(15+(0.5*i), 70, 0); //(x,y top left)
@@ -427,22 +429,22 @@ void MyGLWidget::OGL_Draw_Text(){
     //glPushMatrix();
     //glDisable(GL_LIGHTING);
     glDisable(GL_DEPTH_TEST);
-
-    //qglColor(Qt::white);
-    set_colormap(1-0.001,scalar_col, color_clamp_min, color_clamp_max,color_bands);
-    renderText(20, 15, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
-    //qglColor(Qt::black);
-    set_colormap(1-color_clamp_max,scalar_col, color_clamp_min, color_clamp_max,color_bands);
-    renderText(490, 15, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
-
+    if (draw_smoke){
+        //qglColor(Qt::white);
+        set_colormap(1-0.001,scalar_col, color_clamp_min, color_clamp_max,color_bands);
+        renderText(20, 15, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
+        //qglColor(Qt::black);
+        set_colormap(1-color_clamp_max,scalar_col, color_clamp_min, color_clamp_max,color_bands);
+        renderText(490, 15, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
+}
     //QString maxCol = QString::number(color_clamp_max);
-
-    set_colormap(1-0.001,velocity_color, color_clamp_min, color_clamp_max,color_bands);
-    renderText(20, 45, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render top bar left
-    set_colormap(1-color_clamp_max,velocity_color, color_clamp_min, color_clamp_max,color_bands);
-    //renderText(490, 45, 0, maxCol, QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
-    renderText(490, 45, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
-
+    if (draw_vecs){
+        set_colormap(1-0.001,velocity_color, color_clamp_min, color_clamp_max,color_bands);
+        renderText(20, 45, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render top bar left
+        set_colormap(1-color_clamp_max,velocity_color, color_clamp_min, color_clamp_max,color_bands);
+        //renderText(490, 45, 0, maxCol, QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
+        renderText(490, 45, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
+}
     glEnable(GL_DEPTH_TEST);
     //glEnable(GL_LIGHTING);
     //glPopMatrix();

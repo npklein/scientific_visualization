@@ -25,4 +25,11 @@ void Window::keyPressEvent(QKeyEvent *e)
         QWidget::keyPressEvent(e);
 }
 
+void Window::setDrawingHedgehogsCheckbox(bool setDrawingHedgehogs){
+    ui->drawingHedgehogsCheckbox->setChecked(setDrawingHedgehogs);
+}
+
+void Window::setDrawingMatterCheckbox(bool setDrawingMatter){
+    ui->drawingMatterCheckbox->setChecked(setDrawingMatter);
+}
 
