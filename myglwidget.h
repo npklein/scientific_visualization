@@ -52,7 +52,7 @@ private slots:
 
     void drawHedgehog(float i, float j, float wn, float hn);
 
-    void drawArrow(float length, fftw_real cellWidth, fftw_real cellHeigth);
+    void drawArrow(Vector vector, fftw_real cellWidth, fftw_real cellHeigth, int i, int j, float vy);
 
     void setGlyphType(QString glyps);
 
@@ -65,6 +65,10 @@ private slots:
     void drawGrid(bool new_draw_grid);
 
     void setGridSize(int position);
+
+    void drawGradient(fftw_real cellWidth, fftw_real cellHeigth);
+
+    void setDrawGradient(bool new_gradient);
 
 protected:
     void initializeGL();
@@ -93,6 +97,7 @@ private:
     float color_clamp_min;
     float color_clamp_max;
     float arrow_scale;
+    bool gradient;
     QWidget *window;
     std::string dataset;
     QPoint lastPos;
