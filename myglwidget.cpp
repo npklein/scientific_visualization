@@ -167,14 +167,15 @@ void MyGLWidget::drawArrow(Vector vector, fftw_real cell_width, fftw_real cell_h
     glRotated(angle,0,0,1);
     glScaled(log(vector.length()+1)/10,log(vector.length()+1)/5,0);
     glBegin(GL_TRIANGLES);
-    float size_right = (cell_width/4)*3.0;
-    float size_left = cell_width/4.0;
+    float size_right = (cell_width/20)*11.0;
+    float size_left = (cell_width/20)*9.0;
     float half_cell_height = cell_height/2.0;
     // arrow head, whole cell width, 1/3 of cell heigth
     glVertex2f(0, half_cell_height);            //base1
     glVertex2f(cell_width/2, cell_height);       //tip
     glVertex2f(cell_width, half_cell_height);    //base2
     // arrow tail (made up of 2 triangles)
+    glScaled(log(vector.length()+1),log(vector.length()+1),0);
     glVertex2f(size_right, half_cell_height);
     glVertex2f(size_left, 0);
     glVertex2f(size_left, half_cell_height);
