@@ -25,7 +25,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     force_field_color = 1;
     grid_scale = 1;             // when drawing the grid, the size per cell is grid_scale * cell size, so with 50x50 grid with grid_scale = 10, 5 cells will be drawn
     color_bands = 256;
-    draw_grid = false;
+    draw_grid = true;
     glyphs = "hedgehogs";
     dataset = "fluid density";
     gradient = false;
@@ -130,7 +130,6 @@ void MyGLWidget::drawGradient(fftw_real cell_width, fftw_real cell_height)
             if(gradient_below > gradient_max){
                 gradient_max = gradient_below;
             }
-
         }
 }
 
