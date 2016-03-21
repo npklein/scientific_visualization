@@ -54,21 +54,21 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     glMatrixMode(GL_MODELVIEW);
     //glLoadIdentity();
     drawBar();
-    fftw_real  cellWidth = floor((fftw_real)windowWidth / (fftw_real)(DIM + 1));   // Grid cell width
-    fftw_real  cellHeight = floor((fftw_real)windowHeight / (fftw_real)(DIM + 1));  // Grid cell heigh
+    fftw_real  cell_width = floor((fftw_real)windowWidth / (fftw_real)(DIM + 1));   // Grid cell width
+    fftw_real  cell_heigth = floor((fftw_real)windowHeight / (fftw_real)(DIM + 1));  // Grid cell heigh
     if (draw_grid){
-        drawGridLines(DIM, cellWidth, cellHeight);
+        drawGridLines(DIM, cell_width, cell_heigth);
     }
     if (draw_vecs)
     {
-        drawVelocity(cellWidth, cellHeight);
+        drawVelocity(cell_width, cell_heigth);
     }
     if (gradient){
-        drawGradient(cellWidth, cellHeight);
+        drawGradient(cell_width, cell_heigth);
     }
     if (draw_smoke)
     {
-        drawSmoke(cellWidth, cellHeight);
+        drawSmoke(cell_width, cell_heigth);
     }
 
     OGL_Draw_Text();
@@ -98,7 +98,6 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
     int my = event->y();
     //simulation.drag(mx,my, DIM, winWidth, winHeight);  // Works for Freerk when using external display
     simulation.drag(mx,my, DIM, windowWidth/2, windowHeight/2); // Works for Niek
-    lastPos = event->pos();
 }
 
 void MyGLWidget::drawGradient(fftw_real cell_width, fftw_real cell_height)
@@ -116,7 +115,7 @@ void MyGLWidget::drawGradient(fftw_real cell_width, fftw_real cell_height)
             float y = up_rho - below_rho;
             Vector v = Vector(y, x);
             if (v.length() > 0.1){
-                drawArrow(v, cell_width, cell_height, i, j, v.length());
+                drawArrow(v, cell_width, cell_height, i, j, v.length(), 2);
             }
         }
 }
@@ -139,12 +138,12 @@ void MyGLWidget::drawVelocity(fftw_real cell_width, fftw_real cell_height)
                                        (cell_width + (fftw_real)i * cell_width) + arrow_scale * simulation.get_vx()[idx], //x2
                                        (cell_height + (fftw_real)j * cell_height) + arrow_scale * simulation.get_vy()[idx]);//y2
 
-                drawArrow(vector, cell_width, cell_height, i, j, vector.length()/15);
+                drawArrow(vector, cell_width, cell_height, i, j, vector.length()/15, 10);
             }
         }
 }
 
-void MyGLWidget::drawArrow(Vector vector, fftw_real cell_width, fftw_real cell_height, int i, int j, float vy){
+void MyGLWidget::drawArrow(Vector vector, fftw_real cell_width, fftw_real cell_height, int i, int j, float vy, int scaling_vector){
     // draw an error the size of a cell, scale according to vector length
     float angle = vector.normalize().direction2angle();
 
@@ -152,7 +151,7 @@ void MyGLWidget::drawArrow(Vector vector, fftw_real cell_width, fftw_real cell_h
     glPushMatrix();
     glTranslatef(cell_width*i,cell_height*j, 0);
     glRotated(angle,0,0,1);
-    glScaled(log(vector.length()+1)/10,log(vector.length()+1)/5,0);
+    glScaled(log(vector.length()/scaling_vector+1),log(vector.length()/(scaling_vector/2)+1),0);
     //glScaled(log(vector.length()/2+1),log(vector.length()*5+1),0);
     glBegin(GL_TRIANGLES);
     // arrow base size of 2/20th of cell width
@@ -191,24 +190,24 @@ void MyGLWidget::drawSmoke(fftw_real cell_width, fftw_real cell_height){
     int  i, j, idx0, idx1, idx2, idx3; double px0,py0,px1,py1,px2,py2,px3,py3;
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glBegin(GL_TRIANGLES);
-    for (i = 0; i < DIM - 1; i++)			//draw smoke
+    for (i = 0; i < DIM; i++)			//draw smoke
     {
-        for (j = 0; j < DIM - 1; j++)
+        for (j = 0; j < DIM; j++)
         {
-            px0  = floor(cell_width + (fftw_real)i * cell_width);
-            py0  = floor(cell_height + (fftw_real)j * cell_height);
+            px0  = floor((fftw_real)i * cell_width);
+            py0  = floor((fftw_real)j * cell_height);
             idx0 = (j * DIM) + i;
 
-            px1  = floor(cell_width + (fftw_real)i * cell_width);
-            py1  = floor(cell_height + (fftw_real)(j + 1) * cell_height);
+            px1  = floor((fftw_real)i * cell_width);
+            py1  = floor((fftw_real)(j + 1) * cell_height);
             idx1 = ((j + 1) * DIM) + i;
 
-            px2  = floor(cell_width + (fftw_real)(i + 1) * cell_width);
-            py2  = floor(cell_height + (fftw_real)(j + 1) * cell_height);
+            px2  = floor((fftw_real)(i + 1) * cell_width);
+            py2  = floor((fftw_real)(j + 1) * cell_height);
             idx2 = ((j + 1) * DIM) + (i + 1);
 
-            px3  = floor(cell_width + (fftw_real)(i + 1) * cell_width);
-            py3  = floor(cell_height + (fftw_real)j * cell_height);
+            px3  = floor((fftw_real)(i + 1) * cell_width);
+            py3  = floor((fftw_real)j * cell_height);
             idx3 = (j * DIM) + (i + 1);
             set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min, color_clamp_max, color_bands);
             glVertex2f(px0, py0);
