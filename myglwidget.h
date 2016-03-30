@@ -54,6 +54,8 @@ private slots:
 
     void drawArrow(Vector vector, fftw_real cellWidth, fftw_real cellHeigth, int i, int j, float vy, int scaling_vector);
 
+    void drawStreamLine(float i, float j, fftw_real cell_height, fftw_real cell_width);
+
     void setGlyphType(QString glyps);
 
     void scaleColor(bool new_scale_color);

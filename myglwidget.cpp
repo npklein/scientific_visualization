@@ -25,7 +25,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     force_field_color = 1;
     grid_scale = 1;             // when drawing the grid, the size per cell is grid_scale * cell size, so with 50x50 grid with grid_scale = 10, 5 cells will be drawn
     color_bands = 256;
-    draw_grid = true;
+    draw_grid = false;
     glyphs = "hedgehogs";
     dataset = "fluid density";
     gradient = false;
@@ -96,8 +96,8 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     int mx = event->x();// - lastposition gets calculated in drag(), could save a step by using lastPos.x/y but leaving it like this is safer
     int my = event->y();
-    //simulation.drag(mx,my, DIM, winWidth, winHeight);  // Works for Freerk when using external display
-    simulation.drag(mx,my, DIM, windowWidth/2, windowHeight/2); // Works for Niek
+    simulation.drag(mx,my, DIM, windowWidth, windowHeight);  // Works for Freerk when using external display
+    //simulation.drag(mx,my, DIM, windowWidth/2, windowHeight/2); // Works for Niek
 }
 
 void MyGLWidget::drawGradient(fftw_real cell_width, fftw_real cell_height)
@@ -128,7 +128,10 @@ void MyGLWidget::drawVelocity(fftw_real cell_width, fftw_real cell_height)
         for (j = 0; j < DIM; j++)
         {
             if (glyphs == "hedgehogs"){
-                drawHedgehog(i, j, cell_width, cell_height);
+                if (i % 20 == 0 && j % 20 == 0){
+                //drawHedgehog(i, j, cell_width, cell_height);
+                drawStreamLine(i, j, cell_width, cell_height);
+                }
             }
             if (glyphs == "arrows"){
                 // if (i % 5 == 0 && j % 5 == 0){
@@ -183,6 +186,44 @@ void MyGLWidget::drawHedgehog(float i, float j, float cell_width, float cell_hei
     glVertex2f(cell_width + (fftw_real)i * cell_width, cell_height + (fftw_real)j * cell_height);
     glVertex2f((cell_width + (fftw_real)i * cell_width) + hedgehog_scale * simulation.get_vx()[idx], (cell_height + (fftw_real)j * cell_height) + hedgehog_scale * simulation.get_vy()[idx]);
     glEnd();
+}
+
+/* Given a starting point p in the domain of the vector field,
+ * construct the streamline by integrating the field v upwards.
+ * The simplest is to use Euler integration. Thus, given p,
+ * compute the following point pnext that a particle released at
+ *  p would travel to in the field v by using pnext= p + v(p)*Dt,
+ * where v(p) is the value of v at p and Dt is a (small) time step.
+ * Render the streamline segment ppnext. Then, repeat the process by replacing p with pnext.
+*/
+
+void MyGLWidget::drawStreamLine(float i, float j, fftw_real cell_width, fftw_real cell_height){
+    glBegin(GL_LINES);				//draw velocities
+    int idx = (j * DIM) + i;
+        float dt = 0.001;
+        // get coordinates from edges of cell
+        float dvx = (simulation.get_vx()[idx+1])-(simulation.get_vx()[idx-1]) * 100;
+        float dvy = (simulation.get_vy()[idx+1])-(simulation.get_vy()[idx-1]) * 100;
+        float x = cell_width + ((fftw_real)i) * cell_width;
+        float y = cell_height + ((fftw_real)j) * cell_height;
+        float new_x = 0;
+        float new_y = 0;
+        for (float l=0; l<=DIM; l+=dt){
+            //direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color, color_bands);
+            //set_colormap(simulation.get_rho()[idx], scalar_col, color_clamp_min, color_clamp_max, color_bands);
+            if (new_x < cell_width*DIM && new_y < cell_height*DIM){
+            glVertex2f(x, y);
+            new_x = x+dvx+l;
+            new_y = y+dvy+l;
+            glVertex2f(new_x,new_y);
+            }
+            x = new_x;
+            y =  new_y;
+        }
+        //(cell_width + ((fftw_real)i + dvx + l + dt) * cell_width) + hedgehog_scale * simulation.get_vx()[idx]
+        //(cell_height + ((fftw_real)j + dvy + l + dt) * cell_height) + hedgehog_scale * simulation.get_vy()[idx]
+
+glEnd();
 }
 
 
