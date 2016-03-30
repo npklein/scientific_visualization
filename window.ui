@@ -351,6 +351,16 @@
        </property>
       </widget>
      </item>
+     <item row="13" column="1">
+      <widget class="QCheckBox" name="drawStreamLineCheckbox">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Stream lines</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
@@ -389,6 +399,7 @@
     <slot>setGridSize(int)</slot>
     <slot>drawDispersion(bool)</slot>
     <slot>setDrawGradient(bool)</slot>
+    <slot>setDrawStreamline(bool)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -887,6 +898,22 @@
     <hint type="destinationlabel">
      <x>79</x>
      <y>389</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>drawStreamLineCheckbox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setDrawStreamline(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>245</x>
+     <y>700</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>321</x>
+     <y>369</y>
     </hint>
    </hints>
   </connection>

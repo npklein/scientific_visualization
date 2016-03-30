@@ -54,7 +54,11 @@ private slots:
 
     void drawArrow(Vector vector, fftw_real cellWidth, fftw_real cellHeigth, int i, int j, float vy, int scaling_factor);
 
-    void drawStreamLine(float i, float j, fftw_real cell_height, fftw_real cell_width);
+    void drawStreamline(float i, float j, fftw_real cell_height, fftw_real cell_width);
+
+    void drawStreamline(fftw_real cell_height, fftw_real cell_width);
+
+    void setDrawStreamline(bool new_streamline);
 
     void setGlyphType(QString glyps);
 
@@ -100,6 +104,7 @@ private:
     float color_clamp_max;
     float arrow_scale;
     bool gradient;
+    bool streamline;
     QWidget *window;
     std::string dataset;
     QPoint lastPos;
