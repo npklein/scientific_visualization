@@ -54,10 +54,10 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     glMatrixMode(GL_MODELVIEW);
     //glLoadIdentity();
     drawBar();
-    fftw_real  cell_width = floor((fftw_real)windowWidth / (fftw_real)(DIM + 1));   // Grid cell width
-    fftw_real  cell_heigth = floor((fftw_real)windowHeight / (fftw_real)(DIM + 1));  // Grid cell heigh
+    fftw_real  cell_width = ceil((fftw_real)windowWidth / (fftw_real)(DIM));   // Grid cell width
+    fftw_real  cell_heigth = ceil((fftw_real)windowHeight / (fftw_real)(DIM));  // Grid cell heigh
     if (draw_grid){
-        drawGridLines(DIM, cell_width, cell_heigth);
+        drawGridLines(DIM+1, cell_width, cell_heigth);
     }
     if (draw_vecs)
     {
@@ -136,17 +136,17 @@ void MyGLWidget::drawVelocity(fftw_real cell_width, fftw_real cell_height)
             if (glyphs == "arrows"){
                 // if (i % 5 == 0 && j % 5 == 0){
                 idx = (j * DIM) + i;
-                Vector vector = Vector(cell_width + (fftw_real)i * cell_width, //x1
-                                       cell_height + (fftw_real)j * cell_height, //y1
-                                       (cell_width + (fftw_real)i * cell_width) + arrow_scale * simulation.get_vx()[idx], //x2
-                                       (cell_height + (fftw_real)j * cell_height) + arrow_scale * simulation.get_vy()[idx]);//y2
+                Vector vector = Vector((fftw_real)i * cell_width, //x1
+                                       (fftw_real)j * cell_height, //y1
+                                       ((fftw_real)i * cell_width) + arrow_scale * simulation.get_vx()[idx], //x2
+                                       ((fftw_real)j * cell_height) + arrow_scale * simulation.get_vy()[idx]);//y2
 
                 drawArrow(vector, cell_width, cell_height, i, j, vector.length()/15, 10);
             }
         }
 }
 
-void MyGLWidget::drawArrow(Vector vector, fftw_real cell_width, fftw_real cell_height, int i, int j, float vy, int scaling_vector){
+void MyGLWidget::drawArrow(Vector vector, fftw_real cell_width, fftw_real cell_height, int i, int j, float vy, int scaling_factor){
     // draw an error the size of a cell, scale according to vector length
     float angle = vector.normalize().direction2angle();
 
@@ -154,7 +154,7 @@ void MyGLWidget::drawArrow(Vector vector, fftw_real cell_width, fftw_real cell_h
     glPushMatrix();
     glTranslatef(cell_width*i,cell_height*j, 0);
     glRotated(angle,0,0,1);
-    glScaled(log(vector.length()/scaling_vector+1),log(vector.length()/(scaling_vector/2)+1),0);
+    glScaled(log(vector.length()/scaling_factor+1),log(vector.length()/(scaling_factor/2)+1),0);
     //glScaled(log(vector.length()/2+1),log(vector.length()*5+1),0);
     glBegin(GL_TRIANGLES);
     // arrow base size of 2/20th of cell width
@@ -183,8 +183,8 @@ void MyGLWidget::drawHedgehog(float i, float j, float cell_width, float cell_hei
     glBegin(GL_LINES);				//draw velocities
     int idx = (j * DIM) + i;
     direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color, color_bands);
-    glVertex2f(cell_width + (fftw_real)i * cell_width, cell_height + (fftw_real)j * cell_height);
-    glVertex2f((cell_width + (fftw_real)i * cell_width) + hedgehog_scale * simulation.get_vx()[idx], (cell_height + (fftw_real)j * cell_height) + hedgehog_scale * simulation.get_vy()[idx]);
+    glVertex2f((fftw_real)i * cell_width, (fftw_real)j * cell_height);
+    glVertex2f((fftw_real)i * cell_width + hedgehog_scale * simulation.get_vx()[idx], (fftw_real)j * cell_height + hedgehog_scale * simulation.get_vy()[idx]);
     glEnd();
 }
 
@@ -511,13 +511,12 @@ void MyGLWidget::setGlyphType(QString new_glyphs){
 
 void MyGLWidget::drawGridLines(int DIM, int cell_width, int cell_heigth){
     glBegin(GL_LINES);
-    for(int i=0;i <= floor(DIM/grid_scale);i++) {
+    for(int i=0;i <= DIM/grid_scale;i++) {
         glColor3f(1,1,1);
-        glVertex2f(i*cell_width*grid_scale + 0.5*cell_width,0.5*cell_heigth);
-        glVertex2f(i*cell_width*grid_scale + 0.5*cell_width,DIM*cell_heigth*grid_scale + 0.5*cell_heigth);
-
-        glVertex2f(0,i*cell_heigth*grid_scale+ 0.5*cell_heigth);
-        glVertex2f(DIM*cell_width*grid_scale + 0.5*cell_width,i*cell_heigth*grid_scale+0.5*cell_heigth);
+        glVertex2f(i*cell_width*grid_scale,0);
+        glVertex2f(i*cell_width*grid_scale,DIM*cell_heigth*grid_scale);
+        glVertex2f(0,i*cell_heigth*grid_scale);
+        glVertex2f(DIM*cell_width*grid_scale,i*cell_heigth*grid_scale);
     };
     glEnd();
 }

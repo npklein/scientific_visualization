@@ -52,7 +52,7 @@ private slots:
 
     void drawHedgehog(float i, float j, float wn, float hn);
 
-    void drawArrow(Vector vector, fftw_real cellWidth, fftw_real cellHeigth, int i, int j, float vy, int scaling_vector);
+    void drawArrow(Vector vector, fftw_real cellWidth, fftw_real cellHeigth, int i, int j, float vy, int scaling_factor);
 
     void drawStreamLine(float i, float j, fftw_real cell_height, fftw_real cell_width);
 
