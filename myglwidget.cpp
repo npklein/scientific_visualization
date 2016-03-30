@@ -29,6 +29,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     glyphs = "hedgehogs";
     dataset = "fluid density";
     gradient = false;
+    streamline = false;
     simulation.init_simulation(DIM);
     QTimer *timer = new QTimer;
     timer->start(1);
@@ -58,6 +59,9 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     fftw_real  cell_heigth = ceil((fftw_real)windowHeight / (fftw_real)(DIM));  // Grid cell heigh
     if (draw_grid){
         drawGridLines(DIM+1, cell_width, cell_heigth);
+    }
+    if (streamline){
+        drawStreamline(cell_width, cell_heigth);
     }
     if (draw_vecs)
     {
@@ -96,8 +100,8 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     int mx = event->x();// - lastposition gets calculated in drag(), could save a step by using lastPos.x/y but leaving it like this is safer
     int my = event->y();
-    //simulation.drag(mx,my, DIM, winWidth, winHeight);  // Works for Freerk when using external display
-    simulation.drag(mx,my, DIM, windowWidth/2, windowHeight/2); // Works for Niek
+    simulation.drag(mx,my, DIM, windowWidth, windowHeight);  // Works for Freerk when using external display
+    //simulation.drag(mx,my, DIM, windowWidth/2, windowHeight/2); // Works for Niek
 }
 
 void MyGLWidget::drawGradient(fftw_real cell_width, fftw_real cell_height)
@@ -117,7 +121,19 @@ void MyGLWidget::drawGradient(fftw_real cell_width, fftw_real cell_height)
             if (v.length() > 0.1){
                 drawArrow(v, cell_width, cell_height, i, j, v.length(), 2);
             }
+        }
+}
 
+void MyGLWidget::drawStreamline(fftw_real cell_width, fftw_real cell_height)
+{
+    int  i, j, idx;
+
+    for (i = 0; i < DIM; i++)
+        for (j = 0; j < DIM; j++)
+        {
+            if (i % 20 == 0 && j % 20 == 0){
+                drawStreamline(i, j, cell_width, cell_height);
+            }
         }
 }
 
@@ -183,6 +199,34 @@ void MyGLWidget::drawHedgehog(float i, float j, float cell_width, float cell_hei
     direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color, color_bands);
     glVertex2f((fftw_real)i * cell_width, (fftw_real)j * cell_height);
     glVertex2f((fftw_real)i * cell_width + hedgehog_scale * simulation.get_vx()[idx], (fftw_real)j * cell_height + hedgehog_scale * simulation.get_vy()[idx]);
+    glEnd();
+}
+
+
+void MyGLWidget::drawStreamline(float i, float j, fftw_real cell_width, fftw_real cell_height){
+    glBegin(GL_LINES);				//draw
+    int idx = (j * DIM) + i;
+    float dt = 0.001;
+    // get coordinates from edges of cell
+    float dvx = (simulation.get_vx()[idx+1])-(simulation.get_vx()[idx-1]) * 100;
+    float dvy = (simulation.get_vy()[idx+1])-(simulation.get_vy()[idx-1]) * 100;
+    float x = cell_width + ((fftw_real)i) * cell_width;
+    float y = cell_height + ((fftw_real)j) * cell_height;
+    float new_x = 0;
+    float new_y = 0;
+    for (float l=0; l<=DIM; l+=dt){
+    //direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color, color_bands);
+        if (new_x < cell_width*DIM && new_y < cell_height*DIM){ //limit drawing grid borders
+            glVertex2f(x, y);
+            new_x = x+dvx+l;
+            new_y = y+dvy+l;
+            glVertex2f(new_x,new_y);
+        }
+        x = new_x;
+        y = new_y;
+    }
+        //(cell_width + ((fftw_real)i + dvx + l + dt) * cell_width) + hedgehog_scale * simulation.get_vx()[idx]
+        //(cell_height + ((fftw_real)j + dvy + l + dt) * cell_height) + hedgehog_scale * simulation.get_vy()[idx]
     glEnd();
 }
 
@@ -483,4 +527,9 @@ void MyGLWidget::drawGridLines(int DIM, int cell_width, int cell_heigth){
 
 void MyGLWidget::setDrawGradient(bool new_gradient){
     gradient = new_gradient;
+}
+
+void MyGLWidget::setDrawStreamline(bool new_streamline){
+    streamline = new_streamline;
+    if (streamline) draw_vecs = false;
 }
