@@ -16,7 +16,8 @@ public:
 signals:
 
 public slots:
-    void do_one_simulation_step(void);
+    void do_one_simulation_step(bool update);
+    void do_one_simulation_step();
 
 private slots:
     void showAnimation(bool new_frozen);
@@ -44,6 +45,8 @@ private slots:
 
     void drawVelocity(fftw_real wn, fftw_real hn);
 
+    void drawVelocity(fftw_real cell_width, fftw_real cell_height, fftw_real *vx, fftw_real *vy);
+
     void drawSmoke(fftw_real wn, fftw_real hn);
 
     void applyColoringToDataset(QString dataset_to_use);
@@ -69,6 +72,8 @@ private slots:
     void drawGradient(fftw_real cellWidth, fftw_real cellHeigth);
 
     void setDrawGradient(bool new_gradient);
+
+    void drawSlices(int n);
 
 protected:
     void initializeGL();

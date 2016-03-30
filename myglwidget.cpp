@@ -8,6 +8,7 @@
 #include <simulation.cpp>              //the numerical simulation FFTW library
 #include <cmath>
 #include "vector.cpp"
+#include "grid.h"
 
 MyGLWidget::MyGLWidget(QWidget *parent)
 {
@@ -22,6 +23,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     color_clamp_min = 0.0;        // The lower bound value to clamp color map at
     color_clamp_max = 1.0;        // The higher bound value to clamp color map at
     velocity_color = 1;
+
     force_field_color = 1;
     grid_scale = 1;             // when drawing the grid, the size per cell is grid_scale * cell size, so with 50x50 grid with grid_scale = 10, 5 cells will be drawn
     color_bands = 256;
@@ -44,8 +46,6 @@ void MyGLWidget::initializeGL()
     qglClearColor(Qt::black);
 }
 
-
-
 void MyGLWidget::paintGL() //glutDisplayFunc(display);
 {
     glEnable(GL_DEPTH_TEST);
@@ -56,12 +56,14 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     drawBar();
     fftw_real  cell_width = ceil((fftw_real)windowWidth / (fftw_real)(DIM));   // Grid cell width
     fftw_real  cell_heigth = ceil((fftw_real)windowHeight / (fftw_real)(DIM));  // Grid cell heigh
+
     if (draw_grid){
         drawGridLines(DIM+1, cell_width, cell_heigth);
     }
     if (draw_vecs)
     {
         drawVelocity(cell_width, cell_heigth);
+        //drawSlices(20);
     }
     if (gradient){
         drawGradient(cell_width, cell_heigth);
@@ -75,7 +77,6 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     glFlush();
 }
 
-
 void MyGLWidget::resizeGL(int width, int height)
 {
     // removing below had no effect on what is drawn, so better to not use to lower complexity
@@ -85,7 +86,6 @@ void MyGLWidget::resizeGL(int width, int height)
     gluOrtho2D(0.0, (GLdouble)width, 0.0, (GLdouble)height);
     windowWidth = width; windowHeight = height;
 }
-
 
 void MyGLWidget::mousePressEvent(QMouseEvent *event)
 {
@@ -102,10 +102,8 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 
 void MyGLWidget::drawGradient(fftw_real cell_width, fftw_real cell_height)
 {
-    int  i, j;
-
-    for (i = 0; i < DIM; i++)
-        for (j = 0; j < DIM; j++)
+    for (int i = 0; i < DIM; i++)
+        for (int j = 0; j < DIM; j++)
         {
             float left_rho =  simulation.get_rho()[((j-1) * DIM) + i];
             float up_rho =  simulation.get_rho()[(j * DIM) + (i-1)];
@@ -117,23 +115,21 @@ void MyGLWidget::drawGradient(fftw_real cell_width, fftw_real cell_height)
             if (v.length() > 0.1){
                 drawArrow(v, cell_width, cell_height, i, j, v.length(), 2);
             }
-
         }
 }
 
 void MyGLWidget::drawVelocity(fftw_real cell_width, fftw_real cell_height)
 {
-    int  i, j, idx;
-
-    for (i = 0; i < DIM; i++)
-        for (j = 0; j < DIM; j++)
+    for (int i = 0; i < DIM; i++)
+        for (int j = 0; j < DIM; j++)
         {
             if (glyphs == "hedgehogs"){
                 drawHedgehog(i, j, cell_width, cell_height);
+                //drawSlices(20);
             }
             if (glyphs == "arrows"){
                 // if (i % 5 == 0 && j % 5 == 0){
-                idx = (j * DIM) + i;
+                int idx = (j * DIM) + i;
                 Vector vector = Vector((fftw_real)i * cell_width, //x1
                                        (fftw_real)j * cell_height, //y1
                                        ((fftw_real)i * cell_width) + arrow_scale * simulation.get_vx()[idx], //x2
@@ -143,6 +139,22 @@ void MyGLWidget::drawVelocity(fftw_real cell_width, fftw_real cell_height)
             }
         }
 }
+
+void MyGLWidget::drawVelocity(fftw_real cell_width, fftw_real cell_height, fftw_real *vx, fftw_real *vy)
+{
+    for (int i = 0; i < DIM; i++)
+        for (int j = 0; j < DIM; j++)
+        {
+           int idx = (j * DIM) + i;
+           Vector vector = Vector((fftw_real)i * cell_width, //x1
+                                 (fftw_real)j * cell_height, //y1
+                                 ((fftw_real)i * cell_width) + arrow_scale * vx[idx], //x2
+                                 ((fftw_real)j * cell_height) + arrow_scale * vy[idx]);//y2
+
+                drawArrow(vector, cell_width, cell_height, i, j, vector.length()/15, 10);
+            }
+        }
+
 
 void MyGLWidget::drawArrow(Vector vector, fftw_real cell_width, fftw_real cell_height, int i, int j, float vy, int scaling_factor){
     // draw an error the size of a cell, scale according to vector length
@@ -187,6 +199,23 @@ void MyGLWidget::drawHedgehog(float i, float j, float cell_width, float cell_hei
 }
 
 
+void MyGLWidget::drawSlices(int n){
+    // n = number of slices (timepoints) to draw
+    std::list<Grid> grid_timepoints;
+    for(int y = 0; y < n; y++){
+        do_one_simulation_step(false);
+        Grid grid = Grid(n);
+        for (int i = 0; i < DIM; i++){
+            for (int j = 0; j < DIM; j++){
+                int idx = (j * DIM) + i;
+                grid.addElementToGrid(simulation.get_vx()[idx], simulation.get_vy()[idx], idx);
+            }
+        }
+        grid_timepoints.insert(grid_timepoints.begin(), grid);
+        //drawVelocity()
+    }
+}
+
 void MyGLWidget::drawSmoke(fftw_real cell_width, fftw_real cell_height){
     int  i, j, idx0, idx1, idx2, idx3; double px0,py0,px1,py1,px2,py2,px3,py3;
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -228,7 +257,7 @@ void MyGLWidget::drawSmoke(fftw_real cell_width, fftw_real cell_height){
     glEnd();
 }
 
-void MyGLWidget::do_one_simulation_step()
+void MyGLWidget::do_one_simulation_step(bool update)
 {
     if (!simulation.get_frozen())
     {
@@ -238,10 +267,16 @@ void MyGLWidget::do_one_simulation_step()
         // Note to self: * in *simulation.get_vx() because simulation.get_vx() returns 'double *' and diffuse_matter needs 'double'
         simulation.diffuse_matter(DIM, simulation.get_vx(), simulation.get_vy(),
                                   simulation.get_rho(), simulation.get_rho0(), simulation.get_dt());
-        updateGL();
+        if(update){
+            updateGL();
+        }
     }
 }
 
+void MyGLWidget::do_one_simulation_step()
+{
+    do_one_simulation_step(true);
+}
 
 void MyGLWidget::showAnimation(bool new_frozen)
 {
@@ -293,7 +328,6 @@ void MyGLWidget::setGridSize(int position)
 {
     grid_scale = position;
 }
-
 
 void MyGLWidget::hedgehogScaling(int position)
 {
@@ -350,6 +384,7 @@ void MyGLWidget::clampColorMin(int min_color)
         color_clamp_min = min_color/100.0;
     }
 }
+
 void MyGLWidget::clampColorMax(int max_color)
 {
     if (max_color > 0){
@@ -392,7 +427,6 @@ void MyGLWidget::scalarColoring(QString scalartype){
         }
     }
 }
-
 
 void MyGLWidget::applyColoringToDataset(QString dataset_to_use){
     dataset = dataset_to_use.toStdString();
@@ -440,7 +474,7 @@ void MyGLWidget::OGL_Draw_Text(){
         //qglColor(Qt::black);
         set_colormap(1-color_clamp_max,scalar_col, color_clamp_min, color_clamp_max,color_bands);
         renderText(490, 15, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
-}
+    }
     //QString maxCol = QString::number(color_clamp_max);
     if (draw_vecs){
         set_colormap(1-0.001,velocity_color, color_clamp_min, color_clamp_max,color_bands);
@@ -448,7 +482,7 @@ void MyGLWidget::OGL_Draw_Text(){
         set_colormap(1-color_clamp_max,velocity_color, color_clamp_min, color_clamp_max,color_bands);
         //renderText(490, 45, 0, maxCol, QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
         renderText(490, 45, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
-}
+    }
     glEnable(GL_DEPTH_TEST);
     //glEnable(GL_LIGHTING);
     //glPopMatrix();
@@ -463,7 +497,6 @@ void MyGLWidget::setDim(int new_DIM){
     DIM = new_DIM;
     simulation.init_simulation(DIM);
 }
-
 
 void MyGLWidget::setGlyphType(QString new_glyphs){
     glyphs = new_glyphs;
