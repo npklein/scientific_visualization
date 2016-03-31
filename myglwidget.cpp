@@ -522,7 +522,7 @@ void MyGLWidget::OGL_Draw_Text(QString cClampMin, QString cClampMax){
     glDisable(GL_DEPTH_TEST);
     if (draw_smoke){
         //qglColor(Qt::white);
-        set_colormap(1-color_clamp_min,scalar_col, color_clamp_min, color_clamp_max,color_bands);
+        set_colormap(round(color_clamp_max),scalar_col, color_clamp_min, color_clamp_max,color_bands);
         renderText(20, 15, 0, cClampMin, QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
         //qglColor(Qt::black);
         set_colormap(1-color_clamp_max,scalar_col, color_clamp_min, color_clamp_max,color_bands);
