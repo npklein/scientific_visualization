@@ -126,16 +126,7 @@ void MyGLWidget::drawGradient()
         }
 }
 
-void MyGLWidget::drawStreamline()
-{
-    for (int i = 0; i < DIM; i++)
-        for (int j = 0; j < DIM; j++)
-        {
-            if (i % 20 == 0 && j % 20 == 0){
-                drawStreamline(i, j);
-            }
-        }
-}
+
 
 void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
 {
@@ -220,36 +211,77 @@ void MyGLWidget::drawSlices(int n){
     //updateGL();
 }
 
-void MyGLWidget::drawStreamline(float i, float j){
-    glBegin(GL_LINES);				//draw
-    int idx = (j * DIM) + i;
-    float dt = 0.001;
-    // get coordinates from edges of cell
-    float dvx = (simulation.get_vx()[idx+1])-(simulation.get_vx()[idx-1]);// * 100;
-    float dvy = (simulation.get_vy()[idx+1])-(simulation.get_vy()[idx-1]);// * 100;
-    float x = cell_width + ((fftw_real)i) * cell_width;
-    float y = cell_height + ((fftw_real)j) * cell_height;
-    float new_x = 0;
-    float new_y = 0;
-    for (float l=0; l<=DIM; l+=dt){
-    //direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color, color_bands);
-        if (new_x < cell_width*DIM && new_y < cell_height*DIM){ //limit drawing grid borders
-            //if (new_x > cell_width*DIM+2 || new_y > cell_height*DIM+2 ) break;
-            glVertex2f(x, y);
-            //new_x = (cell_width + ((fftw_real)i+l) * cell_width)*dvx;
-            //new_y = (cell_height + ((fftw_real)j+l) * cell_height)*dvy;
-            new_x = x+dvx+l;
-            new_y = y+dvy+l;
-            glVertex2f(new_x,new_y);
-            dvx = (simulation.get_vx()[(int)(idx+1+dvx+0.5)])-(simulation.get_vx()[(int)(idx-1-dvx+0.5)]) * 100;
-            dvy = (simulation.get_vy()[(int)(idx+1+dvy+0.5)])-(simulation.get_vy()[(int)(idx-1-dvy+0.5)]) * 100;
+void MyGLWidget::drawStreamline()
+{
+
+    //drawStreamline(25,25);
+    for (int i = 0; i < DIM; i++)
+        for (int j = 0; j < DIM; j++)
+        {
+
+            if (i % 5 == 0 && j % 5 == 0){
+            //if ( i ==20 && j==20){
+                int idx_1 = (j * DIM) + i;
+                int idx_2 = (j * DIM) + i+1;
+                int idx_3 = (j+1 * DIM) + i;
+                int idx_4 = (j+1 * DIM) + i+1;
+                float dt = cell_width/3;
+                float max_size = cell_width*3;
+                float vertex_x = (fftw_real)i * cell_width;
+                float vertex_y = (fftw_real)j * cell_height;
+                float start_x = vertex_x + 0.01; // to make sure we are in the cell and not on  the vertex
+                float start_y = vertex_y + 0.01; // to make sure we are in the cell and not on  the vertex
+                for (int y = 0; y < max_size; y+=dt){
+                    Vector vector1 = Vector((fftw_real)i * cell_width, //x1
+                                            (fftw_real)j * cell_height, //y1
+                                            ((fftw_real)i * cell_width) + simulation.get_vx()[idx_1], //x2
+                                            ((fftw_real)j * cell_height) + simulation.get_vy()[idx_1]);//y2
+                    Vector vector2 = Vector((fftw_real)i * cell_width, //x1
+                                            (fftw_real)j * cell_height, //y1
+                                            ((fftw_real)i * cell_width) + simulation.get_vx()[idx_2], //x2
+                                            ((fftw_real)j * cell_height) + simulation.get_vy()[idx_2]);//y2
+                    Vector vector3 = Vector((fftw_real)i * cell_width, //x1
+                                            (fftw_real)j * cell_height, //y1
+                                            ((fftw_real)i * cell_width) + simulation.get_vx()[idx_3], //x2
+                                            ((fftw_real)j * cell_height) + simulation.get_vy()[idx_3]);//y2
+                    Vector vector4 = Vector((fftw_real)i * cell_width, //x1
+                                            (fftw_real)j * cell_height, //y1
+                                            ((fftw_real)i * cell_width) + simulation.get_vx()[idx_4], //x2
+                                            ((fftw_real)j * cell_height) + simulation.get_vy()[idx_4]);//y2
+                    Vector interpolated_vector = Vector(0,0);
+
+                    interpolated_vector.interpolate(vector1, vector2, vector3, vector4, start_x,start_y, vertex_x, vertex_y, cell_width);
+                    // if outside the grid, stop the stream line
+                    //if(interpolated_vector.X > DIM*cell_width || interpolated_vector.Y > DIM*cell_height || interpolated_vector.X <0 || interpolated_vector.Y <0 ){
+                    //    return;
+                    //}
+                    float length  = interpolated_vector.length();
+                    if(length>0){
+                        interpolated_vector.X = interpolated_vector.X / length;
+                        interpolated_vector.Y = interpolated_vector.Y / length;
+                        interpolated_vector.X += interpolated_vector.X * dt;
+                        interpolated_vector.Y += interpolated_vector.Y * dt;
+
+                        //DRAW
+                        glBegin(GL_LINES);				//draw
+                        qglColor(Qt::white);
+                        glVertex2f(start_x, start_y);
+                        glVertex2f(interpolated_vector.X+start_x, interpolated_vector.Y+start_y);
+                        glEnd();
+                        start_x = interpolated_vector.X+start_x;
+                        start_y = interpolated_vector.Y+start_y;
+                        int x_axis = floor(start_x/cell_width);
+                        int y_axis = floor(start_y/cell_height);
+                        idx_1 = (y_axis * DIM) + x_axis;
+                        idx_2 = (y_axis * DIM) + x_axis+1;
+                        idx_3 = (y_axis+1 * DIM) + x_axis;
+                        idx_4 = (y_axis+1 * DIM) + x_axis+1;
+                        vertex_x = (fftw_real)i * cell_width;
+                        vertex_y = (fftw_real)j * cell_height;
+                    }
+            }
         }
-        x = new_x;
-        y = new_y;
-    }
-        //(cell_width + ((fftw_real)i + dvx + l + dt) * cell_width) + hedgehog_scale * simulation.get_vx()[idx]
-        //(cell_height + ((fftw_real)j + dvy + l + dt) * cell_height) + hedgehog_scale * simulation.get_vy()[idx]
-    glEnd();
+}
 }
 
 void MyGLWidget::drawSmoke(){
@@ -579,6 +611,7 @@ void MyGLWidget::setDrawStreamline(bool new_streamline){
     if (draw_streamline) {
         draw_vecs = false;
         draw_slices = false;
+        draw_smoke = false;
     }
 }
 

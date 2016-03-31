@@ -57,8 +57,6 @@ private slots:
 
     void drawArrow(Vector vector, int i, int j, float vy, int scaling_factor);
 
-    void drawStreamline(float i, float j);
-
     void drawStreamline();
 
     void setDrawStreamline(bool new_streamline);
