@@ -43,8 +43,6 @@ private slots:
 
     void drawBar();
 
-    void drawVelocity();
-
     void drawVelocity(fftw_real *vx, fftw_real *vy);
 
     void drawSmoke();
@@ -52,8 +50,6 @@ private slots:
     void applyColoringToDataset(QString dataset_to_use);
 
     void setColorBands(int colorBands);
-
-    void drawHedgehog(float i, float j);
 
     void drawArrow(Vector vector, int i, int j, float vy, int scaling_factor);
 
@@ -82,6 +78,8 @@ private slots:
     void drawSlices(int n);
 
     void setNumberOfGlyphs(int position);
+
+    void setDrawSlices(bool new_slices);
 
 protected:
     void initializeGL();
@@ -112,7 +110,8 @@ private:
     float color_clamp_max;
     float arrow_scale;
     bool gradient;
-    bool streamline;
+    bool draw_streamline;
+    bool draw_slices;
     fftw_real  cell_width;
     fftw_real  cell_height;
     QWidget *window;
