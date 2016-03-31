@@ -220,13 +220,13 @@ void MyGLWidget::drawStreamline()
         {
 
             if (i % 5 == 0 && j % 5 == 0){
-                //if ( i ==20 && j==20){
+            //if ( i ==20 && j==20){
                 int idx_1 = (j * DIM) + i;
                 int idx_2 = (j * DIM) + i+1;
                 int idx_3 = (j+1 * DIM) + i;
                 int idx_4 = (j+1 * DIM) + i+1;
-                float dt = cell_width/5;
-                float max_size = cell_width*10;
+                float dt = cell_width/3;
+                float max_size = cell_width*3;
                 float vertex_x = (fftw_real)i * cell_width;
                 float vertex_y = (fftw_real)j * cell_height;
                 float start_x = vertex_x + 0.01; // to make sure we are in the cell and not on  the vertex
@@ -279,76 +279,9 @@ void MyGLWidget::drawStreamline()
                         vertex_x = (fftw_real)i * cell_width;
                         vertex_y = (fftw_real)j * cell_height;
                     }
-
-                }
-                //glVertex2f(start_x, start_y);
-                //glVertex2f(interpolated_vector.X+start_x, interpolated_vector.Y+start_y);
-                //drawStreamline(i, j);
             }
         }
 }
-
-void MyGLWidget::drawStreamline(float i, float j){
-    glBegin(GL_LINES);				//draw
-    qglColor(Qt::white);
-    glVertex2f(0, 0);
-    //glVertex2f(start_x, start_y);
-    //glVertex2f(interpolated_vector.X+start_x, interpolated_vector.Y+start_y);
-    glVertex2f(300, 300);
-    glEnd();
-    int idx_1 = (j * DIM) + i;
-    int idx_2 = (j * DIM) + i+1;
-    int idx_3 = (j+1 * DIM) + i;
-    int idx_4 = (j+1 * DIM) + i+1;
-    float dt = cell_width/300;
-    float max_size = cell_width*10000;
-    float vertex_x = (fftw_real)i * cell_width;
-    float vertex_y = (fftw_real)j * cell_height;
-    float start_x = vertex_x + 0.0001; // to make sure we are in the cell and not on  the vertex
-    float start_y = vertex_y + 0.0001; // to make sure we are in the cell and not on  the vertex
-    for (int y = 0; y < max_size; y+=dt){
-        Vector vector1 = Vector((fftw_real)i * cell_width, //x1
-                                (fftw_real)j * cell_height, //y1
-                                ((fftw_real)i * cell_width) + simulation.get_vx()[idx_1], //x2
-                                ((fftw_real)j * cell_height) + simulation.get_vy()[idx_1]);//y2
-        Vector vector2 = Vector((fftw_real)i * cell_width, //x1
-                                (fftw_real)j * cell_height, //y1
-                                ((fftw_real)i * cell_width) + simulation.get_vx()[idx_2], //x2
-                                ((fftw_real)j * cell_height) + simulation.get_vy()[idx_2]);//y2
-        Vector vector3 = Vector((fftw_real)i * cell_width, //x1
-                                (fftw_real)j * cell_height, //y1
-                                ((fftw_real)i * cell_width) + simulation.get_vx()[idx_3], //x2
-                                ((fftw_real)j * cell_height) + simulation.get_vy()[idx_3]);//y2
-        Vector vector4 = Vector((fftw_real)i * cell_width, //x1
-                                (fftw_real)j * cell_height, //y1
-                                ((fftw_real)i * cell_width) + simulation.get_vx()[idx_4], //x2
-                                ((fftw_real)j * cell_height) + simulation.get_vy()[idx_4]);//y2
-        Vector interpolated_vector;
-
-        interpolated_vector.interpolate(vector1, vector2, vector3, vector4, start_x,start_y, vertex_x, vertex_y, cell_width);
-        // if outside the grid, stop the stream line
-        if(interpolated_vector.X > DIM || interpolated_vector.Y > DIM || interpolated_vector.X <0 || interpolated_vector.Y <0 ){
-            return;
-        }
-        float length  = interpolated_vector.length();
-        interpolated_vector.X = interpolated_vector.X / 1;
-        interpolated_vector.Y = interpolated_vector.Y / 1;
-        interpolated_vector.X += interpolated_vector.X * dt;
-        interpolated_vector.Y += interpolated_vector.Y * dt;
-
-        //DRAW
-        glBegin(GL_LINES);				//draw
-        qglColor(Qt::white);
-        glVertex2f(0, 0);
-        //glVertex2f(start_x, start_y);
-        //glVertex2f(interpolated_vector.X+start_x, interpolated_vector.Y+start_y);
-        glVertex2f(300, 300);
-        glEnd();
-        start_x = interpolated_vector.X + start_x;
-        start_y = interpolated_vector.Y + start_y;
-        vertex_x = floor(start_x);
-        vertex_y = floor(start_y);
-    }
 }
 
 void MyGLWidget::drawSmoke(){
