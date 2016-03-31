@@ -234,10 +234,15 @@ void MyGLWidget::drawStreamline(float i, float j){
     for (float l=0; l<=DIM; l+=dt){
     //direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color, color_bands);
         if (new_x < cell_width*DIM && new_y < cell_height*DIM){ //limit drawing grid borders
+            if (new_x > cell_width*DIM+2 || new_y > cell_height*DIM+2 ) break;
             glVertex2f(x, y);
+            //new_x = (x+l)*dvx;
+            //new_y = (y+l)*dvy;
             new_x = x+dvx+l;
             new_y = y+dvy+l;
             glVertex2f(new_x,new_y);
+            dvx = (simulation.get_vx()[(int)(idx+1+dvx+0.5)])-(simulation.get_vx()[(int)(idx-1-dvx+0.5)]) * 100;
+            dvy = (simulation.get_vy()[(int)(idx+1+dvy+0.5)])-(simulation.get_vy()[(int)(idx-1-dvy+0.5)]) * 100;
         }
         x = new_x;
         y = new_y;
