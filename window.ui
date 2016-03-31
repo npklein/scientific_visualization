@@ -28,112 +28,10 @@
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="1">
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="1" column="2">
-      <widget class="QComboBox" name="applyColorTo">
-       <item>
-        <property name="text">
-         <string>fluid density</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>|fluid velocity|</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>|force field|</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="12" column="0">
-      <widget class="QLabel" name="label_8">
-       <property name="text">
-        <string>Dimensions</string>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>Color clamp min</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Fluid viscosity</string>
-       </property>
-      </widget>
-     </item>
-     <item row="11" column="3">
-      <widget class="QCheckBox" name="showGridCheckbox">
-       <property name="text">
-        <string>Show grid</string>
-       </property>
-      </widget>
-     </item>
-     <item row="12" column="2">
-      <widget class="QLabel" name="gridSizeLabel">
-       <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
-       </property>
-       <property name="text">
-        <string>Grid size</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="12" column="1">
-      <widget class="QSpinBox" name="dimensionsSpinbox">
-       <property name="minimum">
-        <number>10</number>
-       </property>
-       <property name="maximum">
-        <number>500</number>
-       </property>
-       <property name="singleStep">
-        <number>2</number>
-       </property>
-       <property name="value">
-        <number>50</number>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QCheckBox" name="drawingHedgehogsCheckbox">
-       <property name="text">
-        <string>Draw hedgehogs</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="12" column="3">
-      <widget class="QSlider" name="gridSizeSlider">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>10</number>
-       </property>
+     <item row="10" column="1">
+      <widget class="QSlider" name="colorClampMinSlider">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QCheckBox" name="drawingMatterCheckbox">
-       <property name="text">
-        <string>Draw matter</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -159,10 +57,60 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="3">
-      <widget class="QLabel" name="label_6">
+     <item row="11" column="2">
+      <widget class="QCheckBox" name="checkBox">
        <property name="text">
-        <string>Color bands</string>
+        <string>Scale colors</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QCheckBox" name="drawingHedgehogsCheckbox">
+       <property name="text">
+        <string>Draw hedgehogs</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="3">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Color clamp max</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="4">
+      <widget class="MyGLWidget" name="myGLWidget" native="true">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="mouseTracking">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>VeclocityGlyphType</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="2">
+      <widget class="QSlider" name="colorClampMaxSlider">
+       <property name="value">
+        <number>0</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="invertedAppearance">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -185,119 +133,111 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QComboBox" name="scalarColoring">
-       <item>
-        <property name="text">
-         <string>black&amp;white</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>rainbow</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>heatmap</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="10" column="1">
-      <widget class="QSlider" name="colorClampMinSlider">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0" colspan="4">
-      <widget class="MyGLWidget" name="myGLWidget" native="true">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="cursor">
-        <cursorShape>PointingHandCursor</cursorShape>
-       </property>
-       <property name="mouseTracking">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QPushButton" name="advancedOptionsButton">
+     <item row="11" column="3">
+      <widget class="QCheckBox" name="showGridCheckbox">
        <property name="text">
-        <string>Advanced options</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
+        <string>Show grid</string>
        </property>
       </widget>
      </item>
-     <item row="11" column="2">
-      <widget class="QCheckBox" name="checkBox">
+     <item row="12" column="2">
+      <widget class="QLabel" name="gridSizeLabel">
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
        <property name="text">
-        <string>Scale colors</string>
+        <string>Grid size</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
-     <item row="11" column="0">
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>VeclocityGlyphType</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Timestep</string>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="3">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>Color clamp max</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QCheckBox" name="animationCheckbox">
-       <property name="text">
-        <string>Animate</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="2">
-      <widget class="QSlider" name="colorClampMaxSlider">
-       <property name="value">
-        <number>0</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="invertedAppearance">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="3">
-      <widget class="QSpinBox" name="spinBox">
+     <item row="12" column="3">
+      <widget class="QSlider" name="gridSizeSlider">
        <property name="minimum">
-        <number>2</number>
+        <number>1</number>
        </property>
        <property name="maximum">
-        <number>256</number>
+        <number>10</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="1">
+      <widget class="QSpinBox" name="dimensionsSpinbox">
+       <property name="minimum">
+        <number>10</number>
+       </property>
+       <property name="maximum">
+        <number>500</number>
+       </property>
+       <property name="singleStep">
+        <number>2</number>
        </property>
        <property name="value">
-        <number>256</number>
+        <number>50</number>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Fluid viscosity</string>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="0">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>Dimensions</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Color clamp min</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Glyph scaling</string>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="0">
+      <widget class="QCheckBox" name="drawGradientCheckbox">
+       <property name="text">
+        <string>Draw gradient</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="1">
+      <widget class="QComboBox" name="velocityGlyphType">
+       <item>
+        <property name="text">
+         <string>hedgehogs</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>arrows</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QCheckBox" name="drawingMatterCheckbox">
+       <property name="text">
+        <string>Draw matter</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -323,31 +263,91 @@
        </property>
       </widget>
      </item>
-     <item row="11" column="1">
-      <widget class="QComboBox" name="velocityGlyphType">
-       <item>
-        <property name="text">
-         <string>hedgehogs</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>arrows</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="8" column="0">
-      <widget class="QLabel" name="label_3">
+     <item row="5" column="0">
+      <widget class="QLabel" name="label">
        <property name="text">
-        <string>Glyph scaling</string>
+        <string>Timestep</string>
        </property>
       </widget>
      </item>
-     <item row="13" column="0">
-      <widget class="QCheckBox" name="drawGradientCheckbox">
+     <item row="3" column="3">
+      <widget class="QSpinBox" name="spinBox">
+       <property name="minimum">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <number>256</number>
+       </property>
+       <property name="value">
+        <number>256</number>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QPushButton" name="advancedOptionsButton">
        <property name="text">
-        <string>Draw gradient</string>
+        <string>Advanced options</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Color bands</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QComboBox" name="applyColorTo">
+       <item>
+        <property name="text">
+         <string>fluid density</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>|fluid velocity|</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>|force field|</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="scalarColoring">
+       <item>
+        <property name="text">
+         <string>black&amp;white</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>rainbow</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>heatmap</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QCheckBox" name="animationCheckbox">
+       <property name="text">
+        <string>Animate</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

@@ -16,7 +16,8 @@ public:
 signals:
 
 public slots:
-    void do_one_simulation_step(void);
+    void do_one_simulation_step(bool update);
+    void do_one_simulation_step();
 
 private slots:
     void showAnimation(bool new_frozen);
@@ -42,21 +43,23 @@ private slots:
 
     void drawBar();
 
-    void drawVelocity(fftw_real wn, fftw_real hn);
+    void drawVelocity();
 
-    void drawSmoke(fftw_real wn, fftw_real hn);
+    void drawVelocity(fftw_real *vx, fftw_real *vy);
+
+    void drawSmoke();
 
     void applyColoringToDataset(QString dataset_to_use);
 
     void setColorBands(int colorBands);
 
-    void drawHedgehog(float i, float j, float wn, float hn);
+    void drawHedgehog(float i, float j);
 
-    void drawArrow(Vector vector, fftw_real cellWidth, fftw_real cellHeigth, int i, int j, float vy, int scaling_factor);
+    void drawArrow(Vector vector, int i, int j, float vy, int scaling_factor);
 
-    void drawStreamline(float i, float j, fftw_real cell_height, fftw_real cell_width);
+    void drawStreamline(float i, float j);
 
-    void drawStreamline(fftw_real cell_height, fftw_real cell_width);
+    void drawStreamline();
 
     void setDrawStreamline(bool new_streamline);
 
@@ -64,7 +67,7 @@ private slots:
 
     void scaleColor(bool new_scale_color);
 
-    void drawGridLines(int DIM, int wn, int hn);
+    void drawGridLines(int DIM);
 
     void setDim(int new_DIM);
 
@@ -72,9 +75,11 @@ private slots:
 
     void setGridSize(int position);
 
-    void drawGradient(fftw_real cellWidth, fftw_real cellHeigth);
+    void drawGradient();
 
     void setDrawGradient(bool new_gradient);
+
+    void drawSlices(int n);
 
 protected:
     void initializeGL();
@@ -105,6 +110,8 @@ private:
     float arrow_scale;
     bool gradient;
     bool streamline;
+    fftw_real  cell_width;
+    fftw_real  cell_height;
     QWidget *window;
     std::string dataset;
     QPoint lastPos;
