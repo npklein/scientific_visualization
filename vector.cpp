@@ -47,6 +47,25 @@ float Vector::direction2angle()			//Converts a 2D vector into an orientation (an
 
 }
 
+void Vector::interpolate(Vector v1, Vector v2, Vector v3, Vector v4, float start_x, float start_y, float vertex_x, float vertex_y, float cell_size){
+    float tx = fabs(start_x - vertex_x)/cell_size;	//Parametric coordinates of point within cell
+    float ty = fabs(start_y - vertex_y)/cell_size;
+
+            //Compute vector value at given point, using
+                                            //bilinear interpolation of the vector values at
+    this->X += (1-tx)*(1-ty)*v1.X;		//the four cell vertices
+    this->Y += (1-tx)*(1-ty)*v1.Y;
+
+    this->X += tx*(1-ty)*v2.X;
+    this->Y += tx*(1-ty)*v2.Y;
+
+    this->X += tx*ty*v3.X;
+    this->Y += tx*ty*v3.Y;
+
+    this->X += (1-tx)*ty*v4.X;
+    this->Y += (1-tx)*ty*v4.Y;
+}
+
 Vector::~Vector(void)
 {
 }
