@@ -467,8 +467,16 @@ void MyGLWidget::scalarColoring(QString scalartype){
     }
 }
 
-void MyGLWidget::applyColoringToDataset(QString dataset_to_use){
-    dataset = dataset_to_use.toStdString();
+void MyGLWidget::setFluidDensity(){
+    dataset = "fluid density";
+}
+
+void MyGLWidget::setFluidVelocity(){
+    dataset = "fluid velocity magnitude";
+}
+
+void MyGLWidget::setForceField(){
+    dataset = "force field magnitude";
 }
 
 // Color map explained

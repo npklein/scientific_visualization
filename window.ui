@@ -28,6 +28,23 @@
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="1">
     <layout class="QGridLayout" name="gridLayout_2">
+     <item row="1" column="1">
+      <widget class="QRadioButton" name="fluidDensityRadioButton">
+       <property name="text">
+        <string>fluid density</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QRadioButton" name="forceFieldRadioButton">
+       <property name="text">
+        <string>|force field|</string>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="0">
       <widget class="QCheckBox" name="animationCheckbox">
        <property name="text">
@@ -38,15 +55,219 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_2">
+     <item row="1" column="2">
+      <widget class="QRadioButton" name="fluidVelocityRadioButton">
        <property name="text">
-        <string>Fluid viscosity</string>
+        <string>|fluid velocity|</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="0" column="0" colspan="4">
+      <widget class="MyGLWidget" name="myGLWidget" native="true">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>400</width>
+         <height>400</height>
+        </size>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="mouseTracking">
+        <bool>false</bool>
+       </property>
+       <zorder>tabWidget</zorder>
+       <zorder>tabWidget</zorder>
+       <zorder>tabWidget</zorder>
+       <zorder>tabWidget</zorder>
+       <zorder>tabWidget</zorder>
+       <zorder>tabWidget</zorder>
+       <zorder>tabWidget</zorder>
+       <zorder>tabWidget</zorder>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QCheckBox" name="drawingMatterCheckbox">
+       <property name="text">
+        <string>Draw matter</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QCheckBox" name="drawingHedgehogsCheckbox">
+       <property name="text">
+        <string>Draw hedgehogs</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="0">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>200</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="tabPosition">
+      <enum>QTabWidget::North</enum>
+     </property>
+     <property name="tabShape">
+      <enum>QTabWidget::Rounded</enum>
+     </property>
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>40</width>
+       <height>16</height>
+      </size>
+     </property>
+     <property name="elideMode">
+      <enum>Qt::ElideNone</enum>
+     </property>
+     <property name="usesScrollButtons">
+      <bool>true</bool>
+     </property>
+     <property name="tabsClosable">
+      <bool>false</bool>
+     </property>
+     <property name="movable">
+      <bool>false</bool>
+     </property>
+     <widget class="QWidget" name="colors">
+      <attribute name="title">
+       <string>Colors</string>
+      </attribute>
+      <widget class="QLabel" name="label_6">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>50</y>
+         <width>100</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Color bands</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBox">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>50</y>
+         <width>100</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <number>256</number>
+       </property>
+       <property name="value">
+        <number>256</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_4">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>110</y>
+         <width>101</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>max</string>
+       </property>
+      </widget>
+      <widget class="QSlider" name="colorClampMinSlider">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>130</y>
+         <width>91</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_5">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>80</y>
+         <width>100</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Color clamp</string>
+       </property>
+      </widget>
+      <widget class="QSlider" name="colorClampMaxSlider">
+       <property name="geometry">
+        <rect>
+         <x>84</x>
+         <y>130</y>
+         <width>101</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="invertedAppearance">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_9">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>110</y>
+         <width>101</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>min</string>
+       </property>
+      </widget>
       <widget class="QComboBox" name="scalarColoring">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>10</y>
+         <width>115</width>
+         <height>26</height>
+        </rect>
+       </property>
        <item>
         <property name="text">
          <string>black&amp;white</string>
@@ -63,240 +284,59 @@
         </property>
        </item>
       </widget>
-     </item>
-     <item row="8" column="0">
-      <widget class="QLabel" name="label_8">
-       <property name="text">
-        <string>Dimensions</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Timestep</string>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="1">
-      <widget class="QCheckBox" name="drawStreamLineCheckbox">
-       <property name="enabled">
-        <bool>true</bool>
+      <widget class="QLabel" name="label_10">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>100</width>
+         <height>20</height>
+        </rect>
        </property>
        <property name="text">
-        <string>Stream lines</string>
+        <string>Colormap</string>
        </property>
       </widget>
-     </item>
-     <item row="8" column="2">
-      <widget class="QLabel" name="gridSizeLabel">
-       <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
-       </property>
-       <property name="text">
-        <string>Grid size</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Glyph scaling</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1" colspan="3">
-      <widget class="QSlider" name="fluidViscositySlider">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fluid viscosity&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>1000</number>
-       </property>
-       <property name="value">
-        <number>500</number>
-       </property>
-       <property name="sliderPosition">
-        <number>500</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="1">
-      <widget class="QSpinBox" name="dimensionsSpinbox">
-       <property name="minimum">
-        <number>10</number>
-       </property>
-       <property name="maximum">
-        <number>500</number>
-       </property>
-       <property name="singleStep">
-        <number>2</number>
-       </property>
-       <property name="value">
-        <number>50</number>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="0">
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>VeclocityGlyphType</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="2">
-      <widget class="QSlider" name="colorClampMaxSlider">
-       <property name="value">
-        <number>0</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="invertedAppearance">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QSlider" name="colorClampMinSlider">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="3">
-      <widget class="QSlider" name="gridSizeSlider">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>10</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="3">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>Color clamp max</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="3">
-      <widget class="QCheckBox" name="showGridCheckbox">
-       <property name="text">
-        <string>Show grid</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1" colspan="3">
-      <widget class="QSlider" name="hedgehogScalingSlider">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;hedgehogscaling&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>1000</number>
-       </property>
-       <property name="value">
-        <number>500</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="2">
       <widget class="QCheckBox" name="checkBox">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>160</y>
+         <width>113</width>
+         <height>20</height>
+        </rect>
+       </property>
        <property name="text">
         <string>Scale colors</string>
        </property>
       </widget>
-     </item>
-     <item row="7" column="1">
-      <widget class="QComboBox" name="velocityGlyphType">
-       <item>
-        <property name="text">
-         <string>hedgehogs</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>arrows</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QCheckBox" name="drawingMatterCheckbox">
+     </widget>
+     <widget class="QWidget" name="tab_5">
+      <attribute name="title">
+       <string>Drawing</string>
+      </attribute>
+      <widget class="QLabel" name="label">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>10</y>
+         <width>99</width>
+         <height>22</height>
+        </rect>
+       </property>
        <property name="text">
-        <string>Draw matter</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
+        <string>Timestep</string>
        </property>
       </widget>
-     </item>
-     <item row="0" column="0" colspan="4">
-      <widget class="MyGLWidget" name="myGLWidget" native="true">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>500</width>
-         <height>500</height>
-        </size>
-       </property>
-       <property name="cursor">
-        <cursorShape>PointingHandCursor</cursorShape>
-       </property>
-       <property name="mouseTracking">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="0">
-      <widget class="QCheckBox" name="drawGradientCheckbox">
-       <property name="text">
-        <string>Draw gradient</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QComboBox" name="applyColorTo">
-       <item>
-        <property name="text">
-         <string>fluid density</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>|fluid velocity|</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>|force field|</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="3" column="1" colspan="3">
       <widget class="QSlider" name="simulationTimestepSlider">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>181</width>
+         <height>22</height>
+        </rect>
+       </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;timestep&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -316,85 +356,257 @@
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QPushButton" name="advancedOptionsButton">
+      <widget class="QLabel" name="label_2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>80</y>
+         <width>99</width>
+         <height>22</height>
+        </rect>
+       </property>
        <property name="text">
-        <string>Advanced options</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
+        <string>Fluid viscosity</string>
        </property>
       </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QLabel" name="label_6">
-       <property name="text">
-        <string>Color bands</string>
+      <widget class="QSlider" name="fluidViscositySlider">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>110</y>
+         <width>181</width>
+         <height>22</height>
+        </rect>
        </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QSpinBox" name="spinBox">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fluid viscosity&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="minimum">
-        <number>2</number>
+        <number>1</number>
        </property>
        <property name="maximum">
-        <number>256</number>
+        <number>1000</number>
        </property>
        <property name="value">
-        <number>256</number>
+        <number>500</number>
+       </property>
+       <property name="sliderPosition">
+        <number>500</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
-     </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="label_3">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>160</y>
+         <width>99</width>
+         <height>22</height>
+        </rect>
+       </property>
        <property name="text">
-        <string>Color clamp min</string>
+        <string>Glyph scaling</string>
        </property>
       </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QCheckBox" name="drawingHedgehogsCheckbox">
-       <property name="text">
-        <string>Draw hedgehogs</string>
+      <widget class="QSlider" name="hedgehogScalingSlider">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>190</y>
+         <width>181</width>
+         <height>22</height>
+        </rect>
        </property>
-       <property name="checked">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;hedgehogscaling&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>1000</number>
+       </property>
+       <property name="value">
+        <number>500</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_8">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>270</y>
+         <width>71</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Dimensions</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="dimensionsSpinbox">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>270</y>
+         <width>91</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>10</number>
+       </property>
+       <property name="maximum">
+        <number>500</number>
+       </property>
+       <property name="singleStep">
+        <number>2</number>
+       </property>
+       <property name="value">
+        <number>50</number>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="showGridCheckbox">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>300</y>
+         <width>121</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Show grid</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="gridSizeLabel">
+       <property name="geometry">
+        <rect>
+         <x>-60</x>
+         <y>330</y>
+         <width>117</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string>Grid size</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QSlider" name="gridSizeSlider">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>330</y>
+         <width>122</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>10</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_7">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>230</y>
+         <width>89</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>GlyphType</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="velocityGlyphType">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>230</y>
+         <width>122</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string>hedgehogs</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>arrows</string>
+        </property>
+       </item>
+      </widget>
+      <zorder>label</zorder>
+      <zorder>simulationTimestepSlider</zorder>
+      <zorder>label_2</zorder>
+      <zorder>fluidViscositySlider</zorder>
+      <zorder>label_3</zorder>
+      <zorder>hedgehogScalingSlider</zorder>
+      <zorder>label_8</zorder>
+      <zorder>dimensionsSpinbox</zorder>
+      <zorder>showGridCheckbox</zorder>
+      <zorder>gridSizeLabel</zorder>
+      <zorder>gridSizeSlider</zorder>
+      <zorder>label_7</zorder>
+      <zorder>label_7</zorder>
+      <zorder>velocityGlyphType</zorder>
+     </widget>
+     <widget class="QWidget" name="tab_6">
+      <attribute name="title">
+       <string>Gradient</string>
+      </attribute>
+      <widget class="QCheckBox" name="drawGradientCheckbox">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>10</y>
+         <width>110</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Draw gradient</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="streamlines">
+      <attribute name="title">
+       <string>Streamlines</string>
+      </attribute>
+      <widget class="QCheckBox" name="drawStreamLineCheckbox">
+       <property name="enabled">
         <bool>true</bool>
        </property>
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>10</y>
+         <width>118</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Stream lines</string>
+       </property>
       </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="0" column="0" alignment="Qt::AlignLeft">
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="minimumSize">
-      <size>
-       <width>200</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>200</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <widget class="QWidget" name="tab">
-      <attribute name="title">
-       <string>Tab 1</string>
-      </attribute>
-     </widget>
-     <widget class="QWidget" name="tab_2">
-      <attribute name="title">
-       <string>Tab 2</string>
-      </attribute>
      </widget>
     </widget>
    </item>
@@ -435,6 +647,9 @@
     <slot>drawDispersion(bool)</slot>
     <slot>setDrawGradient(bool)</slot>
     <slot>setDrawStreamline(bool)</slot>
+    <slot>setFluidDensity()</slot>
+    <slot>setFluidVelocity()</slot>
+    <slot>setForceField()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -447,12 +662,12 @@
    <slot>showAnimation(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>160</x>
-     <y>435</y>
+     <x>337</x>
+     <y>489</y>
     </hint>
     <hint type="destinationlabel">
-     <x>57</x>
-     <y>354</y>
+     <x>291</x>
+     <y>367</y>
     </hint>
    </hints>
   </connection>
@@ -463,12 +678,12 @@
    <slot>fluidViscosity(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>615</x>
-     <y>543</y>
+     <x>676</x>
+     <y>577</y>
     </hint>
     <hint type="destinationlabel">
-     <x>179</x>
-     <y>356</y>
+     <x>413</x>
+     <y>369</y>
     </hint>
    </hints>
   </connection>
@@ -479,12 +694,12 @@
    <slot>drawMatter(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>318</x>
-     <y>471</y>
+     <x>452</x>
+     <y>513</y>
     </hint>
     <hint type="destinationlabel">
-     <x>121</x>
-     <y>356</y>
+     <x>355</x>
+     <y>369</y>
     </hint>
    </hints>
   </connection>
@@ -495,12 +710,12 @@
    <slot>hedgehogScaling(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>615</x>
-     <y>577</y>
+     <x>676</x>
+     <y>611</y>
     </hint>
     <hint type="destinationlabel">
-     <x>208</x>
-     <y>356</y>
+     <x>442</x>
+     <y>369</y>
     </hint>
    </hints>
   </connection>
@@ -511,8 +726,8 @@
    <slot>timestep(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>615</x>
-     <y>509</y>
+     <x>676</x>
+     <y>543</y>
     </hint>
     <hint type="destinationlabel">
      <x>266</x>
@@ -527,8 +742,8 @@
    <slot>drawHedgehogs(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>469</x>
-     <y>471</y>
+     <x>576</x>
+     <y>507</y>
     </hint>
     <hint type="destinationlabel">
      <x>372</x>
@@ -543,60 +758,12 @@
    <slot>scalarColoring(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>312</x>
-     <y>439</y>
+     <x>209</x>
+     <y>67</y>
     </hint>
     <hint type="destinationlabel">
-     <x>133</x>
-     <y>356</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>advancedOptionsButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>label_4</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>92</x>
-     <y>479</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>153</x>
-     <y>611</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>advancedOptionsButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>colorClampMinSlider</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>162</x>
-     <y>479</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>313</x>
-     <y>611</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>advancedOptionsButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>colorClampMaxSlider</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>162</x>
-     <y>479</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>464</x>
-     <y>611</y>
+     <x>367</x>
+     <y>369</y>
     </hint>
    </hints>
   </connection>
@@ -607,8 +774,8 @@
    <slot>clampColorMin(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>313</x>
-     <y>611</y>
+     <x>105</x>
+     <y>183</y>
     </hint>
     <hint type="destinationlabel">
      <x>304</x>
@@ -623,43 +790,11 @@
    <slot>clampColorMax(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>464</x>
-     <y>611</y>
+     <x>199</x>
+     <y>183</y>
     </hint>
     <hint type="destinationlabel">
      <x>415</x>
-     <y>356</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>advancedOptionsButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>label_5</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>103</x>
-     <y>479</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>611</x>
-     <y>611</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>applyColorTo</sender>
-   <signal>activated(QString)</signal>
-   <receiver>myGLWidget</receiver>
-   <slot>applyColoringToDataset(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>463</x>
-     <y>439</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>346</x>
      <y>356</y>
     </hint>
    </hints>
@@ -671,8 +806,8 @@
    <slot>setColorBands(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>611</x>
-     <y>473</y>
+     <x>204</x>
+     <y>105</y>
     </hint>
     <hint type="destinationlabel">
      <x>590</x>
@@ -687,12 +822,12 @@
    <slot>setGlyphType(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>312</x>
+     <x>446</x>
      <y>647</y>
     </hint>
     <hint type="destinationlabel">
-     <x>211</x>
-     <y>356</y>
+     <x>445</x>
+     <y>369</y>
     </hint>
    </hints>
   </connection>
@@ -703,8 +838,8 @@
    <slot>scaleColor(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>469</x>
-     <y>643</y>
+     <x>127</x>
+     <y>211</y>
     </hint>
     <hint type="destinationlabel">
      <x>358</x>
@@ -719,92 +854,12 @@
    <slot>setDim(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>309</x>
+     <x>443</x>
      <y>679</y>
     </hint>
     <hint type="destinationlabel">
-     <x>226</x>
-     <y>347</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>advancedOptionsButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>label_7</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>92</x>
-     <y>479</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>55</x>
-     <y>643</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>advancedOptionsButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>label_8</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>31</x>
-     <y>479</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>47</x>
-     <y>679</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>advancedOptionsButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>velocityGlyphType</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>36</x>
-     <y>479</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>312</x>
-     <y>647</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>advancedOptionsButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>dimensionsSpinbox</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>86</x>
-     <y>479</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>309</x>
-     <y>679</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>advancedOptionsButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>checkBox</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>82</x>
-     <y>479</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>469</x>
-     <y>643</y>
+     <x>460</x>
+     <y>360</y>
     </hint>
    </hints>
   </connection>
@@ -815,28 +870,12 @@
    <slot>setDim(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>309</x>
+     <x>443</x>
      <y>679</y>
     </hint>
     <hint type="destinationlabel">
      <x>265</x>
      <y>236</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>advancedOptionsButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>showGridCheckbox</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>73</x>
-     <y>479</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>620</x>
-     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -857,38 +896,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>advancedOptionsButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>gridSizeLabel</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>92</x>
-     <y>479</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>460</x>
-     <y>679</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>advancedOptionsButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>gridSizeSlider</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>60</x>
-     <y>479</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>615</x>
-     <y>678</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>gridSizeSlider</sender>
    <signal>valueChanged(int)</signal>
    <receiver>myGLWidget</receiver>
@@ -905,34 +912,18 @@
    </hints>
   </connection>
   <connection>
-   <sender>advancedOptionsButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>drawGradientCheckbox</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>37</x>
-     <y>470</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>96</x>
-     <y>702</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>drawGradientCheckbox</sender>
    <signal>clicked(bool)</signal>
    <receiver>myGLWidget</receiver>
    <slot>setDrawGradient(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>72</x>
-     <y>698</y>
+     <x>304</x>
+     <y>708</y>
     </hint>
     <hint type="destinationlabel">
-     <x>79</x>
-     <y>389</y>
+     <x>313</x>
+     <y>402</y>
     </hint>
    </hints>
   </connection>
@@ -943,12 +934,60 @@
    <slot>setDrawStreamline(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>245</x>
-     <y>700</y>
+     <x>452</x>
+     <y>708</y>
     </hint>
     <hint type="destinationlabel">
      <x>321</x>
      <y>369</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fluidDensityRadioButton</sender>
+   <signal>clicked()</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setFluidDensity()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>402</x>
+     <y>480</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>398</x>
+     <y>437</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fluidVelocityRadioButton</sender>
+   <signal>clicked()</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setFluidVelocity()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>517</x>
+     <y>477</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>513</x>
+     <y>429</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>forceFieldRadioButton</sender>
+   <signal>clicked()</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setForceField()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>603</x>
+     <y>483</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>594</x>
+     <y>407</y>
     </hint>
    </hints>
   </connection>
