@@ -79,14 +79,6 @@
        <property name="mouseTracking">
         <bool>false</bool>
        </property>
-       <zorder>tabWidget</zorder>
-       <zorder>tabWidget</zorder>
-       <zorder>tabWidget</zorder>
-       <zorder>tabWidget</zorder>
-       <zorder>tabWidget</zorder>
-       <zorder>tabWidget</zorder>
-       <zorder>tabWidget</zorder>
-       <zorder>tabWidget</zorder>
       </widget>
      </item>
      <item row="2" column="0">
@@ -102,7 +94,7 @@
      <item row="2" column="1">
       <widget class="QCheckBox" name="drawingHedgehogsCheckbox">
        <property name="text">
-        <string>Draw hedgehogs</string>
+        <string>Draw glyphs</string>
        </property>
        <property name="checked">
         <bool>true</bool>
@@ -554,20 +546,6 @@
         </property>
        </item>
       </widget>
-      <zorder>label</zorder>
-      <zorder>simulationTimestepSlider</zorder>
-      <zorder>label_2</zorder>
-      <zorder>fluidViscositySlider</zorder>
-      <zorder>label_3</zorder>
-      <zorder>hedgehogScalingSlider</zorder>
-      <zorder>label_8</zorder>
-      <zorder>dimensionsSpinbox</zorder>
-      <zorder>showGridCheckbox</zorder>
-      <zorder>gridSizeLabel</zorder>
-      <zorder>gridSizeSlider</zorder>
-      <zorder>label_7</zorder>
-      <zorder>label_7</zorder>
-      <zorder>velocityGlyphType</zorder>
      </widget>
      <widget class="QWidget" name="tab_6">
       <attribute name="title">

@@ -81,7 +81,7 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
         drawSmoke();
     }
 
-    OGL_Draw_Text();
+    //OGL_Draw_Text();
     glFlush();
 }
 
@@ -225,8 +225,8 @@ void MyGLWidget::drawStreamline(float i, float j){
     int idx = (j * DIM) + i;
     float dt = 0.001;
     // get coordinates from edges of cell
-    float dvx = (simulation.get_vx()[idx+1])-(simulation.get_vx()[idx-1]) * 100;
-    float dvy = (simulation.get_vy()[idx+1])-(simulation.get_vy()[idx-1]) * 100;
+    float dvx = (simulation.get_vx()[idx+1])-(simulation.get_vx()[idx-1]);// * 100;
+    float dvy = (simulation.get_vy()[idx+1])-(simulation.get_vy()[idx-1]);// * 100;
     float x = cell_width + ((fftw_real)i) * cell_width;
     float y = cell_height + ((fftw_real)j) * cell_height;
     float new_x = 0;
@@ -234,10 +234,15 @@ void MyGLWidget::drawStreamline(float i, float j){
     for (float l=0; l<=DIM; l+=dt){
     //direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color, color_bands);
         if (new_x < cell_width*DIM && new_y < cell_height*DIM){ //limit drawing grid borders
+            //if (new_x > cell_width*DIM+2 || new_y > cell_height*DIM+2 ) break;
             glVertex2f(x, y);
+            //new_x = (cell_width + ((fftw_real)i+l) * cell_width)*dvx;
+            //new_y = (cell_height + ((fftw_real)j+l) * cell_height)*dvy;
             new_x = x+dvx+l;
             new_y = y+dvy+l;
             glVertex2f(new_x,new_y);
+            dvx = (simulation.get_vx()[(int)(idx+1+dvx+0.5)])-(simulation.get_vx()[(int)(idx-1-dvx+0.5)]) * 100;
+            dvy = (simulation.get_vy()[(int)(idx+1+dvy+0.5)])-(simulation.get_vy()[(int)(idx-1-dvy+0.5)]) * 100;
         }
         x = new_x;
         y = new_y;
@@ -504,31 +509,32 @@ void MyGLWidget::drawBar(){
             glVertex3f(15+(0.5*(i+1)),70, 0); //(x,y top right)
         }
     }
-
     glEnd ();
     glPopMatrix ();
-
+    QString colorClampMin = QString::number(color_clamp_min);
+    QString colorClampMax = QString::number(color_clamp_max);
+    OGL_Draw_Text(colorClampMin, colorClampMax);
 }
 
-void MyGLWidget::OGL_Draw_Text(){
+void MyGLWidget::OGL_Draw_Text(QString cClampMin, QString cClampMax){
     //glPushMatrix();
     //glDisable(GL_LIGHTING);
     glDisable(GL_DEPTH_TEST);
     if (draw_smoke){
         //qglColor(Qt::white);
-        set_colormap(1-0.001,scalar_col, color_clamp_min, color_clamp_max,color_bands);
-        renderText(20, 15, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
+        set_colormap(1-color_clamp_min,scalar_col, color_clamp_min, color_clamp_max,color_bands);
+        renderText(20, 15, 0, cClampMin, QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
         //qglColor(Qt::black);
         set_colormap(1-color_clamp_max,scalar_col, color_clamp_min, color_clamp_max,color_bands);
-        renderText(490, 15, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
+        renderText(490, 15, 0, cClampMax, QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
     }
     //QString maxCol = QString::number(color_clamp_max);
     if (draw_vecs){
-        set_colormap(1-0.001,velocity_color, color_clamp_min, color_clamp_max,color_bands);
-        renderText(20, 45, 0, "0.001", QFont("Arial", 12, QFont::Bold, false) ); // render top bar left
+        set_colormap(1-color_clamp_min,velocity_color, color_clamp_min, color_clamp_max,color_bands);
+        renderText(20, 45, 0, cClampMin, QFont("Arial", 12, QFont::Bold, false) ); // render top bar left
         set_colormap(1-color_clamp_max,velocity_color, color_clamp_min, color_clamp_max,color_bands);
         //renderText(490, 45, 0, maxCol, QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
-        renderText(490, 45, 0, "1", QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
+        renderText(490, 45, 0, cClampMax, QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
     }
     glEnable(GL_DEPTH_TEST);
     //glEnable(GL_LIGHTING);
