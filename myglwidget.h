@@ -47,7 +47,11 @@ private slots:
 
     void drawSmoke();
 
-    void applyColoringToDataset(QString dataset_to_use);
+    void setFluidDensity();
+
+    void setFluidVelocity();
+
+    void setForceField();
 
     void setColorBands(int colorBands);
 
