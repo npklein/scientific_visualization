@@ -11,7 +11,7 @@ Grid::Grid(int DIM)
 
 void Grid::addElementToGrid(fftw_real vx_element, fftw_real vy_element, int index){
     vx[index] = vx_element;
-    vy[index] = vx_element;
+    vy[index] = vy_element;
 }
 
 //Destructor
