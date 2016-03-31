@@ -9,6 +9,7 @@
 #include <cmath>
 #include "vector.cpp"
 #include "grid.h"
+#include <queue>
 
 MyGLWidget::MyGLWidget(QWidget *parent)
 {
@@ -23,15 +24,16 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     color_clamp_min = 0.0;        // The lower bound value to clamp color map at
     color_clamp_max = 1.0;        // The higher bound value to clamp color map at
     velocity_color = 1;
-
+    number_of_glyphs = DIM*2;
     force_field_color = 1;
     grid_scale = 1;             // when drawing the grid, the size per cell is grid_scale * cell size, so with 50x50 grid with grid_scale = 10, 5 cells will be drawn
     color_bands = 256;
     draw_grid = false;
+    draw_slices = false;
     glyphs = "hedgehogs";
     dataset = "fluid density";
     gradient = false;
-    streamline = false;
+    draw_streamline = false;
     simulation.init_simulation(DIM);
     QTimer *timer = new QTimer;
     timer->start(1);
@@ -61,13 +63,15 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     if (draw_grid){
         drawGridLines(DIM);
     }
-    if (streamline){
+    if(draw_slices){
+        drawSlices(2);
+    }
+    if (draw_streamline){
         drawStreamline();
     }
     if (draw_vecs)
     {
-        drawVelocity();
-        //drawSlices(20);
+        drawVelocity(simulation.get_vx(), simulation.get_vy());
     }
     if (gradient){
         drawGradient();
@@ -133,43 +137,34 @@ void MyGLWidget::drawStreamline()
         }
 }
 
-void MyGLWidget::drawVelocity()
-{
-    for (int i = 0; i < DIM; i++)
-        for (int j = 0; j < DIM; j++)
-        {
-            if (glyphs == "hedgehogs"){
-                drawHedgehog(i, j);
-                //drawSlices(20);
-            }
-            if (glyphs == "arrows"){
-                // if (i % 5 == 0 && j % 5 == 0){
-                int idx = (j * DIM) + i;
-                Vector vector = Vector((fftw_real)i * cell_width, //x1
-                                       (fftw_real)j * cell_height, //y1
-                                       ((fftw_real)i * cell_width) + arrow_scale * simulation.get_vx()[idx], //x2
-                                       ((fftw_real)j * cell_height) + arrow_scale * simulation.get_vy()[idx]);//y2
-
-                drawArrow(vector, i, j, vector.length()/15, 10);
-            }
-        }
-}
-
 void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
 {
     for (int i = 0; i < DIM; i++)
         for (int j = 0; j < DIM; j++)
         {
-           int idx = (j * DIM) + i;
-           Vector vector = Vector((fftw_real)i * cell_width, //x1
-                                 (fftw_real)j * cell_height, //y1
-                                 ((fftw_real)i * cell_width) + arrow_scale * vx[idx], //x2
-                                 ((fftw_real)j * cell_height) + arrow_scale * vy[idx]);//y2
+            int idx = (j * DIM) + i;
+            if (glyphs == "hedgehogs"){
+                if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
+                    glBegin(GL_LINES);				//draw velocities
+                    direction_to_color(vx[idx], vy[idx], velocity_color, color_bands);
+                    glVertex2f((fftw_real)i * cell_width, (fftw_real)j * cell_height);
+                    glVertex2f((fftw_real)i * cell_width + hedgehog_scale * vx[idx], (fftw_real)j * cell_height + hedgehog_scale * vy[idx]);
+                    glEnd();
+                }
+            }
+            else if (glyphs == "arrows"){
+                if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
+                    int idx = (j * DIM) + i;
+                    Vector vector = Vector((fftw_real)i * cell_width, //x1
+                                           (fftw_real)j * cell_height, //y1
+                                           ((fftw_real)i * cell_width) + arrow_scale * vx[idx], //x2
+                                           ((fftw_real)j * cell_height) + arrow_scale * vy[idx]);//y2
 
-                drawArrow(vector, i, j, vector.length()/15, 10);
+                    drawArrow(vector, i, j, vector.length()/15, 10);
+                }
             }
         }
-
+}
 
 void MyGLWidget::drawArrow(Vector vector, int i, int j, float vy, int scaling_factor){
     // draw an error the size of a cell, scale according to vector length
@@ -204,30 +199,25 @@ void MyGLWidget::drawArrow(Vector vector, int i, int j, float vy, int scaling_fa
     glLoadIdentity(); // needed to stop the rotating, otherwise rotates the entire drawing
 }
 
-void MyGLWidget::drawHedgehog(float i, float j){
-    glBegin(GL_LINES);				//draw velocities
-    int idx = (j * DIM) + i;
-    direction_to_color(simulation.get_vx()[idx],simulation.get_vy()[idx], velocity_color, color_bands);
-    glVertex2f((fftw_real)i * cell_width, (fftw_real)j * cell_height);
-    glVertex2f((fftw_real)i * cell_width + hedgehog_scale * simulation.get_vx()[idx], (fftw_real)j * cell_height + hedgehog_scale * simulation.get_vy()[idx]);
-    glEnd();
-}
-
 void MyGLWidget::drawSlices(int n){
     // n = number of slices (timepoints) to draw
-    std::list<Grid> grid_timepoints;
+    // use std::queue instead of std::list because it forces FIFO
+    std::deque<Grid> grid_timepoints;
     for(int y = 0; y < n; y++){
         do_one_simulation_step(false);
-        Grid grid = Grid(n);
+        Grid grid = Grid(DIM);
         for (int i = 0; i < DIM; i++){
             for (int j = 0; j < DIM; j++){
                 int idx = (j * DIM) + i;
                 grid.addElementToGrid(simulation.get_vx()[idx], simulation.get_vy()[idx], idx);
             }
         }
-        grid_timepoints.insert(grid_timepoints.begin(), grid);
-        //drawVelocity()
+        grid_timepoints.push_front(grid);
     }
+    Grid popped_grid = grid_timepoints.front();
+    grid_timepoints.pop_back();
+    drawVelocity(popped_grid.vx, popped_grid.vy);
+    //updateGL();
 }
 
 void MyGLWidget::drawStreamline(float i, float j){
@@ -328,15 +318,18 @@ void MyGLWidget::showAnimation(bool new_frozen)
 void MyGLWidget::drawMatter(bool new_draw_smoke)
 {
     draw_smoke = new_draw_smoke;
-    if (!new_draw_smoke) {
+    if (!draw_smoke) {
         draw_vecs = true;
     }
+    else{draw_slices = false;}
+
 }
 
 void MyGLWidget::drawHedgehogs(bool new_draw_vecs)
 {
     draw_vecs = new_draw_vecs;
-    if (!draw_vecs) draw_smoke = true;
+    if (!draw_vecs) {draw_smoke = true;}
+    else{draw_slices = false;}
 }
 
 void MyGLWidget::drawGrid(bool new_draw_grid)
@@ -417,6 +410,11 @@ void MyGLWidget::fluidViscosity(int position)
     }
     simulation.set_visc(new_visc);
     last_pos_visc = position;
+}
+
+void MyGLWidget::setNumberOfGlyphs(int position)
+{
+    number_of_glyphs = position;
 }
 
 void MyGLWidget::clampColorMin(int min_color)
@@ -557,9 +555,28 @@ void MyGLWidget::drawGridLines(int DIM){
 
 void MyGLWidget::setDrawGradient(bool new_gradient){
     gradient = new_gradient;
+    if (gradient){
+        draw_slices = false;
+    }
 }
 
 void MyGLWidget::setDrawStreamline(bool new_streamline){
-    streamline = new_streamline;
-    if (streamline) draw_vecs = false;
+    draw_streamline = new_streamline;
+    if (draw_streamline) {
+        draw_vecs = false;
+        draw_slices = false;
+    }
+}
+
+void MyGLWidget::setDrawSlices(bool new_slices){
+    draw_slices = new_slices;
+    if (draw_slices) {
+        draw_vecs = false;
+        draw_streamline = false;
+        draw_smoke = false;
+    }
+    if (!draw_slices) {
+        draw_vecs = true;
+        draw_smoke = true;
+    }
 }

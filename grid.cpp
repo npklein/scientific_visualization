@@ -1,9 +1,10 @@
 #include "grid.h"
 
 
-Grid::Grid(int n)
+Grid::Grid(){};
+Grid::Grid(int DIM)
 {
-    dim = n * 2*(n/2+1)*sizeof(fftw_real);        //Allocate data structures
+    dim = DIM * 2*(DIM/2+1)*sizeof(fftw_real);        //Allocate data structures
     vx = (fftw_real*) malloc(dim);
     vy = (fftw_real*) malloc(dim);
 }
