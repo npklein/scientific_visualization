@@ -5,9 +5,9 @@
 class Grid
 {
 public:
-    Grid();
 
-    Grid(int);
+    Grid();
+    Grid(int n);
     //Destructor (destroy out of memory after being done)
     ~Grid();
 

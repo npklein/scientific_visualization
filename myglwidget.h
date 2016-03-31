@@ -81,6 +81,8 @@ private slots:
 
     void drawSlices(int n);
 
+    void setNumberOfGlyphs(int position);
+
 protected:
     void initializeGL();
     void paintGL();
@@ -101,6 +103,7 @@ private:
     bool   draw_vecs;            //draw the vector field or not
     int   scalar_col;           //method for scalar coloring
     int DIM;
+    int number_of_glyphs;
     int grid_scale;
     int color_bands;
     bool scale_color;

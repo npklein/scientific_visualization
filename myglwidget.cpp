@@ -9,6 +9,7 @@
 #include <cmath>
 #include "vector.cpp"
 #include "grid.h"
+#include <queue>
 
 MyGLWidget::MyGLWidget(QWidget *parent)
 {
@@ -23,7 +24,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     color_clamp_min = 0.0;        // The lower bound value to clamp color map at
     color_clamp_max = 1.0;        // The higher bound value to clamp color map at
     velocity_color = 1;
-
+    number_of_glyphs = DIM*2;
     force_field_color = 1;
     grid_scale = 1;             // when drawing the grid, the size per cell is grid_scale * cell size, so with 50x50 grid with grid_scale = 10, 5 cells will be drawn
     color_bands = 256;
@@ -57,7 +58,7 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     drawBar();
     cell_width = ceil((fftw_real)windowWidth / (fftw_real)(DIM));   // Grid cell width
     cell_height = ceil((fftw_real)windowHeight / (fftw_real)(DIM));  // Grid cell heigh
-
+    //drawSlices(2);
     if (draw_grid){
         drawGridLines(DIM);
     }
@@ -67,7 +68,6 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     if (draw_vecs)
     {
         drawVelocity();
-        //drawSlices(20);
     }
     if (gradient){
         drawGradient();
@@ -139,18 +139,20 @@ void MyGLWidget::drawVelocity()
         for (int j = 0; j < DIM; j++)
         {
             if (glyphs == "hedgehogs"){
-                drawHedgehog(i, j);
-                //drawSlices(20);
+                if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
+                    drawHedgehog(i, j);
+                }
             }
-            if (glyphs == "arrows"){
-                // if (i % 5 == 0 && j % 5 == 0){
-                int idx = (j * DIM) + i;
-                Vector vector = Vector((fftw_real)i * cell_width, //x1
-                                       (fftw_real)j * cell_height, //y1
-                                       ((fftw_real)i * cell_width) + arrow_scale * simulation.get_vx()[idx], //x2
-                                       ((fftw_real)j * cell_height) + arrow_scale * simulation.get_vy()[idx]);//y2
+            else if (glyphs == "arrows"){
+                if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
+                    int idx = (j * DIM) + i;
+                    Vector vector = Vector((fftw_real)i * cell_width, //x1
+                                           (fftw_real)j * cell_height, //y1
+                                           ((fftw_real)i * cell_width) + arrow_scale * simulation.get_vx()[idx], //x2
+                                           ((fftw_real)j * cell_height) + arrow_scale * simulation.get_vy()[idx]);//y2
 
-                drawArrow(vector, i, j, vector.length()/15, 10);
+                    drawArrow(vector, i, j, vector.length()/15, 10);
+                }
             }
         }
 }
@@ -169,7 +171,6 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
                 drawArrow(vector, i, j, vector.length()/15, 10);
             }
         }
-
 
 void MyGLWidget::drawArrow(Vector vector, int i, int j, float vy, int scaling_factor){
     // draw an error the size of a cell, scale according to vector length
@@ -215,19 +216,25 @@ void MyGLWidget::drawHedgehog(float i, float j){
 
 void MyGLWidget::drawSlices(int n){
     // n = number of slices (timepoints) to draw
-    std::list<Grid> grid_timepoints;
+    // use std::queue instead of std::list because it forces FIFO
+    std::deque<Grid> grid_timepoints;
     for(int y = 0; y < n; y++){
         do_one_simulation_step(false);
-        Grid grid = Grid(n);
+        Grid grid = Grid(DIM);
         for (int i = 0; i < DIM; i++){
             for (int j = 0; j < DIM; j++){
                 int idx = (j * DIM) + i;
                 grid.addElementToGrid(simulation.get_vx()[idx], simulation.get_vy()[idx], idx);
             }
         }
-        grid_timepoints.insert(grid_timepoints.begin(), grid);
-        //drawVelocity()
+        grid_timepoints.push_front(grid);
     }
+    grid_timepoints.pop_back();
+
+    Grid popped_grid = grid_timepoints.back();
+    grid_timepoints.pop_back();
+    drawVelocity(popped_grid.vx, popped_grid.vy);
+    //updateGL();
 }
 
 void MyGLWidget::drawStreamline(float i, float j){
@@ -417,6 +424,11 @@ void MyGLWidget::fluidViscosity(int position)
     }
     simulation.set_visc(new_visc);
     last_pos_visc = position;
+}
+
+void MyGLWidget::setNumberOfGlyphs(int position)
+{
+    number_of_glyphs = position;
 }
 
 void MyGLWidget::clampColorMin(int min_color)
