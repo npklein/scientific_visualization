@@ -535,7 +535,7 @@ void MyGLWidget::hedgehogScaling(int position)
     }
     if (glyphs == "cones"){
         static int last_pos_cone = 500;				//remembers last slider location
-        int new_pos = position - last_pos_arrow;
+        int new_pos = position - last_pos_cone;
         cone_scale = cone_scale + new_pos*300; //easier to debug on separate line
         if (cone_scale < 0){
             cone_scale = 0;
