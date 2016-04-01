@@ -34,7 +34,7 @@
         <string>fluid density</string>
        </property>
        <property name="checked">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -60,6 +60,9 @@
        <property name="text">
         <string>|fluid velocity|</string>
        </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item row="0" column="0" colspan="4">
@@ -79,6 +82,7 @@
        <property name="mouseTracking">
         <bool>false</bool>
        </property>
+       <zorder>tabWidget</zorder>
       </widget>
      </item>
      <item row="2" column="0">
@@ -324,6 +328,57 @@
        </property>
        <property name="text">
         <string>Scale colors</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_11">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>200</y>
+         <width>59</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Hue</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_12">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>270</y>
+         <width>71</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Saturation</string>
+       </property>
+      </widget>
+      <widget class="QSlider" name="hueSlider">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>200</y>
+         <width>131</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="maximum">
+        <number>360</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="tickPosition">
+        <enum>QSlider::TicksBothSides</enum>
+       </property>
+       <property name="tickInterval">
+        <number>10</number>
        </property>
       </widget>
      </widget>
@@ -652,6 +707,7 @@
     <slot>setFluidDensity()</slot>
     <slot>setFluidVelocity()</slot>
     <slot>setForceField()</slot>
+    <slot>setHue(int)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -664,8 +720,8 @@
    <slot>showAnimation(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>337</x>
-     <y>489</y>
+     <x>340</x>
+     <y>684</y>
     </hint>
     <hint type="destinationlabel">
      <x>291</x>
@@ -680,8 +736,8 @@
    <slot>fluidViscosity(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>676</x>
-     <y>577</y>
+     <x>195</x>
+     <y>163</y>
     </hint>
     <hint type="destinationlabel">
      <x>413</x>
@@ -696,8 +752,8 @@
    <slot>drawMatter(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>452</x>
-     <y>513</y>
+     <x>340</x>
+     <y>708</y>
     </hint>
     <hint type="destinationlabel">
      <x>355</x>
@@ -712,8 +768,8 @@
    <slot>hedgehogScaling(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>676</x>
-     <y>611</y>
+     <x>195</x>
+     <y>243</y>
     </hint>
     <hint type="destinationlabel">
      <x>442</x>
@@ -728,8 +784,8 @@
    <slot>timestep(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>676</x>
-     <y>543</y>
+     <x>195</x>
+     <y>93</y>
     </hint>
     <hint type="destinationlabel">
      <x>266</x>
@@ -744,8 +800,8 @@
    <slot>drawHedgehogs(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>576</x>
-     <y>507</y>
+     <x>454</x>
+     <y>708</y>
     </hint>
     <hint type="destinationlabel">
      <x>372</x>
@@ -824,8 +880,8 @@
    <slot>setGlyphType(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>446</x>
-     <y>647</y>
+     <x>206</x>
+     <y>287</y>
     </hint>
     <hint type="destinationlabel">
      <x>445</x>
@@ -856,8 +912,8 @@
    <slot>setDim(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>443</x>
-     <y>679</y>
+     <x>185</x>
+     <y>325</y>
     </hint>
     <hint type="destinationlabel">
      <x>460</x>
@@ -872,8 +928,8 @@
    <slot>setDim(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>443</x>
-     <y>679</y>
+     <x>185</x>
+     <y>325</y>
     </hint>
     <hint type="destinationlabel">
      <x>265</x>
@@ -888,8 +944,8 @@
    <slot>drawGrid(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>620</x>
-     <y>643</y>
+     <x>135</x>
+     <y>351</y>
     </hint>
     <hint type="destinationlabel">
      <x>458</x>
@@ -904,8 +960,8 @@
    <slot>setGridSize(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>615</x>
-     <y>678</y>
+     <x>206</x>
+     <y>383</y>
     </hint>
     <hint type="destinationlabel">
      <x>433</x>
@@ -920,8 +976,8 @@
    <slot>setDrawGradient(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>304</x>
-     <y>708</y>
+     <x>124</x>
+     <y>61</y>
     </hint>
     <hint type="destinationlabel">
      <x>313</x>
@@ -936,8 +992,8 @@
    <slot>setDrawStreamline(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>452</x>
-     <y>708</y>
+     <x>132</x>
+     <y>61</y>
     </hint>
     <hint type="destinationlabel">
      <x>321</x>
@@ -952,8 +1008,8 @@
    <slot>setFluidDensity()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>402</x>
-     <y>480</y>
+     <x>445</x>
+     <y>685</y>
     </hint>
     <hint type="destinationlabel">
      <x>398</x>
@@ -968,8 +1024,8 @@
    <slot>setFluidVelocity()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>517</x>
-     <y>477</y>
+     <x>566</x>
+     <y>685</y>
     </hint>
     <hint type="destinationlabel">
      <x>513</x>
@@ -984,12 +1040,28 @@
    <slot>setForceField()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>603</x>
-     <y>483</y>
+     <x>680</x>
+     <y>685</y>
     </hint>
     <hint type="destinationlabel">
      <x>594</x>
      <y>407</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>hueSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setHue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>150</x>
+     <y>241</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>346</x>
+     <y>240</y>
     </hint>
    </hints>
   </connection>

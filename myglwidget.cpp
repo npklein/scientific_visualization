@@ -31,10 +31,11 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     force_field_color = 1;
     grid_scale = 1;             // when drawing the grid, the size per cell is grid_scale * cell size, so with 50x50 grid with grid_scale = 10, 5 cells will be drawn
     color_bands = 256;
+    hue = 1;
     draw_grid = false;
     draw_slices = false;
     glyphs = "hedgehogs";
-    dataset == "fluid velocity magnitude";
+    dataset = "fluid velocity magnitude";
     gradient = false;
     draw_streamline = false;
     simulation.init_simulation(DIM);
@@ -145,7 +146,7 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
             if (glyphs == "hedgehogs"){
                 if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
                     glBegin(GL_LINES);				//draw velocities
-                    direction_to_color(vx[idx], vy[idx], velocity_color, color_bands, color_clamp_min_glyph, color_clamp_max_glyph);
+                    direction_to_color(vx[idx], vy[idx], velocity_color, color_bands, color_clamp_min_glyph, color_clamp_max_glyph, hue);
                     glVertex2f((fftw_real)i * cell_width, (fftw_real)j * cell_height);
                     glVertex2f((fftw_real)i * cell_width + hedgehog_scale * vx[idx], (fftw_real)j * cell_height + hedgehog_scale * vy[idx]);
                     glEnd();
@@ -175,7 +176,7 @@ void MyGLWidget::drawForcefield(fftw_real *fx, fftw_real *fy)
             if (glyphs == "hedgehogs"){
                 if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
                     glBegin(GL_LINES);				//draw velocities
-                    direction_to_color(fx[idx], fy[idx], velocity_color, color_bands, color_clamp_min_glyph, color_clamp_max_glyph);
+                    direction_to_color(fx[idx], fy[idx], velocity_color, color_bands, color_clamp_min_glyph, color_clamp_max_glyph, hue);
                     glVertex2f((fftw_real)i * cell_width, (fftw_real)j * cell_height);
                     glVertex2f((fftw_real)i * cell_width + hedgehog_scale * fx[idx], (fftw_real)j * cell_height + hedgehog_scale * fy[idx]);
                     glEnd();
@@ -200,7 +201,7 @@ void MyGLWidget::drawArrow(Vector vector, int i, int j, float vy, int scaling_fa
     // draw an error the size of a cell, scale according to vector length
     float angle = vector.normalize().direction2angle();
 
-    set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands);
+    set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue);
     glPushMatrix();
     glTranslatef(cell_width*i,cell_height*j, 0);
     glRotated(angle,0,0,1);
@@ -346,18 +347,18 @@ void MyGLWidget::drawSmoke(){
             px3  = floor((fftw_real)(i + 1) * cell_width);
             py3  = floor((fftw_real)j * cell_height);
             idx3 = (j * DIM) + (i + 1);
-            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands);
+            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue);
             glVertex2f(px0, py0);
-            set_colormap(simulation.get_rho()[idx1], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands);
+            set_colormap(simulation.get_rho()[idx1], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue);
             glVertex2f(px1, py1);
-            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands);
+            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue);
             glVertex2f(px2, py2);
 
-            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands);
+            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue);
             glVertex2f(px0, py0);
-            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands);
+            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue);
             glVertex2f(px2, py2);
-            set_colormap(simulation.get_rho()[idx3], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands);
+            set_colormap(simulation.get_rho()[idx3], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue);
             glVertex2f(px3, py3);
         }
     }
@@ -574,7 +575,7 @@ void MyGLWidget::drawBar(){
     glBegin (GL_QUADS);
     if (draw_smoke){
         for (int i = 0; i < 1001; i = i + 1){
-            set_colormap(0.001*i,scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands);
+            set_colormap(0.001*i,scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue);
             glVertex3f(15+(0.5*i), 40, 0); //(x,y top left)
             glVertex3f(15+(0.5*i), 10, 0); //(x,y bottom left)
             glVertex3f(15+(0.5*(i+1)),10, 0); //(x,y bottom right)
@@ -583,7 +584,7 @@ void MyGLWidget::drawBar(){
     }
     if (draw_vecs){
         for (int i = 0; i < 1001; i = i + 1){
-            set_colormap(0.001*i,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands);
+            set_colormap(0.001*i,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue);
             glVertex3f(15+(0.5*i), 70, 0); //(x,y top left)
             glVertex3f(15+(0.5*i), 40, 0); //(x,y bottom left)
             glVertex3f(15+(0.5*(i+1)),40, 0); //(x,y bottom right)
@@ -601,25 +602,29 @@ void MyGLWidget::OGL_Draw_Text(){
     glDisable(GL_DEPTH_TEST);
     if (draw_smoke){
         //qglColor(Qt::white);
-        set_colormap(1-color_clamp_min_matter,scalar_col, color_clamp_min_matter, color_clamp_max_matter,color_bands);
+        set_colormap(1-color_clamp_min_matter,scalar_col, color_clamp_min_matter, color_clamp_max_matter,color_bands, hue);
         renderText(20, 15, 0, QString::number(color_clamp_min_matter), QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
         //qglColor(Qt::black);
         renderText(240, 15, 0, "matter", QFont("Arial", 8, QFont::Bold, false) );
-        set_colormap(1-color_clamp_max_matter, scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands);
+        set_colormap(1-color_clamp_max_matter, scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue);
         renderText(470, 15, 0, QString::number(color_clamp_max_matter), QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
     }
     //QString maxCol = QString::number(color_clamp_max);
     if (draw_vecs){
-        set_colormap(1-color_clamp_min_glyph,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph,color_bands);
+        set_colormap(1-color_clamp_min_glyph,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph,color_bands, hue);
         renderText(20, 45, 0, QString::number(color_clamp_min_glyph), QFont("Arial", 12, QFont::Bold, false) ); // render top bar left
         renderText(240, 45, 0, "glyph", QFont("Arial", 8, QFont::Bold, false) );
-        set_colormap(1-color_clamp_max_glyph,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph,color_bands);
+        set_colormap(1-color_clamp_max_glyph,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph,color_bands, hue);
         renderText(470, 45, 0, QString::number(color_clamp_max_glyph), QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
     }
     glEnable(GL_DEPTH_TEST);
     //glEnable(GL_LIGHTING);
     //glPopMatrix();
 
+}
+
+void MyGLWidget::setHue(int new_hue){
+    hue = new_hue;
 }
 
 void MyGLWidget::setColorBands(int new_color_bands){

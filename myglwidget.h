@@ -85,6 +85,8 @@ private slots:
 
     void setDrawSlices(bool new_slices);
 
+    void setHue(int new_hue);
+
 protected:
     void initializeGL();
     void paintGL();
@@ -118,6 +120,7 @@ private:
     bool gradient;
     bool draw_streamline;
     bool draw_slices;
+    float hue;
     fftw_real  cell_width;
     fftw_real  cell_height;
     QWidget *window;
