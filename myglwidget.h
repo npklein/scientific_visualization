@@ -45,6 +45,8 @@ private slots:
 
     void drawVelocity(fftw_real *vx, fftw_real *vy);
 
+    void drawForcefield(fftw_real *fx, fftw_real *fy);
+
     void drawSmoke();
 
     void setFluidDensity();

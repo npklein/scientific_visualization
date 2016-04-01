@@ -34,7 +34,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     draw_grid = false;
     draw_slices = false;
     glyphs = "hedgehogs";
-    dataset = "fluid density";
+    dataset == "fluid velocity magnitude";
     gradient = false;
     draw_streamline = false;
     simulation.init_simulation(DIM);
@@ -74,7 +74,12 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     }
     if (draw_vecs)
     {
-        drawVelocity(simulation.get_vx(), simulation.get_vy());
+        if(dataset == "fluid velocity magnitude"){
+            drawVelocity(simulation.get_vx(), simulation.get_vy());
+        }
+        else if (dataset == "force field magnitude"){
+            drawForcefield(simulation.get_fx(), simulation.get_fy());
+        }
     }
     if (gradient){
         drawGradient();
@@ -160,6 +165,37 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
         }
 }
 
+
+void MyGLWidget::drawForcefield(fftw_real *fx, fftw_real *fy)
+{
+    for (int i = 0; i < DIM; i++)
+        for (int j = 0; j < DIM; j++)
+        {
+            int idx = (j * DIM) + i;
+            if (glyphs == "hedgehogs"){
+                if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
+                    glBegin(GL_LINES);				//draw velocities
+                    direction_to_color(fx[idx], fy[idx], velocity_color, color_bands, color_clamp_min_glyph, color_clamp_max_glyph);
+                    glVertex2f((fftw_real)i * cell_width, (fftw_real)j * cell_height);
+                    glVertex2f((fftw_real)i * cell_width + hedgehog_scale * fx[idx], (fftw_real)j * cell_height + hedgehog_scale * fy[idx]);
+                    glEnd();
+                }
+            }
+            else if (glyphs == "arrows"){
+                if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
+                    int idx = (j * DIM) + i;
+                    Vector vector = Vector((fftw_real)i * cell_width, //x1
+                                           (fftw_real)j * cell_height, //y1
+                                           ((fftw_real)i * cell_width) + arrow_scale * fx[idx], //x2
+                                           ((fftw_real)j * cell_height) + arrow_scale * fy[idx]);//y2
+
+                    drawArrow(vector, i, j, vector.length()/15, 10);
+                }
+            }
+        }
+}
+
+
 void MyGLWidget::drawArrow(Vector vector, int i, int j, float vy, int scaling_factor){
     // draw an error the size of a cell, scale according to vector length
     float angle = vector.normalize().direction2angle();
@@ -223,7 +259,7 @@ void MyGLWidget::drawStreamline()
         {
 
             if (i % 5 == 0 && j % 5 == 0){
-            //if ( i ==20 && j==20){
+                //if ( i ==20 && j==20){
                 int idx_1 = (j * DIM) + i;
                 int idx_2 = (j * DIM) + i+1;
                 int idx_3 = (j+1 * DIM) + i;
@@ -282,9 +318,9 @@ void MyGLWidget::drawStreamline()
                         vertex_x = (fftw_real)i * cell_width;
                         vertex_y = (fftw_real)j * cell_height;
                     }
+                }
             }
         }
-}
 }
 
 void MyGLWidget::drawSmoke(){
@@ -463,7 +499,7 @@ void MyGLWidget::clampColorMin(int min_color)
         if(dataset == "fluid density"){
             color_clamp_min_matter = min_color/100.0;
         }
-        if(dataset == "fluid velocity magnitude"){
+        if(dataset == "fluid velocity magnitude" || dataset == "force field magnitude"){
             color_clamp_min_glyph = min_color/100.0;
         }
     }
@@ -475,7 +511,7 @@ void MyGLWidget::clampColorMax(int max_color)
         if(dataset == "fluid density"){
             color_clamp_max_matter = 1-(max_color/100.0);
         }
-        if(dataset == "fluid velocity magnitude"){
+        if(dataset == "fluid velocity magnitude" || dataset == "force field magnitude"){
             color_clamp_max_glyph = 1-(max_color/100.0);
         }
     }
@@ -568,7 +604,7 @@ void MyGLWidget::OGL_Draw_Text(){
         set_colormap(1-color_clamp_min_matter,scalar_col, color_clamp_min_matter, color_clamp_max_matter,color_bands);
         renderText(20, 15, 0, QString::number(color_clamp_min_matter), QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
         //qglColor(Qt::black);
-        renderText(240, 15, 0, "matter", QFont("Arial", 12, QFont::Bold, false) );
+        renderText(240, 15, 0, "matter", QFont("Arial", 8, QFont::Bold, false) );
         set_colormap(1-color_clamp_max_matter, scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands);
         renderText(470, 15, 0, QString::number(color_clamp_max_matter), QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
     }
@@ -576,7 +612,7 @@ void MyGLWidget::OGL_Draw_Text(){
     if (draw_vecs){
         set_colormap(1-color_clamp_min_glyph,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph,color_bands);
         renderText(20, 45, 0, QString::number(color_clamp_min_glyph), QFont("Arial", 12, QFont::Bold, false) ); // render top bar left
-        renderText(240, 45, 0, "glyph", QFont("Arial", 12, QFont::Bold, false) );
+        renderText(240, 45, 0, "glyph", QFont("Arial", 8, QFont::Bold, false) );
         set_colormap(1-color_clamp_max_glyph,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph,color_bands);
         renderText(470, 45, 0, QString::number(color_clamp_max_glyph), QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
     }
