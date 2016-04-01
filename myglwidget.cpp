@@ -243,7 +243,6 @@ void MyGLWidget::drawArrow(Vector vector, int i, int j, float vy, int scaling_fa
     float size_left = (cell_width/20)*9.0;
     float half_cell_height = cell_height/2.0;
     // arrow head, whole cell width, 1/3 of cell heigth
-    glColor4f(0,0,0,0.5-(0.5/angle)); // colors(R, G, B, alpha)
     glVertex2f(0, half_cell_height);            //base1
     glVertex2f(cell_width/2, cell_height);       //tip
     glVertex2f(cell_width, half_cell_height);    //base2
