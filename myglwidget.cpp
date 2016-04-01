@@ -535,7 +535,7 @@ void MyGLWidget::hedgehogScaling(int position)
     }
     if (glyphs == "cones"){
         static int last_pos_cone = 500;				//remembers last slider location
-        int new_pos = position - last_pos_arrow;
+        int new_pos = position - last_pos_cone;
         cone_scale = cone_scale + new_pos*300; //easier to debug on separate line
         if (cone_scale < 0){
             cone_scale = 0;
@@ -681,19 +681,19 @@ void MyGLWidget::OGL_Draw_Text(){
     glDisable(GL_DEPTH_TEST);
     if (draw_smoke){
         //qglColor(Qt::white);
-        set_colormap(1-color_clamp_min_matter,scalar_col, color_clamp_min_matter, color_clamp_max_matter,color_bands, hue_matter, saturation_matter);
+        set_colormap(1-color_clamp_min_matter,scalar_col, color_clamp_min_matter, color_clamp_max_matter,color_bands, hue_matter, 1);
         renderText(20, 15, 0, QString::number(color_clamp_min_matter), QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
         //qglColor(Qt::black);
         renderText(240, 15, 0, "matter", QFont("Arial", 8, QFont::Bold, false) );
-        set_colormap(1-color_clamp_max_matter, scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, saturation_matter);
+        set_colormap(1-color_clamp_max_matter, scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, 1);
         renderText(470, 15, 0, QString::number(color_clamp_max_matter), QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
     }
     //QString maxCol = QString::number(color_clamp_max);
     if (draw_vecs){
-        set_colormap(1-color_clamp_min_glyph,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph,color_bands, hue_glyph, saturation_glyph);
+        set_colormap(1-color_clamp_min_glyph,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph,color_bands, hue_glyph, 1);
         renderText(20, 45, 0, QString::number(color_clamp_min_glyph), QFont("Arial", 12, QFont::Bold, false) ); // render top bar left
         renderText(240, 45, 0, "glyph", QFont("Arial", 8, QFont::Bold, false) );
-        set_colormap(1-color_clamp_max_glyph,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph,color_bands, hue_glyph, saturation_glyph);
+        set_colormap(1-color_clamp_max_glyph,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph,color_bands, hue_glyph, 1);
         renderText(470, 45, 0, QString::number(color_clamp_max_glyph), QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
     }
     glEnable(GL_DEPTH_TEST);
