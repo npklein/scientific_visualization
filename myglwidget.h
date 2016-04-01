@@ -59,6 +59,8 @@ private slots:
 
     void drawArrow(Vector vector, int i, int j, float vy, int scaling_factor);
 
+    void drawCone(Vector vector, int i, int j, float vy, int scaling_factor);
+
     void drawStreamline();
 
     void setDrawStreamline(bool new_streamline);
@@ -115,6 +117,7 @@ private:
     float color_clamp_min_glyph;
     float color_clamp_max_glyph;
     float arrow_scale;
+    float cone_scale;
     bool gradient;
     bool draw_streamline;
     bool draw_slices;
