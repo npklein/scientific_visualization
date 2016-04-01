@@ -20,7 +20,7 @@
    <bool>false</bool>
   </property>
   <property name="windowTitle">
-   <string>Window</string>
+   <string>Fluid simulation</string>
   </property>
   <property name="layoutDirection">
    <enum>Qt::LeftToRight</enum>
@@ -82,7 +82,6 @@
        <property name="mouseTracking">
         <bool>false</bool>
        </property>
-       <zorder>tabWidget</zorder>
       </widget>
      </item>
      <item row="2" column="0">
@@ -128,7 +127,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="iconSize">
       <size>
@@ -333,7 +332,7 @@
       <widget class="QLabel" name="label_11">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>0</x>
          <y>200</y>
          <width>59</width>
          <height>16</height>
@@ -346,8 +345,8 @@
       <widget class="QLabel" name="label_12">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>270</y>
+         <x>0</x>
+         <y>250</y>
          <width>71</width>
          <height>16</height>
         </rect>
@@ -359,9 +358,9 @@
       <widget class="QSlider" name="hueSlider">
        <property name="geometry">
         <rect>
-         <x>50</x>
-         <y>200</y>
-         <width>131</width>
+         <x>0</x>
+         <y>220</y>
+         <width>181</width>
          <height>22</height>
         </rect>
        </property>
@@ -370,6 +369,34 @@
        </property>
        <property name="singleStep">
         <number>1</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="tickPosition">
+        <enum>QSlider::TicksBothSides</enum>
+       </property>
+       <property name="tickInterval">
+        <number>10</number>
+       </property>
+      </widget>
+      <widget class="QSlider" name="hueSlider_2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>270</y>
+         <width>181</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>100</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -713,6 +740,7 @@
     <slot>setFluidVelocity()</slot>
     <slot>setForceField()</slot>
     <slot>setHue(int)</slot>
+    <slot>setSaturation(int)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -1061,12 +1089,28 @@
    <slot>setHue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>241</y>
+     <x>115</x>
+     <y>273</y>
     </hint>
     <hint type="destinationlabel">
      <x>346</x>
      <y>240</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>hueSlider_2</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setSaturation(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>80</x>
+     <y>316</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>254</x>
+     <y>324</y>
     </hint>
    </hints>
   </connection>

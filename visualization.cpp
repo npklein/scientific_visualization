@@ -12,7 +12,8 @@ Simulation simulation;
 float max(float x, float y)
 { return x > y ? x : y; }
 
-Rgb TransformHSV(
+
+Rgb TransformH(
         const Rgb &in,  // color to transform
         float H          // hue shift (in degrees)
     )
@@ -34,6 +35,29 @@ Rgb TransformHSV(
            + (.587-.588*U-1.05*W)*in.g
            + (.114+.886*U-.203*W)*in.b;
     }
+    return ret;
+}
+
+Rgb TransformHS(
+        const Rgb &in,  // color to transform
+        float H,        // hue shift (in degrees)
+        float S          // hue shift (in degrees)
+    )
+{
+    if(H==0)H=1;
+    float SU = S*cos(H*M_PI/180);
+    float SW = S*sin(H*M_PI/180);
+
+    Rgb ret;
+    ret.r = (.299+.701*SU+.168*SW)*in.r
+        + (.587-.587*SU+.330*SW)*in.g
+        + (.114-.114*SU-.497*SW)*in.b;
+    ret.g = (.299-.299*SU-.328*SW)*in.r
+        + (.587+.413*SU+.035*SW)*in.g
+        + (.114-.114*SU+.292*SW)*in.b;
+    ret.b = (.299-.3*SU+1.25*SW)*in.r
+        + (.587-.588*SU-1.05*SW)*in.g
+        + (.114+.886*SU-.203*SW)*in.b;
     return ret;
 }
 
@@ -61,7 +85,7 @@ void heatmap(float value,float* R,float* G,float* B)
 }
 
 //set_colormap: Sets three different types of colormaps
-void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_clamp_max, int color_bands, float hue_degree)
+void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_clamp_max, int color_bands, int hue_degree, float saturation)
 {
    float R,G,B;
    R = G = B = 0;
@@ -89,7 +113,7 @@ void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_c
    }
 
    Rgb color = {R,G,B};
-   Rgb new_color = TransformHSV(color,hue_degree);
+   Rgb new_color = TransformHS(color,hue_degree,saturation);
 
    glColor3f(new_color.r,new_color.g,new_color.b);
 }
@@ -98,14 +122,14 @@ void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_c
 //direction_to_color: Set the current color by mapping a direction vector (x,y), using
 //                    the color mapping method 'method'. If method==1, map the vector direction
 //                    using a rainbow colormap. If method==0, simply use the white color
-void direction_to_color(float x, float y, int method, int color_bands, int color_clamp_min, int color_clamp_max, float hue_degree)
+void direction_to_color(float x, float y, int method, int color_bands, int color_clamp_min, int color_clamp_max, int hue_degree, float saturation)
 {
 	float r,g,b,f;
     if (method)
     {
 	  f = atan2(y,x) / 3.1415927 + 1;
       // mehtod acts same way as scalar_col in density
-      set_colormap(f, method, color_clamp_min, color_clamp_max, color_bands, hue_degree);
+      set_colormap(f, method, color_clamp_min, color_clamp_max, color_bands, hue_degree, saturation);
 	}
 	else
 	{ r = g = b = 1; }

@@ -89,6 +89,7 @@ private slots:
 
     void setHue(int new_hue);
 
+    void setSaturation(int new_saturation);
 protected:
     void initializeGL();
     void paintGL();
@@ -123,7 +124,12 @@ private:
     bool gradient;
     bool draw_streamline;
     bool draw_slices;
-    float hue;
+    int hue_glyph;
+    int hue_matter;
+    float saturation_matter;
+    float saturation_glyph;
+    bool draw_v;
+    bool draw_f;
     fftw_real  cell_width;
     fftw_real  cell_height;
     QWidget *window;
