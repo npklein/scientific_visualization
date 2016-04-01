@@ -213,7 +213,7 @@ void MyGLWidget::drawForcefield(fftw_real *fx, fftw_real *fy)
             }
             else if (glyphs == "cones"){
                 //
-                if (i % (200/number_of_glyphs) == 0 && j % (200/number_of_glyphs)  == 0){
+                if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
                     int idx = (j * DIM) + i;
                     Vector vector = Vector((fftw_real)i * cell_width, //x1
                                            (fftw_real)j * cell_height, //y1
@@ -625,6 +625,17 @@ void MyGLWidget::scalarColoring(QString scalartype){
         }
         else if (dataset == "force field magnitude"){
             force_field_color = 2;
+        }
+    }
+    else if(scalartype == "zebrafish"){
+        if (dataset == "fluid density"){
+            scalar_col = 3;
+        }
+        else if (dataset == "fluid velocity magnitude"){
+            velocity_color = 3;
+        }
+        else if (dataset == "force field magnitude"){
+            force_field_color = 3;
         }
     }
 }

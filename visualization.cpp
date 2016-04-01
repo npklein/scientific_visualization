@@ -5,6 +5,7 @@
 const int COLOR_BLACKWHITE=0;   //different types of color mapping: black-and-white, rainbow, banded
 const int COLOR_RAINBOW=1;
 const int COLOR_HEATMAP=2;
+const int COLOR_ZEBRAFISH=3;
 
 Simulation simulation;
 
@@ -58,6 +59,16 @@ void heatmap(float value,float* R,float* G,float* B)
     *B = 0;
 }
 
+//heatmap: see 2nd edition page 154-155
+void zebrafish(float value,float* R,float* G,float* B)
+{
+    if (value<0) value=0; if (value>1) value=1;
+    int color = 1;
+    if((int)(value*10) % 2 == 0) color = 0;
+    *R = *G = *B = color;
+}
+
+
 //set_colormap: Sets three different types of colormaps
 void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_clamp_max, int color_bands, int hue_degree, float saturation)
 {
@@ -84,6 +95,10 @@ void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_c
    else if (scalar_col==COLOR_HEATMAP)
    {
        heatmap(vy, &R, &G, &B);
+   }
+   else if (scalar_col==COLOR_ZEBRAFISH)
+   {
+       zebrafish(vy, &R, &G, &B);
    }
 
    Rgb color = {R,G,B};
