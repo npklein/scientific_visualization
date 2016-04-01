@@ -15,7 +15,8 @@ MyGLWidget::MyGLWidget(QWidget *parent)
 {
     //--- VISUALIZATION PARAMETERS ---------------------------------------------------------------------
     hedgehog_scale = 2000;			//scaling of hedgehogs
-    arrow_scale = 1000;			//scaling of hedgehogs
+    arrow_scale = 1000;			//scaling of arrows
+    cone_scale = 1000;          //scaling of cones
     draw_smoke = true;           //draw the smoke or not
     draw_vecs = true;            //draw the vector field or not
     scalar_col = 0;           //method for scalar coloring
@@ -163,6 +164,18 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
                     drawArrow(vector, i, j, vector.length()/15, 10);
                 }
             }
+            else if (glyphs == "cones"){
+                //
+                if (i % (200/number_of_glyphs) == 0 && j % (200/number_of_glyphs)  == 0){
+                    int idx = (j * DIM) + i;
+                    Vector vector = Vector((fftw_real)i * cell_width, //x1
+                                           (fftw_real)j * cell_height, //y1
+                                           ((fftw_real)i * cell_width) + cone_scale * vx[idx], //x2
+                                           ((fftw_real)j * cell_height) + cone_scale * vy[idx]);//y2
+
+                    drawCone(vector, i, j, vector.length()/15, 10);
+                }
+            }
         }
 }
 
@@ -193,12 +206,24 @@ void MyGLWidget::drawForcefield(fftw_real *fx, fftw_real *fy)
                     drawArrow(vector, i, j, vector.length()/15, 10);
                 }
             }
+            else if (glyphs == "cones"){
+                //
+                if (i % (200/number_of_glyphs) == 0 && j % (200/number_of_glyphs)  == 0){
+                    int idx = (j * DIM) + i;
+                    Vector vector = Vector((fftw_real)i * cell_width, //x1
+                                           (fftw_real)j * cell_height, //y1
+                                           ((fftw_real)i * cell_width) + cone_scale * fx[idx], //x2
+                                           ((fftw_real)j * cell_height) + cone_scale * fy[idx]);//y2
+
+                    drawCone(vector, i, j, vector.length()/15, 10);
+                }
+            }
         }
 }
 
 
 void MyGLWidget::drawArrow(Vector vector, int i, int j, float vy, int scaling_factor){
-    // draw an error the size of a cell, scale according to vector length
+    // draw an arrow the size of a cell, scale according to vector length
     float angle = vector.normalize().direction2angle();
 
     set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue);
@@ -229,6 +254,39 @@ void MyGLWidget::drawArrow(Vector vector, int i, int j, float vy, int scaling_fa
     glPopMatrix(); // now it's at normal scale again
     glLoadIdentity(); // needed to stop the rotating, otherwise rotates the entire drawing
 }
+
+
+void MyGLWidget::drawCone(Vector vector, int i, int j, float vy, int scaling_factor){
+    // draw
+    float angle = vector.normalize().direction2angle();
+
+    set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands);
+    glPushMatrix();
+    glTranslatef(cell_width*i,cell_height*j, 0);
+    glRotated(angle,0,0,1);
+    glScaled(log(vector.length()/scaling_factor+1),log(vector.length()/(scaling_factor/2)+1),0);
+
+    // draw the upper part of the cone
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex3f(0, 0, 0);
+    // Smooth shading
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glShadeModel(GL_SMOOTH);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    //glEnable (GL_LIGHTING);
+    float radius = cell_height/3; // calculate radius
+    // foreach degree angle draw circle + arrow point
+    for (int angle = 1; angle <= 360; angle++) {
+        glColor4f(0,0,0,0.5-(0.5/angle)); // colors(R, G, B, alpha)
+        glVertex2f(cell_width/2, cell_height); // draw cone point/tip
+        glVertex2f(sin(angle) * radius, cos(angle) * radius); // draw cone base (circle)
+    }
+
+    glEnd();
+    glPopMatrix(); // now it's at normal scale again
+    glLoadIdentity(); // needed to stop the rotating, otherwise rotates the entire drawing
+}
+
 
 void MyGLWidget::drawSlices(int n){
     // n = number of slices (timepoints) to draw
