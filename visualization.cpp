@@ -69,14 +69,14 @@ void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_c
 //direction_to_color: Set the current color by mapping a direction vector (x,y), using
 //                    the color mapping method 'method'. If method==1, map the vector direction
 //                    using a rainbow colormap. If method==0, simply use the white color
-void direction_to_color(float x, float y, int method, int color_bands)
+void direction_to_color(float x, float y, int method, int color_bands, int color_clamp_min, int color_clamp_max)
 {
 	float r,g,b,f;
     if (method)
     {
 	  f = atan2(y,x) / 3.1415927 + 1;
       // mehtod acts same way as scalar_col in density
-      set_colormap(f, method, 0, 1,color_bands);
+      set_colormap(f, method, color_clamp_min, color_clamp_max, color_bands);
 	}
 	else
 	{ r = g = b = 1; }

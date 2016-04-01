@@ -39,11 +39,13 @@ private slots:
     void clampColorMax(int max_color);
 
     //void OGL_Draw_Text(QString text,float x,float y, float z, float red, float green, float blue);
-    void OGL_Draw_Text(QString cClampMin, QString cClampMax);
+    void OGL_Draw_Text();
 
     void drawBar();
 
     void drawVelocity(fftw_real *vx, fftw_real *vy);
+
+    void drawForcefield(fftw_real *fx, fftw_real *fy);
 
     void drawSmoke();
 
@@ -108,8 +110,10 @@ private:
     int color_bands;
     bool scale_color;
     bool draw_grid;
-    float color_clamp_min;
-    float color_clamp_max;
+    float color_clamp_min_matter;
+    float color_clamp_max_matter;
+    float color_clamp_min_glyph;
+    float color_clamp_max_glyph;
     float arrow_scale;
     bool gradient;
     bool draw_streamline;
