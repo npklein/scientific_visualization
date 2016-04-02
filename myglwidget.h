@@ -96,7 +96,7 @@ private slots:
 
     void selectPoints(bool select_points);
 
-    void defaultPoints();
+    void defaultPoints(std::vector<int> &points_x, std::vector<int> &points_y);
 protected:
     void initializeGL();
     void paintGL();
