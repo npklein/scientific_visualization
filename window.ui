@@ -104,13 +104,6 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="2">
-      <widget class="QCheckBox" name="selectPoints">
-       <property name="text">
-        <string>Select points</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item row="0" column="0">

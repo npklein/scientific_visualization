@@ -174,8 +174,8 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
     for (int i = 0; i < points_x.size(); i++)
         for (int j = 0; j < points_y.size(); j++)
         {
-            i = points_x[i];
-            j = points_x[j];
+            i = &points_x[i];
+            j = &points_x[j];
             int idx = (j * DIM) + i;
             if (glyphs == "hedgehogs"){
                 if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
