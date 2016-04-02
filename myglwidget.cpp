@@ -158,7 +158,7 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
 {
     std::vector<int> points_x;
     std::vector<int> points_y;
-    select_points = true;
+    select_points = false;
     if(select_points){
         for (int i = 0; i < mouse_x.size(); i++){
             points_x.insert(points_x.end(), mouse_x[i]);
