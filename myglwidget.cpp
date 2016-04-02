@@ -44,7 +44,6 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     dataset = "fluid velocity magnitude";
     gradient = false;
     draw_streamline = false;
-    bool select_points = false;
     simulation.init_simulation(DIM);
     QTimer *timer = new QTimer;
     timer->start(1);
@@ -171,10 +170,10 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
     std::vector<int> points_y;
     select_points = true;
     if(select_points){
-        for (int i = 0; i < mouse_x.size(); i++){
+        for (unsigned i = 0; i < mouse_x.size(); i++){
             points_x.insert(points_x.end(), mouse_x[i]);
         }
-        for (int i = 0; i < mouse_y.size(); i++){
+        for (unsigned i = 0; i < mouse_y.size(); i++){
             points_y.insert(points_y.end(),mouse_y[i] );
         }
     }
@@ -183,32 +182,31 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
     }
     //  for (int i = 0; i < DIM; i++)
     //      for (int j = 0; j < DIM; j++)
-    for (int i = 0; i < points_x.size(); i++)
-        for (int j = 0; j < points_y.size(); j++)
+    for (unsigned i = 0; i < points_x.size(); i++)
+        for (unsigned j = 0; j < points_y.size(); j++)
         {
-
-            if (glyphs == "hedgehogs"){
-
                 float vx_draw = 0;
                 float vy_draw = 0;
                 float x_coord;
                 float y_coord;
+                int idx = (j * DIM) + i;
                 if(select_points){
                     float point_x = floor(points_x[i]/cell_width);
-                    float point_y = floor(points_y[i]/cell_width);
+                    float point_y = floor(points_y[j]/cell_height);
                     Vector interpolated_vector = interpolate_vector(point_x, point_y, cell_width, DIM, simulation);
                     vx_draw = interpolated_vector.X;
                     vy_draw = interpolated_vector.Y;
                     x_coord = points_x[i];
-                    y_coord = points_y[i];
+                    y_coord = points_y[j];
                 }
                 else{
-                    int idx = (j * DIM) + i;
+
                     vx_draw = vx[idx];
                     vy_draw = vy[idx];
                     x_coord = (fftw_real)i * cell_width;
                     y_coord = (fftw_real)j * cell_height;
                 }
+                            if (glyphs == "hedgehogs"){
                 direction_to_color(vx_draw, vy_draw, velocity_color, color_bands, color_clamp_min_glyph, color_clamp_max_glyph, hue_glyph, saturation_glyph);
                 if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
                     glBegin(GL_LINES);				//draw velocities
@@ -219,11 +217,10 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
             }
             else if (glyphs == "arrows"){
                 if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
-                    int idx = (j * DIM) + i;
                     Vector vector = Vector((fftw_real)i * cell_width, //x1
                                            (fftw_real)j * cell_height, //y1
-                                           ((fftw_real)i * cell_width) + arrow_scale * vx[idx], //x2
-                                           ((fftw_real)j * cell_height) + arrow_scale * vy[idx]);//y2
+                                           ((fftw_real)i * cell_width) + arrow_scale * vy_draw, //x2
+                                           ((fftw_real)j * cell_height) + arrow_scale * vx_draw);//y2
 
                     drawArrow(vector, i, j, vector.length()/15, 10, simulation.get_vy_min(), simulation.get_vy_max());
                 }
