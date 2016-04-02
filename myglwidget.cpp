@@ -136,7 +136,7 @@ void MyGLWidget::drawGradient()
             float y = up_rho - below_rho;
             Vector v = Vector(y, x);
             if (v.length() > 0.1){
-                drawArrow(v, i, j, v.length(), 2);
+                drawArrow(v, i, j, v.length(), 2, 0, 1);
             }
         }
 }
@@ -166,7 +166,7 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
                                            ((fftw_real)i * cell_width) + arrow_scale * vx[idx], //x2
                                            ((fftw_real)j * cell_height) + arrow_scale * vy[idx]);//y2
 
-                    drawArrow(vector, i, j, vector.length()/15, 10);
+                    drawArrow(vector, i, j, vector.length()/15, 10, simulation.get_vy_min(), simulation.get_vy_max());
                 }
             }
             else if (glyphs == "cones"){
@@ -178,7 +178,7 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
                                            ((fftw_real)i * cell_width) + cone_scale * vx[idx], //x2
                                            ((fftw_real)j * cell_height) + cone_scale * vy[idx]);//y2
 
-                    drawCone(vector, i, j, vector.length()/15, 10);
+                    drawCone(vector, i, j, vector.length()/15, 10, simulation.get_vy_min(), simulation.get_vy_max());
                 }
             }
         }
@@ -208,7 +208,7 @@ void MyGLWidget::drawForcefield(fftw_real *fx, fftw_real *fy)
                                            ((fftw_real)i * cell_width) + arrow_scale * fx[idx], //x2
                                            ((fftw_real)j * cell_height) + arrow_scale * fy[idx]);//y2
 
-                    drawArrow(vector, i, j, vector.length()/15, 10);
+                    drawArrow(vector, i, j, vector.length()/15, 10, simulation.get_fx_min(), simulation.get_fx_max());
                 }
             }
             else if (glyphs == "cones"){
@@ -220,18 +220,18 @@ void MyGLWidget::drawForcefield(fftw_real *fx, fftw_real *fy)
                                            ((fftw_real)i * cell_width) + cone_scale * fx[idx], //x2
                                            ((fftw_real)j * cell_height) + cone_scale * fy[idx]);//y2
 
-                    drawCone(vector, i, j, vector.length()/15, 10);
+                    drawCone(vector, i, j, vector.length()/15, 10, simulation.get_fx_min(), simulation.get_fx_max());
                 }
             }
         }
 }
 
 
-void MyGLWidget::drawArrow(Vector vector, int i, int j, float vy, int scaling_factor){
+void MyGLWidget::drawArrow(Vector vector, int i, int j, float vy, int scaling_factor, float vy_min, float vy_max){
     // draw an arrow the size of a cell, scale according to vector length
     float angle = vector.normalize().direction2angle();
 
-    set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph);
+    set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph,scale_color, vy_min, vy_max);
     glPushMatrix();
     glTranslatef(cell_width*i,cell_height*j, 0);
     glRotated(angle,0,0,1);
@@ -261,11 +261,11 @@ void MyGLWidget::drawArrow(Vector vector, int i, int j, float vy, int scaling_fa
 }
 
 
-void MyGLWidget::drawCone(Vector vector, int i, int j, float vy, int scaling_factor){
+void MyGLWidget::drawCone(Vector vector, int i, int j, float vy, int scaling_factor, float vy_min, float vy_max){
     // draw
     float angle = vector.normalize().direction2angle();
 
-    set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph);
+    set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph, scale_color, vy_min, vy_max);
     glPushMatrix();
     glTranslatef(cell_width*i,cell_height*j, 0);
     glRotated(angle,0,0,1);
@@ -410,18 +410,24 @@ void MyGLWidget::drawSmoke(){
             px3  = floor((fftw_real)(i + 1) * cell_width);
             py3  = floor((fftw_real)j * cell_height);
             idx3 = (j * DIM) + (i + 1);
-            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, saturation_matter);
+            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
+                         saturation_matter, scale_color, simulation.get_rho_min(), simulation.get_rho_max());
             glVertex2f(px0, py0);
-            set_colormap(simulation.get_rho()[idx1], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, saturation_matter);
+            set_colormap(simulation.get_rho()[idx1], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
+                         saturation_matter, scale_color, simulation.get_rho_min(), simulation.get_rho_max());
             glVertex2f(px1, py1);
-            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, saturation_matter);
+            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
+                         saturation_matter, scale_color, simulation.get_rho_min(), simulation.get_rho_max());
             glVertex2f(px2, py2);
 
-            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, saturation_matter);
+            set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
+                         saturation_matter, scale_color, simulation.get_rho_min(), simulation.get_rho_max());
             glVertex2f(px0, py0);
-            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, saturation_matter);
+            set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
+                         saturation_matter, scale_color, simulation.get_rho_min(), simulation.get_rho_max());
             glVertex2f(px2, py2);
-            set_colormap(simulation.get_rho()[idx3], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, saturation_matter);
+            set_colormap(simulation.get_rho()[idx3], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
+                         saturation_matter, scale_color, simulation.get_rho_min(), simulation.get_rho_max());
             glVertex2f(px3, py3);
         }
     }
@@ -477,7 +483,7 @@ void MyGLWidget::drawGrid(bool new_draw_grid)
     draw_grid = new_draw_grid;
 }
 
-void MyGLWidget::scaleColor(bool new_scale_color)
+void MyGLWidget::scaleColors(bool new_scale_color)
 {
     scale_color = new_scale_color;
 }
@@ -665,7 +671,13 @@ void MyGLWidget::drawBar(){
     glBegin (GL_QUADS);
     if (draw_smoke){
         for (int i = 0; i < 1001; i = i + 1){
-            set_colormap(0.001*i,scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, saturation_matter);
+            float rho_min = 0;
+            float rho_max = 0;
+            if (scale_color){
+            rho_min = simulation.get_rho_min();
+            rho_max = simulation.get_rho_max();
+            }
+            set_colormap(0.001*i,scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, saturation_matter, scale_color, rho_min, rho_max);
             glVertex3f(15+(0.5*i), 40, 0); //(x,y top left)
             glVertex3f(15+(0.5*i), 10, 0); //(x,y bottom left)
             glVertex3f(15+(0.5*(i+1)),10, 0); //(x,y bottom right)
@@ -674,7 +686,7 @@ void MyGLWidget::drawBar(){
     }
     if (draw_vecs){
         for (int i = 0; i < 1001; i = i + 1){
-            set_colormap(0.001*i,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph);
+            set_colormap(0.001*i,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph, scale_color, 0, 1);
             glVertex3f(15+(0.5*i), 70, 0); //(x,y top left)
             glVertex3f(15+(0.5*i), 40, 0); //(x,y bottom left)
             glVertex3f(15+(0.5*(i+1)),40, 0); //(x,y bottom right)
@@ -690,21 +702,28 @@ void MyGLWidget::OGL_Draw_Text(){
     //glPushMatrix();
     //glDisable(GL_LIGHTING);
     glDisable(GL_DEPTH_TEST);
+    QString text_min = QString::number(color_clamp_min_matter);
+    QString text_max = QString::number(color_clamp_max_matter);
     if (draw_smoke){
         //qglColor(Qt::white);
-        set_colormap(1-color_clamp_min_matter,scalar_col, color_clamp_min_matter, color_clamp_max_matter,color_bands, hue_matter, 1);
-        renderText(20, 15, 0, QString::number(color_clamp_min_matter), QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
+        if(scale_color){
+            // to round off to 1 decimal
+            text_min = QString::number(floor(simulation.get_rho_min()*10)/10);
+            text_max = QString::number(floor(simulation.get_rho_max()*10)/10);
+        }
+        set_colormap(1-color_clamp_min_matter,scalar_col, color_clamp_min_matter, color_clamp_max_matter,color_bands, hue_matter, 1, scale_color, 0, 1);
+        renderText(20, 15, 0, text_min, QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
         //qglColor(Qt::black);
         renderText(240, 15, 0, "matter", QFont("Arial", 8, QFont::Bold, false) );
-        set_colormap(1-color_clamp_max_matter, scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, 1);
-        renderText(470, 15, 0, QString::number(color_clamp_max_matter), QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
+        set_colormap(1-color_clamp_max_matter, scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, 1, scale_color, 0, 1);
+        renderText(470, 15, 0, text_max, QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
     }
     //QString maxCol = QString::number(color_clamp_max);
     if (draw_vecs){
-        set_colormap(1-color_clamp_min_glyph,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph,color_bands, hue_glyph, 1);
+        set_colormap(1-color_clamp_min_glyph,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph,color_bands, hue_glyph, 1, scale_color, 0, 1);
         renderText(20, 45, 0, QString::number(color_clamp_min_glyph), QFont("Arial", 12, QFont::Bold, false) ); // render top bar left
         renderText(240, 45, 0, "glyph", QFont("Arial", 8, QFont::Bold, false) );
-        set_colormap(1-color_clamp_max_glyph,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph,color_bands, hue_glyph, 1);
+        set_colormap(1-color_clamp_max_glyph,velocity_color, color_clamp_min_glyph, color_clamp_max_glyph,color_bands, hue_glyph, 1, scale_color, 0, 1);
         renderText(470, 45, 0, QString::number(color_clamp_max_glyph), QFont("Arial", 12, QFont::Bold, false) ); // render top bar right
     }
     glEnable(GL_DEPTH_TEST);

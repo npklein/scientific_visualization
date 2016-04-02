@@ -128,7 +128,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="iconSize">
       <size>
@@ -795,7 +795,6 @@
     <slot>applyColoringToDataset(QString)</slot>
     <slot>setColorBands(int)</slot>
     <slot>setGlyphType(QString)</slot>
-    <slot>scaleColor(bool)</slot>
     <slot>setDim(int)</slot>
     <slot>drawGrid(bool)</slot>
     <slot>setGridSize(int)</slot>
@@ -808,6 +807,7 @@
     <slot>setHue(int)</slot>
     <slot>setSaturation(int)</slot>
     <slot>setNumberOfGlyphs(int)</slot>
+    <slot>scaleColors(bool)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -1194,6 +1194,22 @@
     <hint type="destinationlabel">
      <x>301</x>
      <y>420</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>scaleColors(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>63</x>
+     <y>206</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>203</y>
     </hint>
    </hints>
   </connection>
