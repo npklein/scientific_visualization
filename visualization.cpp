@@ -7,8 +7,6 @@ const int COLOR_RAINBOW=1;
 const int COLOR_HEATMAP=2;
 const int COLOR_ZEBRAFISH=3;
 
-Simulation simulation;
-
 //------ VISUALIZATION CODE STARTS HERE -----------------------------------------------------------------
 float max(float x, float y)
 { return x > y ? x : y; }
@@ -68,12 +66,19 @@ void zebrafish(float value,float* R,float* G,float* B)
     *R = *G = *B = color;
 }
 
+float scale(float valueIn, float baseMin, float baseMax,  float limitMin, float limitMax){
+     return ((limitMax - limitMin) * (valueIn - baseMin) / (baseMax - baseMin)) + limitMin;
+}
 
 //set_colormap: Sets three different types of colormaps
-void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_clamp_max, int color_bands, int hue_degree, float saturation)
+void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_clamp_max,
+                  int color_bands, int hue_degree, float saturation, bool scale_colors, int vy_min, int vy_max)
 {
    float R,G,B;
    R = G = B = 0;
+   if(scale_colors){
+       vy = scale(vy, vy_min, vy_max, 0, 1);
+   }
    // clamp vy to the min and max value
    if (vy < color_clamp_min){
        vy = color_clamp_min;
@@ -118,7 +123,7 @@ void direction_to_color(float x, float y, int method, int color_bands, int color
     {
 	  f = atan2(y,x) / 3.1415927 + 1;
       // mehtod acts same way as scalar_col in density
-      set_colormap(f, method, color_clamp_min, color_clamp_max, color_bands, hue_degree, saturation);
+      set_colormap(f, method, color_clamp_min, color_clamp_max, color_bands, hue_degree, saturation, false, 0, 1);
 	}
 	else
 	{ r = g = b = 1; }
