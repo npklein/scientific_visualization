@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <rfftw.h>              //the numerical simulation FFTW library
 #include "vector.h"
+#include "simulation.h"
 class MyGLWidget : public QGLWidget
 {
     Q_OBJECT
@@ -57,9 +58,9 @@ private slots:
 
     void setColorBands(int colorBands);
 
-    void drawArrow(Vector vector, int i, int j, float vy, int scaling_factor);
+    void drawArrow(Vector vector, int i, int j, float vy, int scaling_factor, float vy_min, float vy_max);
 
-    void drawCone(Vector vector, int i, int j, float vy, int scaling_factor);
+    void drawCone(Vector vector, int i, int j, float vy, int scaling_factor, float vy_min, float vy_max);
 
     void drawStreamline();
 
@@ -67,7 +68,7 @@ private slots:
 
     void setGlyphType(QString glyps);
 
-    void scaleColor(bool new_scale_color);
+    void scaleColors(bool new_scale_color);
 
     void drawGridLines(int DIM);
 
@@ -130,6 +131,7 @@ private:
     float saturation_glyph;
     bool draw_v;
     bool draw_f;
+    Simulation simulation;
     fftw_real  cell_width;
     fftw_real  cell_height;
     QWidget *window;

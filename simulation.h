@@ -25,6 +25,16 @@ class Simulation {
         fftw_real* get_vy() const;
         fftw_real* get_vx0() const;
         fftw_real* get_vy0() const;
+        fftw_real get_vy_max() const;
+        fftw_real get_vx_max() const;
+        fftw_real get_vy_min() const;
+        fftw_real get_vx_min() const;
+        fftw_real get_rho_min() const;
+        fftw_real get_rho_max() const;
+        fftw_real get_fx_min() const;
+        fftw_real get_fx_max() const;
+        fftw_real get_fy_min() const;
+        fftw_real get_fy_max() const;
         //Mutator functions
         void set_frozen(bool);
         void set_visc(float);
@@ -53,8 +63,8 @@ class Simulation {
         int clamp(float);
         void drag(int mx , int my, int DIM, int winWidth ,int winHeight);
 
-        float rho_min;
-        float rho_max;
+        float rho_minimal;
+        float rho_maximal;
 
     private:
         // member variables
@@ -65,6 +75,10 @@ class Simulation {
         fftw_real *vx0, *vy0;           //(vx0,vy0) = velocity field at the previous moment
         fftw_real *fx, *fy;	            //(fx,fy)   = user-controlled simulation forces, steered with the mouse
         fftw_real *rho, *rho0;			//smoke density at the current (rho) and previous (rho0) moment
+        // min/max are lowest and highest values in the grid
+        fftw_real vx_min, vx_max, vy_min, vy_max;
+        fftw_real fx_min, fx_max, fy_min, fy_max;
+        fftw_real rho_min, rho_max;
         rfftwnd_plan plan_rc, plan_cr;  //simulation domain discretization
         int frozen;               //toggles on/off the animation
 
