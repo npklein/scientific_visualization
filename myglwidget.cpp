@@ -671,7 +671,13 @@ void MyGLWidget::drawBar(){
     glBegin (GL_QUADS);
     if (draw_smoke){
         for (int i = 0; i < 1001; i = i + 1){
-            set_colormap(0.001*i,scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, saturation_matter, scale_color, 0, 1);
+            float rho_min = 0;
+            float rho_max = 0;
+            if (scale_color){
+            rho_min = simulation.get_rho_min();
+            rho_max = simulation.get_rho_max();
+            }
+            set_colormap(0.001*i,scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, saturation_matter, scale_color, rho_min, rho_max);
             glVertex3f(15+(0.5*i), 40, 0); //(x,y top left)
             glVertex3f(15+(0.5*i), 10, 0); //(x,y bottom left)
             glVertex3f(15+(0.5*(i+1)),10, 0); //(x,y bottom right)
@@ -696,14 +702,21 @@ void MyGLWidget::OGL_Draw_Text(){
     //glPushMatrix();
     //glDisable(GL_LIGHTING);
     glDisable(GL_DEPTH_TEST);
+    QString text_min = QString::number(color_clamp_min_matter);
+    QString text_max = QString::number(color_clamp_max_matter);
     if (draw_smoke){
         //qglColor(Qt::white);
+        if(scale_color){
+            // to round off to 1 decimal
+            text_min = QString::number(floor(simulation.get_rho_min()*10)/10);
+            text_max = QString::number(floor(simulation.get_rho_max()*10)/10);
+        }
         set_colormap(1-color_clamp_min_matter,scalar_col, color_clamp_min_matter, color_clamp_max_matter,color_bands, hue_matter, 1, scale_color, 0, 1);
-        renderText(20, 15, 0, QString::number(color_clamp_min_matter), QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
+        renderText(20, 15, 0, text_min, QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
         //qglColor(Qt::black);
         renderText(240, 15, 0, "matter", QFont("Arial", 8, QFont::Bold, false) );
         set_colormap(1-color_clamp_max_matter, scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, 1, scale_color, 0, 1);
-        renderText(470, 15, 0, QString::number(color_clamp_max_matter), QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
+        renderText(470, 15, 0, text_max, QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
     }
     //QString maxCol = QString::number(color_clamp_max);
     if (draw_vecs){
