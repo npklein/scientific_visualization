@@ -1,6 +1,6 @@
 #ifndef VECTOR_H
 #define VECTOR_H
-
+#include "simulation.h"
 
 class Vector
 { public:
@@ -12,8 +12,7 @@ class Vector
     Vector normalize();
     float X,Y;
     float direction2angle();
-    void interpolate(Vector v1, Vector v2, Vector v3, Vector v4, float start_x, float start_y, float vertex_x, float vertex_y, float cell_size);
 };
 
-
+Vector interpolate_vector(float point_x, float point_y, float cell_size, int DIM, Simulation simulation);
 #endif // VECTOR_H

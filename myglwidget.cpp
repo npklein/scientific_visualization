@@ -9,7 +9,7 @@
 #include <cmath>
 #include "vector.cpp"
 #include "grid.h"
-#include <queue>
+#include <deque>
 
 MyGLWidget::MyGLWidget(QWidget *parent)
 {
@@ -44,6 +44,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     dataset = "fluid velocity magnitude";
     gradient = false;
     draw_streamline = false;
+    bool select_points = false;
     simulation.init_simulation(DIM);
     QTimer *timer = new QTimer;
     timer->start(1);
@@ -58,6 +59,16 @@ void MyGLWidget::initializeGL()
 {
     qglClearColor(Qt::black);
 }
+
+void MyGLWidget::defaultPoints(){
+    for (int i = 0; i < DIM; i++){
+        points_x.insert(points_x.begin(), i);
+    }
+    for (int i = 0; i < DIM; i++){
+        points_y.insert(points_y.begin(), i);
+    }
+}
+
 
 void MyGLWidget::paintGL() //glutDisplayFunc(display);
 {
@@ -113,6 +124,8 @@ void MyGLWidget::resizeGL(int width, int height)
 void MyGLWidget::mousePressEvent(QMouseEvent *event)
 {
     lastPos = event->pos();
+    mouse_x.insert(mouse_x.begin(), lastPos.x());
+    mouse_y.insert(mouse_y.begin(), lastPos.y());
 }
 
 void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
@@ -141,20 +154,46 @@ void MyGLWidget::drawGradient()
         }
 }
 
-
-
 void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
 {
-    for (int i = 0; i < DIM; i++)
-        for (int j = 0; j < DIM; j++)
+    std::vector<int> points_x;
+    std::vector<int> points_y;
+    if(select_points){
+        for (int i = 0; i < mouse_x.size(); i++){
+            points_x.insert(points_x.begin(), i);
+        }
+        for (int i = 0; i < mouse_y.size(); i++){
+            points_y.insert(points_y.begin(), i);
+        }
+    }
+    else{
+        defaultPoints();
+    }
+    //  for (int i = 0; i < DIM; i++)
+    //      for (int j = 0; j < DIM; j++)
+    for (int i = 0; i < points_x.size(); i++)
+        for (int j = 0; j < points_y.size(); j++)
         {
+            i = points_x[i];
+            j = points_x[j];
             int idx = (j * DIM) + i;
             if (glyphs == "hedgehogs"){
                 if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
                     glBegin(GL_LINES);				//draw velocities
                     direction_to_color(vx[idx], vy[idx], velocity_color, color_bands, color_clamp_min_glyph, color_clamp_max_glyph, hue_glyph, saturation_glyph);
                     glVertex2f((fftw_real)i * cell_width, (fftw_real)j * cell_height);
-                    glVertex2f((fftw_real)i * cell_width + hedgehog_scale * vx[idx], (fftw_real)j * cell_height + hedgehog_scale * vy[idx]);
+                    float vx_draw;
+                    float vy_draw;
+                    if(select_points){
+                        Vector interpolated_vector = interpolate_vector(i, j, cell_width, DIM, simulation);
+                        vx_draw = interpolated_vector.X;
+                        vy_draw = interpolated_vector.Y;
+                    }
+                    else{
+                        vx_draw = vx[idx];
+                        vy_draw = vy[idx];
+                    }
+                    glVertex2f((fftw_real)i * cell_width + hedgehog_scale * vx_draw, (fftw_real)j * cell_height + hedgehog_scale * vy_draw);
                     glEnd();
                 }
             }
@@ -226,7 +265,6 @@ void MyGLWidget::drawForcefield(fftw_real *fx, fftw_real *fy)
         }
 }
 
-
 void MyGLWidget::drawArrow(Vector vector, int i, int j, float vy, int scaling_factor, float vy_min, float vy_max){
     // draw an arrow the size of a cell, scale according to vector length
     float angle = vector.normalize().direction2angle();
@@ -260,7 +298,6 @@ void MyGLWidget::drawArrow(Vector vector, int i, int j, float vy, int scaling_fa
     glLoadIdentity(); // needed to stop the rotating, otherwise rotates the entire drawing
 }
 
-
 void MyGLWidget::drawCone(Vector vector, int i, int j, float vy, int scaling_factor, float vy_min, float vy_max){
     // draw
     float angle = vector.normalize().direction2angle();
@@ -292,7 +329,6 @@ void MyGLWidget::drawCone(Vector vector, int i, int j, float vy, int scaling_fac
     glLoadIdentity(); // needed to stop the rotating, otherwise rotates the entire drawing
 }
 
-
 void MyGLWidget::drawSlices(int n){
     // n = number of slices (timepoints) to draw
     // use std::queue instead of std::list because it forces FIFO
@@ -316,49 +352,24 @@ void MyGLWidget::drawSlices(int n){
 
 void MyGLWidget::drawStreamline()
 {
-
+    float dt = cell_width/3;
+    float max_size = cell_width*3;
     //drawStreamline(25,25);
     for (int i = 0; i < DIM; i++)
         for (int j = 0; j < DIM; j++)
         {
-
             if (i % 5 == 0 && j % 5 == 0){
                 //if ( i ==20 && j==20){
-                int idx_1 = (j * DIM) + i;
-                int idx_2 = (j * DIM) + i+1;
-                int idx_3 = (j+1 * DIM) + i;
-                int idx_4 = (j+1 * DIM) + i+1;
-                float dt = cell_width/3;
-                float max_size = cell_width*3;
-                float vertex_x = (fftw_real)i * cell_width;
-                float vertex_y = (fftw_real)j * cell_height;
-                float start_x = vertex_x + 0.01; // to make sure we are in the cell and not on  the vertex
-                float start_y = vertex_y + 0.01; // to make sure we are in the cell and not on  the vertex
+                float start_x = i + 0.01; // to make sure we are in the cell and not on  the vertex
+                float start_y = j + 0.01; // to make sure we are in the cell and not on  the vert
                 for (int y = 0; y < max_size; y+=dt){
-                    Vector vector1 = Vector((fftw_real)i * cell_width, //x1
-                                            (fftw_real)j * cell_height, //y1
-                                            ((fftw_real)i * cell_width) + simulation.get_vx()[idx_1], //x2
-                                            ((fftw_real)j * cell_height) + simulation.get_vy()[idx_1]);//y2
-                    Vector vector2 = Vector((fftw_real)i * cell_width, //x1
-                                            (fftw_real)j * cell_height, //y1
-                                            ((fftw_real)i * cell_width) + simulation.get_vx()[idx_2], //x2
-                                            ((fftw_real)j * cell_height) + simulation.get_vy()[idx_2]);//y2
-                    Vector vector3 = Vector((fftw_real)i * cell_width, //x1
-                                            (fftw_real)j * cell_height, //y1
-                                            ((fftw_real)i * cell_width) + simulation.get_vx()[idx_3], //x2
-                                            ((fftw_real)j * cell_height) + simulation.get_vy()[idx_3]);//y2
-                    Vector vector4 = Vector((fftw_real)i * cell_width, //x1
-                                            (fftw_real)j * cell_height, //y1
-                                            ((fftw_real)i * cell_width) + simulation.get_vx()[idx_4], //x2
-                                            ((fftw_real)j * cell_height) + simulation.get_vy()[idx_4]);//y2
-                    Vector interpolated_vector = Vector(0,0);
-
-                    interpolated_vector.interpolate(vector1, vector2, vector3, vector4, start_x,start_y, vertex_x, vertex_y, cell_width);
+                    Vector interpolated_vector = interpolate_vector(i, j, cell_width, DIM, simulation);
                     // if outside the grid, stop the stream line
                     //if(interpolated_vector.X > DIM*cell_width || interpolated_vector.Y > DIM*cell_height || interpolated_vector.X <0 || interpolated_vector.Y <0 ){
                     //    return;
                     //}
                     float length  = interpolated_vector.length();
+
                     if(length>0){
                         interpolated_vector.X = interpolated_vector.X / length;
                         interpolated_vector.Y = interpolated_vector.Y / length;
@@ -375,17 +386,14 @@ void MyGLWidget::drawStreamline()
                         start_y = interpolated_vector.Y+start_y;
                         int x_axis = floor(start_x/cell_width);
                         int y_axis = floor(start_y/cell_height);
-                        idx_1 = (y_axis * DIM) + x_axis;
-                        idx_2 = (y_axis * DIM) + x_axis+1;
-                        idx_3 = (y_axis+1 * DIM) + x_axis;
-                        idx_4 = (y_axis+1 * DIM) + x_axis+1;
-                        vertex_x = (fftw_real)i * cell_width;
-                        vertex_y = (fftw_real)j * cell_height;
+                        i = x_axis;
+                        j = y_axis;
                     }
                 }
             }
         }
 }
+
 
 void MyGLWidget::drawSmoke(){
     int  i, j, idx0, idx1, idx2, idx3; double px0,py0,px1,py1,px2,py2,px3,py3;
@@ -674,8 +682,8 @@ void MyGLWidget::drawBar(){
             float rho_min = 0;
             float rho_max = 0;
             if (scale_color){
-            rho_min = simulation.get_rho_min();
-            rho_max = simulation.get_rho_max();
+                rho_min = simulation.get_rho_min();
+                rho_max = simulation.get_rho_max();
             }
             set_colormap(0.001*i,scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, saturation_matter, scale_color, rho_min, rho_max);
             glVertex3f(15+(0.5*i), 40, 0); //(x,y top left)
@@ -802,4 +810,8 @@ void MyGLWidget::setDrawSlices(bool new_slices){
         draw_vecs = true;
         draw_smoke = true;
     }
+}
+
+void MyGLWidget::selectPoints(bool new_select_points){
+    select_points = new_select_points;
 }

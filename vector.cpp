@@ -9,6 +9,7 @@ Vector::Vector(void)
 {
 }
 
+
 Vector::Vector(float X, float Y){
     this->X = X;
     this->Y = Y;
@@ -47,23 +48,55 @@ float Vector::direction2angle()			//Converts a 2D vector into an orientation (an
 
 }
 
-void Vector::interpolate(Vector v1, Vector v2, Vector v3, Vector v4, float start_x, float start_y, float vertex_x, float vertex_y, float cell_size){
-    float tx = fabs(start_x - vertex_x)/cell_size;	//Parametric coordinates of point within cell
-    float ty = fabs(start_y - vertex_y)/cell_size;
+Vector interpolate_vector(float point_x, float point_y, float cell_size, int DIM, Simulation simulation){
+    int i = floor(point_x);
+    int j = floor(point_y);
+    int idx_1 = (j * DIM) + i;
+    int idx_2 = (j * DIM) + i+1;
+    int idx_3 = (j+1 * DIM) + i;
+    int idx_4 = (j+1 * DIM) + i+1;
+    float cell_width = cell_size/2;
+    float cell_height = cell_size/2;
+    float vertex_x = (fftw_real)i * cell_width;
+    float vertex_y = (fftw_real)j * cell_height;
+    // float start_x = vertex_x + 0.01; // to make sure we are in the cell and not on  the vertex
+    // float start_y = vertex_y + 0.01; // to make sure we are in the cell and not on  the vertex
 
-            //Compute vector value at given point, using
-                                            //bilinear interpolation of the vector values at
-    this->X += (1-tx)*(1-ty)*v1.X;		//the four cell vertices
-    this->Y += (1-tx)*(1-ty)*v1.Y;
+    Vector vector1 = Vector((fftw_real)i * cell_width, //x1
+                            (fftw_real)j * cell_height, //y1
+                            ((fftw_real)i * cell_width) + simulation.get_vx()[idx_1], //x2
+                            ((fftw_real)j * cell_height) + simulation.get_vy()[idx_1]);//y2
+    Vector vector2 = Vector((fftw_real)i * cell_width, //x1
+                            (fftw_real)j * cell_height, //y1
+                            ((fftw_real)i * cell_width) + simulation.get_vx()[idx_2], //x2
+                            ((fftw_real)j * cell_height) + simulation.get_vy()[idx_2]);//y2
+    Vector vector3 = Vector((fftw_real)i * cell_width, //x1
+                            (fftw_real)j * cell_height, //y1
+                            ((fftw_real)i * cell_width) + simulation.get_vx()[idx_3], //x2
+                            ((fftw_real)j * cell_height) + simulation.get_vy()[idx_3]);//y2
+    Vector vector4 = Vector((fftw_real)i * cell_width, //x1
+                            (fftw_real)j * cell_height, //y1
+                            ((fftw_real)i * cell_width) + simulation.get_vx()[idx_4], //x2
+                            ((fftw_real)j * cell_height) + simulation.get_vy()[idx_4]);//y2
+    Vector interpolated_vector = Vector(0,0);
 
-    this->X += tx*(1-ty)*v2.X;
-    this->Y += tx*(1-ty)*v2.Y;
+    float tx = fabs(point_x - vertex_x)/cell_size;	//Parametric coordinates of point within cell
+    float ty = fabs(point_y - vertex_y)/cell_size;
 
-    this->X += tx*ty*v3.X;
-    this->Y += tx*ty*v3.Y;
+    //Compute vector value at given point, using
+    //bilinear interpolation of the vector values at
+    interpolated_vector.X += (1-tx)*(1-ty)*vector1.X;		//the four cell vertices
+    interpolated_vector.Y += (1-tx)*(1-ty)*vector1.Y;
 
-    this->X += (1-tx)*ty*v4.X;
-    this->Y += (1-tx)*ty*v4.Y;
+    interpolated_vector.X += tx*(1-ty)*vector2.X;
+    interpolated_vector.Y += tx*(1-ty)*vector2.Y;
+
+    interpolated_vector.X += tx*ty*vector3.X;
+    interpolated_vector.Y += tx*ty*vector3.Y;
+
+    interpolated_vector.X += (1-tx)*ty*vector4.X;
+    interpolated_vector.Y += (1-tx)*ty*vector4.Y;
+    return(interpolated_vector);
 }
 
 Vector::~Vector(void)

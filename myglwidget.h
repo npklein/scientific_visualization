@@ -8,6 +8,8 @@
 #include <rfftw.h>              //the numerical simulation FFTW library
 #include "vector.h"
 #include "simulation.h"
+#include <vector>
+
 class MyGLWidget : public QGLWidget
 {
     Q_OBJECT
@@ -91,6 +93,10 @@ private slots:
     void setHue(int new_hue);
 
     void setSaturation(int new_saturation);
+
+    void selectPoints(bool select_points);
+
+    void defaultPoints();
 protected:
     void initializeGL();
     void paintGL();
@@ -131,6 +137,7 @@ private:
     float saturation_glyph;
     bool draw_v;
     bool draw_f;
+    bool select_points;
     Simulation simulation;
     fftw_real  cell_width;
     fftw_real  cell_height;
@@ -138,6 +145,10 @@ private:
     std::string dataset;
     QPoint lastPos;
     QString glyphs;
+    std::vector<int> mouse_x;
+    std::vector<int> mouse_y;
+    std::vector<int> points_x;
+    std::vector<int> points_y;
 };
 
 #endif // MYGLWIDGET_H

@@ -26,6 +26,8 @@ protected:
 private slots:
 
 
+    void on_selectPoints_clicked(bool select_points);
+
 private:
     Ui::Window *ui;
 };

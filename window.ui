@@ -102,7 +102,13 @@
        <property name="mouseTracking">
         <bool>false</bool>
        </property>
-       <zorder>tabWidget</zorder>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QCheckBox" name="selectPoints">
+       <property name="text">
+        <string>Select points</string>
+       </property>
       </widget>
      </item>
     </layout>
@@ -707,22 +713,6 @@
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
-      <zorder>label</zorder>
-      <zorder>simulationTimestepSlider</zorder>
-      <zorder>label_2</zorder>
-      <zorder>fluidViscositySlider</zorder>
-      <zorder>label_3</zorder>
-      <zorder>hedgehogScalingSlider</zorder>
-      <zorder>label_8</zorder>
-      <zorder>dimensionsSpinbox</zorder>
-      <zorder>showGridCheckbox</zorder>
-      <zorder>gridSizeLabel</zorder>
-      <zorder>gridSizeSlider</zorder>
-      <zorder>label_7</zorder>
-      <zorder>velocityGlyphType</zorder>
-      <zorder>numberOfGlyphsSlider</zorder>
-      <zorder>myGLWidget</zorder>
-      <zorder>gridSizeLabel_2</zorder>
      </widget>
      <widget class="QWidget" name="tab_6">
       <attribute name="title">
@@ -808,6 +798,7 @@
     <slot>setSaturation(int)</slot>
     <slot>setNumberOfGlyphs(int)</slot>
     <slot>scaleColors(bool)</slot>
+    <slot>selectPoints(bool)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -986,22 +977,6 @@
     <hint type="destinationlabel">
      <x>445</x>
      <y>369</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBox</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>myGLWidget</receiver>
-   <slot>scaleColor(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>127</x>
-     <y>211</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>358</x>
-     <y>356</y>
     </hint>
    </hints>
   </connection>
