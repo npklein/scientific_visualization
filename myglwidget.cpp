@@ -60,12 +60,12 @@ void MyGLWidget::initializeGL()
     qglClearColor(Qt::black);
 }
 
-void MyGLWidget::defaultPoints(){
+void MyGLWidget::defaultPoints(std::vector<int> &points_x, std::vector<int> &points_y){
     for (int i = 0; i < DIM; i++){
-        points_x.insert(points_x.begin(), i);
+        points_x.insert(points_x.end(), i);
     }
     for (int i = 0; i < DIM; i++){
-        points_y.insert(points_y.begin(), i);
+        points_y.insert(points_y.end(), i);
     }
 }
 
@@ -158,21 +158,22 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
 {
     std::vector<int> points_x;
     std::vector<int> points_y;
+    select_points = true;
     if(select_points){
         for (int i = 0; i < mouse_x.size(); i++){
-            points_x.insert(points_x.begin(), i);
+            points_x.insert(points_x.end(), mouse_x[i]);
         }
         for (int i = 0; i < mouse_y.size(); i++){
-            points_y.insert(points_y.begin(), i);
+            points_y.insert(points_y.end(),mouse_y[i] );
         }
     }
     else{
-        defaultPoints();
+        defaultPoints(points_x, points_y);
     }
     //  for (int i = 0; i < DIM; i++)
     //      for (int j = 0; j < DIM; j++)
-    for (int i = 0; i < points_x.size(); i++)
-        for (int j = 0; j < points_y.size(); j++)
+    for (unsigned i = 0; i < points_x.size(); i++)
+        for (unsigned j = 0; j < points_y.size(); j++)
         {
             i = points_x[i];
             j = points_x[j];
