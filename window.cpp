@@ -33,3 +33,8 @@ void Window::setDrawingMatterCheckbox(bool setDrawingMatter){
     ui->drawingMatterCheckbox->setChecked(setDrawingMatter);
 }
 
+
+void Window::on_selectPoints_clicked(bool select_points)
+{
+    ui->drawingMatterCheckbox->setChecked(select_points);
+}
