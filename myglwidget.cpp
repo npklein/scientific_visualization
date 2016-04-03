@@ -44,7 +44,6 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     dataset = "fluid velocity magnitude";
     gradient = false;
     draw_streamline = false;
-    bool select_points = false;
     simulation.init_simulation(DIM);
     QTimer *timer = new QTimer;
     timer->start(1);
@@ -62,13 +61,12 @@ void MyGLWidget::initializeGL()
 
 void MyGLWidget::defaultPoints(std::vector<int> &points_x, std::vector<int> &points_y){
     for (int i = 0; i < DIM; i++){
-        points_x.insert(points_x.end(), i);
-    }
-    for (int i = 0; i < DIM; i++){
-        points_y.insert(points_y.end(), i);
+        for (int j = 0; j < DIM; j++){
+            points_x.insert(points_x.end(), i);
+            points_y.insert(points_y.end(), j);
+        }
     }
 }
-
 
 void MyGLWidget::paintGL() //glutDisplayFunc(display);
 {
@@ -124,16 +122,16 @@ void MyGLWidget::resizeGL(int width, int height)
 void MyGLWidget::mousePressEvent(QMouseEvent *event)
 {
     lastPos = event->pos();
-    mouse_x.insert(mouse_x.begin(), lastPos.x());
-    mouse_y.insert(mouse_y.begin(), lastPos.y());
+    mouse_x.insert(mouse_x.end(), lastPos.x()*2);
+    mouse_y.insert(mouse_y.end(), windowHeight - lastPos.y()*2);
 }
 
 void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     int mx = event->x();// - lastposition gets calculated in drag(), could save a step by using lastPos.x/y but leaving it like this is safer
     int my = event->y();
-    simulation.drag(mx,my, DIM, windowWidth, windowHeight);  // Works for Freerk when using external display
-    //simulation.drag(mx,my, DIM, windowWidth/2, windowHeight/2); // Works for Niek
+    //simulation.drag(mx,my, DIM, windowWidth, windowHeight);  // Works for Freerk when using external display
+    simulation.drag(mx,my, DIM, windowWidth/2, windowHeight/2); // Works for Niek
 }
 
 void MyGLWidget::drawGradient()
@@ -158,12 +156,11 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
 {
     std::vector<int> points_x;
     std::vector<int> points_y;
-    select_points = false;
     if(select_points){
-        for (int i = 0; i < mouse_x.size(); i++){
+        for (unsigned i = 0; i < mouse_x.size(); i++){
             points_x.insert(points_x.end(), mouse_x[i]);
         }
-        for (int i = 0; i < mouse_y.size(); i++){
+        for (unsigned i = 0; i < mouse_y.size(); i++){
             points_y.insert(points_y.end(),mouse_y[i] );
         }
     }
@@ -172,56 +169,63 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
     }
     //  for (int i = 0; i < DIM; i++)
     //      for (int j = 0; j < DIM; j++)
-    for (unsigned i = 0; i < points_x.size(); i++)
-        for (unsigned j = 0; j < points_y.size(); j++)
-        {
-            i = points_x[i];
-            j = points_x[j];
-            int idx = (j * DIM) + i;
-            if (glyphs == "hedgehogs"){
-                if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
-                    glBegin(GL_LINES);				//draw velocities
-                    direction_to_color(vx[idx], vy[idx], velocity_color, color_bands, color_clamp_min_glyph, color_clamp_max_glyph, hue_glyph, saturation_glyph);
-                    glVertex2f((fftw_real)i * cell_width, (fftw_real)j * cell_height);
-                    float vx_draw;
-                    float vy_draw;
-                    if(select_points){
-                        Vector interpolated_vector = interpolate_vector(i, j, cell_width, DIM, simulation);
-                        vx_draw = interpolated_vector.X;
-                        vy_draw = interpolated_vector.Y;
-                    }
-                    else{
-                        vx_draw = vx[idx];
-                        vy_draw = vy[idx];
-                    }
-                    glVertex2f((fftw_real)i * cell_width + hedgehog_scale * vx_draw, (fftw_real)j * cell_height + hedgehog_scale * vy_draw);
-                    glEnd();
-                }
-            }
-            else if (glyphs == "arrows"){
-                if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
-                    int idx = (j * DIM) + i;
-                    Vector vector = Vector((fftw_real)i * cell_width, //x1
-                                           (fftw_real)j * cell_height, //y1
-                                           ((fftw_real)i * cell_width) + arrow_scale * vx[idx], //x2
-                                           ((fftw_real)j * cell_height) + arrow_scale * vy[idx]);//y2
+    for (unsigned y = 0; y < points_x.size(); y++)
+    {
+        int i = points_x[y];
+        int j = points_y[y];
+        float vx_draw = 0;
+        float vy_draw = 0;
+        int x_coord;
+        int y_coord;
+        int idx = (j * DIM) + i;
+        if(select_points){
+            float point_x = (float)points_x[y]/cell_width;
+            float point_y = (float)points_y[y]/cell_height;
+            Vector interpolated_vector = interpolate_vector(point_x, point_y, cell_width*2, DIM, simulation);
+            vx_draw = interpolated_vector.X;
+            vy_draw = interpolated_vector.Y;
+            x_coord = points_x[y];
+            y_coord = points_y[y];
+        }
+        else{
 
-                    drawArrow(vector, i, j, vector.length()/15, 10, simulation.get_vy_min(), simulation.get_vy_max());
-                }
-            }
-            else if (glyphs == "cones"){
-                //
-                if (i % (200/number_of_glyphs) == 0 && j % (200/number_of_glyphs)  == 0){
-                    int idx = (j * DIM) + i;
-                    Vector vector = Vector((fftw_real)i * cell_width, //x1
-                                           (fftw_real)j * cell_height, //y1
-                                           ((fftw_real)i * cell_width) + cone_scale * vx[idx], //x2
-                                           ((fftw_real)j * cell_height) + cone_scale * vy[idx]);//y2
-
-                    drawCone(vector, i, j, vector.length()/15, 10, simulation.get_vy_min(), simulation.get_vy_max());
-                }
+            vx_draw = vx[idx];
+            vy_draw = vy[idx];
+            x_coord = (fftw_real)i * cell_width;
+            y_coord = (fftw_real)j * cell_height;
+        }
+        if (glyphs == "hedgehogs"){
+            direction_to_color(vx_draw, vy_draw, velocity_color, color_bands, color_clamp_min_glyph, color_clamp_max_glyph, hue_glyph, saturation_glyph);
+            if (y % (100/number_of_glyphs)  == 0|| y ==0){
+                glBegin(GL_LINES);				//draw velocities
+                glVertex2f(x_coord, y_coord);
+                glVertex2f(x_coord + hedgehog_scale * vx_draw, y_coord + hedgehog_scale * vy_draw);
+                glEnd();
             }
         }
+        else if (glyphs == "arrows"){
+            if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
+                Vector vector = Vector((fftw_real)i * cell_width, //x1
+                                       (fftw_real)j * cell_height, //y1
+                                       ((fftw_real)i * cell_width) + arrow_scale * vy_draw, //x2
+                                       ((fftw_real)j * cell_height) + arrow_scale * vx_draw);//y2
+
+                drawArrow(vector, i, j, vector.length()/15, 10, simulation.get_vy_min(), simulation.get_vy_max());
+            }
+        }
+        else if (glyphs == "cones"){
+            //
+            if (i % (200/number_of_glyphs) == 0 && j % (200/number_of_glyphs)  == 0){
+                int idx = (j * DIM) + i;
+                Vector vector = Vector((fftw_real)i * cell_width, //x1
+                                       (fftw_real)j * cell_height, //y1
+                                       ((fftw_real)i * cell_width) + cone_scale * vx[idx], //x2
+                                       ((fftw_real)j * cell_height) + cone_scale * vy[idx]);//y2
+
+                drawCone(vector, i, j, vector.length()/15, 10, simulation.get_vy_min(), simulation.get_vy_max());
+            }
+        }
+    }
 }
 
 

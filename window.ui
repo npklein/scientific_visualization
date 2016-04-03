@@ -791,6 +791,7 @@
     <slot>setSaturation(int)</slot>
     <slot>setNumberOfGlyphs(int)</slot>
     <slot>scaleColors(bool)</slot>
+    <slot>setPlotPoints(bool)</slot>
     <slot>selectPoints(bool)</slot>
    </slots>
   </customwidget>
@@ -1178,6 +1179,22 @@
     <hint type="destinationlabel">
      <x>286</x>
      <y>203</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>selectPoints</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>selectPoints(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>480</x>
+     <y>701</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>479</x>
+     <y>618</y>
     </hint>
    </hints>
   </connection>
