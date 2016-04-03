@@ -53,8 +53,8 @@ Vector interpolate_vector(float point_x, float point_y, float cell_size, int DIM
     int j = floor(point_y);
     int idx_1 = (j * DIM) + i;
     int idx_2 = (j * DIM) + i+1;
-    int idx_3 = (j+1 * DIM) + i;
-    int idx_4 = (j+1 * DIM) + i+1;
+    int idx_3 = ((j+1) * DIM) + i;
+    int idx_4 = ((j+1) * DIM) + i+1;
     float cell_width = cell_size/2;
     float cell_height = cell_size/2;
     float vertex_x = (fftw_real)i * cell_width;
@@ -80,8 +80,8 @@ Vector interpolate_vector(float point_x, float point_y, float cell_size, int DIM
                             ((fftw_real)j * cell_height) + simulation.get_vy()[idx_4]);//y2
     Vector interpolated_vector = Vector(0,0);
 
-    float tx = fabs(point_x - vertex_x)/cell_size;	//Parametric coordinates of point within cell
-    float ty = fabs(point_y - vertex_y)/cell_size;
+    float tx = fabs(point_x - i)/cell_width;	//Parametric coordinates of point within cell
+    float ty = fabs(point_y - j)/cell_height;
 
     //Compute vector value at given point, using
     //bilinear interpolation of the vector values at
