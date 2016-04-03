@@ -175,20 +175,19 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
         int j = points_y[y];
         float vx_draw = 0;
         float vy_draw = 0;
-        int x_coord;
-        int y_coord;
+        fftw_real x_coord;
+        fftw_real y_coord;
         int idx = (j * DIM) + i;
         if(select_points){
             float point_x = (float)points_x[y]/cell_width;
             float point_y = (float)points_y[y]/cell_height;
-            Vector interpolated_vector = interpolate_vector(point_x, point_y, cell_width*2, DIM, simulation);
+            Vector interpolated_vector = interpolate_vector(point_x, point_y, cell_width, cell_height, DIM, simulation);
             vx_draw = interpolated_vector.X;
             vy_draw = interpolated_vector.Y;
-            x_coord = points_x[y];
-            y_coord = points_y[y];
+            x_coord = (fftw_real)points_x[y];
+            y_coord = (fftw_real)points_y[y];
         }
         else{
-
             vx_draw = vx[idx];
             vy_draw = vy[idx];
             x_coord = (fftw_real)i * cell_width;
@@ -204,11 +203,12 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
             }
         }
         else if (glyphs == "arrows"){
-            if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
-                Vector vector = Vector((fftw_real)i * cell_width, //x1
-                                       (fftw_real)j * cell_height, //y1
-                                       ((fftw_real)i * cell_width) + arrow_scale * vy_draw, //x2
-                                       ((fftw_real)j * cell_height) + arrow_scale * vx_draw);//y2
+            if (y % (100/number_of_glyphs)  == 0|| y ==0){
+                int idx = (j * DIM) + i;
+                Vector vector = Vector(x_coord, //x1
+                                       y_coord, //y1
+                                       (x_coord) + arrow_scale * vx_draw, //x2
+                                       (y_coord) + arrow_scale * vy_draw);//y2
 
                 drawArrow(vector, i, j, vector.length()/15, 10, simulation.get_vy_min(), simulation.get_vy_max());
             }
@@ -368,7 +368,7 @@ void MyGLWidget::drawStreamline()
                 float start_x = i + 0.01; // to make sure we are in the cell and not on  the vertex
                 float start_y = j + 0.01; // to make sure we are in the cell and not on  the vert
                 for (int y = 0; y < max_size; y+=dt){
-                    Vector interpolated_vector = interpolate_vector(i, j, cell_width, DIM, simulation);
+                    Vector interpolated_vector = interpolate_vector(i, j, cell_width, cell_height, DIM, simulation);
                     // if outside the grid, stop the stream line
                     //if(interpolated_vector.X > DIM*cell_width || interpolated_vector.Y > DIM*cell_height || interpolated_vector.X <0 || interpolated_vector.Y <0 ){
                     //    return;
