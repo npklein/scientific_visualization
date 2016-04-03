@@ -125,17 +125,6 @@ void MyGLWidget::mousePressEvent(QMouseEvent *event)
     lastPos = event->pos();
     mouse_x.insert(mouse_x.begin(), lastPos.x());
     mouse_y.insert(mouse_y.begin(), lastPos.y());
-    if(select_points){
-        glPushMatrix ();
-        glBegin (GL_QUADS);
-        glColor3f(255,0,0);
-        glVertex3f(lastPos.x()-10, lastPos.y()+10, 0); //(x,y top left)
-        glVertex3f(lastPos.x()-10, lastPos.y()-10, 0); //(x,y bottom left)
-        glVertex3f(lastPos.x()+10,lastPos.y()-10, 0); //(x,y bottom right)
-        glVertex3f(lastPos.x()+10,lastPos.y()+10, 0); //(x,y top right)
-    }
-    glEnd ();
-    glPopMatrix ();
 }
 
 void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
@@ -168,7 +157,6 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
 {
     std::vector<int> points_x;
     std::vector<int> points_y;
-    select_points = true;
     if(select_points){
         for (unsigned i = 0; i < mouse_x.size(); i++){
             points_x.insert(points_x.end(), mouse_x[i]);
