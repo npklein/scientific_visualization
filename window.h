@@ -15,8 +15,6 @@ class Window : public QWidget
     Q_OBJECT
 
 public:
-    void setDrawingHedgehogsCheckbox(bool setDrawingHedgehogs);
-    void setDrawingMatterCheckbox(bool setDrawingMatter);
     explicit Window(QWidget *parent = 0);
     ~Window();
 
@@ -28,7 +26,7 @@ private slots:
 
     void on_selectPoints_clicked(bool select_points);
 
-private:
+    private:
     Ui::Window *ui;
 };
 
