@@ -275,7 +275,7 @@ void MyGLWidget::drawArrow(Vector vector, int i, int j, float vy, int scaling_fa
     // draw an arrow the size of a cell, scale according to vector length
     float angle = vector.normalize().direction2angle();
 
-    set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph,scale_color, vy_min, vy_max);
+    set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph, scale_color, vy_min, vy_max);
     glPushMatrix();
     glTranslatef(cell_width*i,cell_height*j, 0);
     glRotated(angle,0,0,1);
