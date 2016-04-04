@@ -48,15 +48,13 @@ float Vector::direction2angle()			//Converts a 2D vector into an orientation (an
 
 }
 
-Vector interpolate_vector(float point_x, float point_y, float cell_size, int DIM, Simulation simulation){
+Vector interpolate_vector(float point_x, float point_y, float cell_width, float cell_height, int DIM, Simulation simulation){
     int i = floor(point_x);
     int j = floor(point_y);
     int idx_1 = (j * DIM) + i;
     int idx_2 = (j * DIM) + i+1;
     int idx_3 = ((j+1) * DIM) + i;
     int idx_4 = ((j+1) * DIM) + i+1;
-    float cell_width = cell_size/2;
-    float cell_height = cell_size/2;
     float vertex_x = (fftw_real)i * cell_width;
     float vertex_y = (fftw_real)j * cell_height;
     // float start_x = vertex_x + 0.01; // to make sure we are in the cell and not on  the vertex
