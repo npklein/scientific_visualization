@@ -97,6 +97,11 @@ private slots:
     void selectPoints(bool select_points);
 
     void defaultPoints(std::vector<int> &points_x, std::vector<int> &points_y);
+
+    void drawDefaultPoints();
+
+    void drawSelectedPoints();
+
 protected:
     void initializeGL();
     void paintGL();
@@ -138,6 +143,8 @@ private:
     bool draw_v;
     bool draw_f;
     bool select_points;
+    bool draw_default_points;
+    bool draw_selected_points;
     Simulation simulation;
     fftw_real  cell_width;
     fftw_real  cell_height;

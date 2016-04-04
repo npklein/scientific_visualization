@@ -14,5 +14,5 @@ class Vector
     float direction2angle();
 };
 
-Vector interpolate_vector(float point_x, float point_y, float cell_size, int DIM, Simulation simulation);
+Vector interpolate_vector(float point_x, float point_y, float cell_width, float cell_height, int DIM, Simulation simulation);
 #endif // VECTOR_H

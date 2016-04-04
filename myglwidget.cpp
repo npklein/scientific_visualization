@@ -19,6 +19,8 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     cone_scale = 1000;          //scaling of cones
     draw_smoke = true;           //draw the smoke or not
     draw_vecs = true;            //draw the vector field or not
+    draw_default_points = true;
+    draw_selected_points = false;
     draw_v = true; // draw velocity
     draw_f = false; // draw forcefield
     scalar_col = 0;           //method for scalar coloring
@@ -122,16 +124,18 @@ void MyGLWidget::resizeGL(int width, int height)
 void MyGLWidget::mousePressEvent(QMouseEvent *event)
 {
     lastPos = event->pos();
-    mouse_x.insert(mouse_x.end(), lastPos.x()*2);
-    mouse_y.insert(mouse_y.end(), windowHeight - lastPos.y()*2);
+    if(select_points){
+        mouse_x.insert(mouse_x.end(), lastPos.x());
+        mouse_y.insert(mouse_y.end(), windowHeight - lastPos.y());
+    }
 }
 
 void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     int mx = event->x();// - lastposition gets calculated in drag(), could save a step by using lastPos.x/y but leaving it like this is safer
     int my = event->y();
-    //simulation.drag(mx,my, DIM, windowWidth, windowHeight);  // Works for Freerk when using external display
-    simulation.drag(mx,my, DIM, windowWidth/2, windowHeight/2); // Works for Niek
+    simulation.drag(mx,my, DIM, windowWidth, windowHeight);  // Works for Freerk when using external display
+    //simulation.drag(mx,my, DIM, windowWidth, windowHeight); // Works for Niek
 }
 
 void MyGLWidget::drawGradient()
@@ -156,7 +160,7 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
 {
     std::vector<int> points_x;
     std::vector<int> points_y;
-    if(select_points){
+    if(draw_selected_points){
         for (unsigned i = 0; i < mouse_x.size(); i++){
             points_x.insert(points_x.end(), mouse_x[i]);
         }
@@ -164,7 +168,7 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
             points_y.insert(points_y.end(),mouse_y[i] );
         }
     }
-    else{
+    else if(draw_default_points){
         defaultPoints(points_x, points_y);
     }
     //  for (int i = 0; i < DIM; i++)
@@ -175,20 +179,19 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
         int j = points_y[y];
         float vx_draw = 0;
         float vy_draw = 0;
-        int x_coord;
-        int y_coord;
+        fftw_real x_coord;
+        fftw_real y_coord;
         int idx = (j * DIM) + i;
-        if(select_points){
+        if(draw_selected_points){
             float point_x = (float)points_x[y]/cell_width;
             float point_y = (float)points_y[y]/cell_height;
-            Vector interpolated_vector = interpolate_vector(point_x, point_y, cell_width*2, DIM, simulation);
+            Vector interpolated_vector = interpolate_vector(point_x, point_y, cell_width, cell_height, DIM, simulation);
             vx_draw = interpolated_vector.X;
             vy_draw = interpolated_vector.Y;
-            x_coord = points_x[y];
-            y_coord = points_y[y];
+            x_coord = (fftw_real)points_x[y];
+            y_coord = (fftw_real)points_y[y];
         }
-        else{
-
+        else if (draw_default_points){
             vx_draw = vx[idx];
             vy_draw = vy[idx];
             x_coord = (fftw_real)i * cell_width;
@@ -204,24 +207,22 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
             }
         }
         else if (glyphs == "arrows"){
-            if (i % (100/number_of_glyphs) == 0 && j % (100/number_of_glyphs)  == 0){
-                Vector vector = Vector((fftw_real)i * cell_width, //x1
-                                       (fftw_real)j * cell_height, //y1
-                                       ((fftw_real)i * cell_width) + arrow_scale * vy_draw, //x2
-                                       ((fftw_real)j * cell_height) + arrow_scale * vx_draw);//y2
+            if (y % (100/number_of_glyphs)  == 0|| y ==0){
+                Vector vector = Vector(x_coord, //x1
+                                       y_coord, //y1
+                                       (x_coord) + arrow_scale * vx_draw, //x2
+                                       (y_coord) + arrow_scale * vy_draw);//y2
 
                 drawArrow(vector, i, j, vector.length()/15, 10, simulation.get_vy_min(), simulation.get_vy_max());
             }
         }
         else if (glyphs == "cones"){
             //
-            if (i % (200/number_of_glyphs) == 0 && j % (200/number_of_glyphs)  == 0){
-                int idx = (j * DIM) + i;
-                Vector vector = Vector((fftw_real)i * cell_width, //x1
-                                       (fftw_real)j * cell_height, //y1
-                                       ((fftw_real)i * cell_width) + cone_scale * vx[idx], //x2
-                                       ((fftw_real)j * cell_height) + cone_scale * vy[idx]);//y2
-
+            if (y % (100/number_of_glyphs)  == 0|| y ==0){
+                Vector vector = Vector(x_coord, //x1
+                                       y_coord, //y1
+                                       (x_coord) + cone_scale * vx_draw, //x2
+                                       (y_coord) + cone_scale * vy_draw);//y2
                 drawCone(vector, i, j, vector.length()/15, 10, simulation.get_vy_min(), simulation.get_vy_max());
             }
         }
@@ -368,7 +369,7 @@ void MyGLWidget::drawStreamline()
                 float start_x = i + 0.01; // to make sure we are in the cell and not on  the vertex
                 float start_y = j + 0.01; // to make sure we are in the cell and not on  the vert
                 for (int y = 0; y < max_size; y+=dt){
-                    Vector interpolated_vector = interpolate_vector(i, j, cell_width, DIM, simulation);
+                    Vector interpolated_vector = interpolate_vector(i, j, cell_width, cell_height, DIM, simulation);
                     // if outside the grid, stop the stream line
                     //if(interpolated_vector.X > DIM*cell_width || interpolated_vector.Y > DIM*cell_height || interpolated_vector.X <0 || interpolated_vector.Y <0 ){
                     //    return;
@@ -529,40 +530,13 @@ void MyGLWidget::hedgehogScaling(int position)
     //        case 's': vec_scale *= 0.8; break;
     // The scaling goes exponential with keyboard, but with slide can just do linear
     if (glyphs == "hedgehogs"){
-        static int last_pos_hedgehog = 500;				//remembers last slider location
-        int new_pos = position - last_pos_hedgehog;
-        hedgehog_scale = hedgehog_scale + new_pos * 200; //easier to debug on separate line
-        if (hedgehog_scale < 0){
-            hedgehog_scale = 0;
-        }
-        if (hedgehog_scale > 4000){
-            hedgehog_scale = 4000;
-        }
-        last_pos_hedgehog = position;
+        hedgehog_scale = position*2;
     }
     if (glyphs == "arrows"){
-        static int last_pos_arrow = 500;				//remembers last slider location
-        int new_pos = position - last_pos_arrow;
-        arrow_scale = arrow_scale + new_pos*2; //easier to debug on separate line
-        if (arrow_scale < 0){
-            arrow_scale = 0;
-        }
-        if (arrow_scale > 2000){
-            arrow_scale = 2000;
-        }
-        last_pos_arrow = position;
+        arrow_scale = position*1.5;
     }
     if (glyphs == "cones"){
-        static int last_pos_cone = 500;				//remembers last slider location
-        int new_pos = position - last_pos_cone;
-        cone_scale = cone_scale + new_pos*300; //easier to debug on separate line
-        if (cone_scale < 0){
-            cone_scale = 0;
-        }
-        if (cone_scale > 6000){
-            cone_scale = 6000;
-        }
-        last_pos_cone = position;
+        cone_scale = position*3; //easier to debug on separate line
     }
 }
 
@@ -572,15 +546,8 @@ void MyGLWidget::fluidViscosity(int position)
     //      case 'V': simulation.set_visc(simulation.get_visc()*5); break;
     //      case 'v': simulation.set_visc(simulation.get_visc()*0.2); break;
     // The scaling goes exponential with keyboard, but with slide can just do linear
-    static int last_pos_visc = 500;
-    int new_pos = position - last_pos_visc;
-    double old_visc = simulation.get_visc();
-    double new_visc = old_visc + new_pos * 0.005; //easier to debug on separate line
-    if (new_visc < 0){
-        new_visc = 0;
-    }
-    simulation.set_visc(new_visc);
-    last_pos_visc = position;
+    float visc =  position*0.00001;
+    simulation.set_visc(visc);
 }
 
 void MyGLWidget::setNumberOfGlyphs(int position)
@@ -819,4 +786,17 @@ void MyGLWidget::setDrawSlices(bool new_slices){
 
 void MyGLWidget::selectPoints(bool new_select_points){
     select_points = new_select_points;
+    draw_vecs = !new_select_points;
+    draw_smoke = !new_select_points;
+}
+
+
+void MyGLWidget::drawDefaultPoints(){
+    draw_default_points = true;
+    draw_selected_points = false;
+}
+
+void MyGLWidget::drawSelectedPoints(){
+    draw_default_points = false;
+    draw_selected_points = true;
 }
