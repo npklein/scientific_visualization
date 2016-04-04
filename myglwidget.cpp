@@ -216,7 +216,7 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
                                        y_coord, //y1
                                        (x_coord) + 70 * vx_draw, //x2
                                        (y_coord) + 70 * vy_draw);//y2
-                drawArrow(vector, i, j, unscaled_vector.length(), 10, simulation.get_vy_min(), simulation.get_vy_max());
+                drawArrow(vector, x_coord, y_coord, unscaled_vector.length(), 10, simulation.get_vy_min(), simulation.get_vy_max());
             }
         }
         else if (glyphs == "cones"){
@@ -230,7 +230,7 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
                                        y_coord, //y1
                                        (x_coord) + 70 * vx_draw, //x2
                                        (y_coord) + 70 * vy_draw);//y2
-                drawCone(vector, i, j, unscaled_vector.length(), 10, simulation.get_vy_min(), simulation.get_vy_max());
+                drawCone(vector, x_coord, y_coord, unscaled_vector.length(), 10, simulation.get_vy_min(), simulation.get_vy_max());
             }
         }
     }
@@ -278,13 +278,13 @@ void MyGLWidget::drawForcefield(fftw_real *fx, fftw_real *fy)
         }
 }
 
-void MyGLWidget::drawArrow(Vector vector, int i, int j, float vy, int scaling_factor, float vy_min, float vy_max){
+void MyGLWidget::drawArrow(Vector vector, int x_coord, int y_coord, float vy, int scaling_factor, float vy_min, float vy_max){
     // draw an arrow the size of a cell, scale according to vector length
     float angle = vector.normalize().direction2angle();
 
     set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph,scale_color, vy_min, vy_max);
     glPushMatrix();
-    glTranslatef(cell_width*i,cell_height*j, 0);
+    glTranslatef(x_coord,y_coord, 0);
     glRotated(angle,0,0,1);
     glScaled(log(vector.length()/scaling_factor+1),log(vector.length()/(scaling_factor/2)+1),0);
     //glScaled(log(vector.length()/2+1),log(vector.length()*5+1),0);
@@ -317,7 +317,7 @@ void MyGLWidget::drawCone(Vector vector, int i, int j, float vy, int scaling_fac
 
     set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph, scale_color, vy_min, vy_max);
     glPushMatrix();
-    glTranslatef(cell_width*i,cell_height*j, 0);
+    glTranslatef(i,j, 0);
     glRotated(angle,0,0,1);
     glScaled(log(vector.length()/scaling_factor+1),log(vector.length()/(scaling_factor/2)+1),0);
 

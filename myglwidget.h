@@ -60,7 +60,7 @@ private slots:
 
     void setColorBands(int colorBands);
 
-    void drawArrow(Vector vector, int i, int j, float vy, int scaling_factor, float vy_min, float vy_max);
+    void drawArrow(Vector vector, int x_coord, int y_coord, float vy, int scaling_factor, float vy_min, float vy_max);
 
     void drawCone(Vector vector, int i, int j, float vy, int scaling_factor, float vy_min, float vy_max);
 

@@ -946,8 +946,8 @@
    <slot>selectPoints(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>485</x>
-     <y>615</y>
+     <x>39</x>
+     <y>521</y>
     </hint>
     <hint type="destinationlabel">
      <x>479</x>
@@ -962,8 +962,8 @@
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>495</x>
-     <y>602</y>
+     <x>49</x>
+     <y>508</y>
     </hint>
     <hint type="destinationlabel">
      <x>93</x>
@@ -1266,8 +1266,8 @@
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>534</x>
-     <y>605</y>
+     <x>88</x>
+     <y>511</y>
     </hint>
     <hint type="destinationlabel">
      <x>64</x>
@@ -1298,8 +1298,8 @@
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>535</x>
-     <y>606</y>
+     <x>89</x>
+     <y>512</y>
     </hint>
     <hint type="destinationlabel">
      <x>389</x>
@@ -1314,12 +1314,28 @@
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>564</x>
-     <y>609</y>
+     <x>118</x>
+     <y>515</y>
     </hint>
     <hint type="destinationlabel">
      <x>293</x>
      <y>605</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>drawGradientCheckbox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setDrawGradient(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>50</x>
+     <y>597</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>236</x>
+     <y>531</y>
     </hint>
    </hints>
   </connection>
