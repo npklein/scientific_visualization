@@ -104,13 +104,6 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="2">
-      <widget class="QCheckBox" name="selectPoints">
-       <property name="text">
-        <string>Select points</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item row="0" column="0">
@@ -752,13 +745,26 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>490</y>
+         <y>550</y>
          <width>110</width>
          <height>20</height>
         </rect>
        </property>
        <property name="text">
         <string>Draw gradient</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="selectPoints">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>470</y>
+         <width>120</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Select points</string>
        </property>
       </widget>
      </widget>

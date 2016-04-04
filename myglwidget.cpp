@@ -212,8 +212,11 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
                                        y_coord, //y1
                                        (x_coord) + arrow_scale * vx_draw, //x2
                                        (y_coord) + arrow_scale * vy_draw);//y2
-
-                drawArrow(vector, i, j, vector.length()/15, 10, simulation.get_vy_min(), simulation.get_vy_max());
+                Vector unscaled_vector = Vector(x_coord, //x1
+                                       y_coord, //y1
+                                       (x_coord) + 70 * vx_draw, //x2
+                                       (y_coord) + 70 * vy_draw);//y2
+                drawArrow(vector, i, j, unscaled_vector.length(), 10, simulation.get_vy_min(), simulation.get_vy_max());
             }
         }
         else if (glyphs == "cones"){
@@ -223,7 +226,11 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
                                        y_coord, //y1
                                        (x_coord) + cone_scale * vx_draw, //x2
                                        (y_coord) + cone_scale * vy_draw);//y2
-                drawCone(vector, i, j, vector.length()/15, 10, simulation.get_vy_min(), simulation.get_vy_max());
+                Vector unscaled_vector = Vector(x_coord, //x1
+                                       y_coord, //y1
+                                       (x_coord) + 70 * vx_draw, //x2
+                                       (y_coord) + 70 * vy_draw);//y2
+                drawCone(vector, i, j, unscaled_vector.length(), 10, simulation.get_vy_min(), simulation.get_vy_max());
             }
         }
     }
