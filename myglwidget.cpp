@@ -416,7 +416,7 @@ void MyGLWidget::drawStreamline()
         float start_y = (float)points_y[s];
         float total_length = 0;
         for (int y = 0; y < max_size; y+=dt){ // loop using delta time to do interpolation
-            Vector interpolated_vector = interpolate_vector(start_x/cell_width, start_y/cell_height, cell_width, cell_height, DIM, simulation); //interpolate vector x,y
+            Vector interpolated_vector = interpolateVector(start_x/cell_width, start_y/cell_height, cell_width, cell_height, DIM, simulation); //interpolate vector x,y
             // if outside the grid, stop the stream line
             if(interpolated_vector.X+start_x > DIM*cell_width || interpolated_vector.Y+start_y > DIM*cell_height ||
                     interpolated_vector.X+start_x <0 || interpolated_vector.Y+start_y <0 ||
