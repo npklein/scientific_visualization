@@ -409,8 +409,8 @@ void MyGLWidget::drawSlices(int n){
 
 
 void MyGLWidget::defaultPointsStreamline(std::vector<int> &points_x, std::vector<int> &points_y){
-    for (int i = 0; i < DIM; i+=10){
-        for (int j = 0; j < DIM;j+=10){
+    for (int i = 0; i < DIM; i+=15){
+        for (int j = 0; j < DIM;j+=15){
             points_x.insert(points_x.end(), i*cell_width);
             points_y.insert(points_y.end(), j*cell_height);
         }
