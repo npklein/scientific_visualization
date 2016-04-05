@@ -399,8 +399,8 @@ void MyGLWidget::drawSlices(int n){
 
 void MyGLWidget::drawStreamline()
 {
-    float dt = cell_width/3;
-    float max_size = cell_width*100;
+    float dt = cell_width/1;
+    float max_size = cell_width*10;
     //drawStreamline(25,25);
     selectedPoints(points_x, points_y);
 
@@ -408,13 +408,17 @@ void MyGLWidget::drawStreamline()
     {
         float start_x = (float)points_x[s];
         float start_y = (float)points_y[s];
+        float total_length = 0;
         for (int y = 0; y < max_size; y+=dt){
             Vector interpolated_vector = interpolate_vector(start_x/cell_width, start_y/cell_height, cell_width, cell_height, DIM, simulation);
             // if outside the grid, stop the stream line
-            //if(interpolated_vector.X > DIM*cell_width || interpolated_vector.Y > DIM*cell_height || interpolated_vector.X <0 || interpolated_vector.Y <0 ){
-            //    return;
-            //}
+            if(interpolated_vector.X+start_x > DIM*cell_width || interpolated_vector.Y+start_y > DIM*cell_height ||
+                    interpolated_vector.X+start_x <0 || interpolated_vector.Y+start_y <0 ||
+                    total_length > max_size){
+                break;
+            }
             float length  = interpolated_vector.length();
+            total_length += length;
 
             if(length>0){
                 interpolated_vector.X = interpolated_vector.X / length;
@@ -426,10 +430,10 @@ void MyGLWidget::drawStreamline()
                 glBegin(GL_LINES);				//draw
                 qglColor(Qt::white);
                 glVertex2f(start_x, start_y);
-                glVertex2f(interpolated_vector.X*cell_width+points_x[s], interpolated_vector.Y*cell_height+points_y[s]);
+                glVertex2f(interpolated_vector.X+start_x, interpolated_vector.Y+start_y);
                 glEnd();
-                start_x = interpolated_vector.X*cell_width+points_x[s];
-                start_y = interpolated_vector.Y*cell_height+points_y[s];
+                start_x = interpolated_vector.X+start_x;
+                start_y = interpolated_vector.Y+start_y;
             }
         }
     }
