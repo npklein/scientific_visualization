@@ -60,7 +60,7 @@ private slots:
 
     void setColorBands(int colorBands);
 
-    void drawArrow(Vector vector, int i, int j, float vy, int scaling_factor, float vy_min, float vy_max);
+    void drawArrow(Vector vector, int x_coord, int y_coord, float vy, int scaling_factor, float vy_min, float vy_max);
 
     void drawCone(Vector vector, int i, int j, float vy, int scaling_factor, float vy_min, float vy_max);
 
@@ -98,9 +98,19 @@ private slots:
 
     void defaultPoints(std::vector<int> &points_x, std::vector<int> &points_y);
 
+    void selectedPoints(std::vector<int> &points_x, std::vector<int> &points_y);
+
     void drawDefaultPoints();
 
+    void setDrawSelectedPoints();
+
     void drawSelectedPoints();
+
+    void showPoints(bool new_show_points);
+
+    void clearSelectedPoints();
+
+    void selectPointsStreamline(bool new_select_points);
 
 protected:
     void initializeGL();
@@ -127,6 +137,7 @@ private:
     int color_bands;
     bool scale_color;
     bool draw_grid;
+    bool show_points;
     float color_clamp_min_matter;
     float color_clamp_max_matter;
     float color_clamp_min_glyph;

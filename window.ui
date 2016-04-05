@@ -104,6 +104,13 @@
        </property>
       </widget>
      </item>
+     <item row="2" column="2">
+      <widget class="QCheckBox" name="showPointsCheckbox">
+       <property name="text">
+        <string>Show points</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item row="0" column="0">
@@ -127,7 +134,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <property name="iconSize">
       <size>
@@ -754,7 +761,7 @@
         <string>Draw gradient</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="selectPoints">
+      <widget class="QCheckBox" name="selectPointsCheckbox">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -765,6 +772,19 @@
        </property>
        <property name="text">
         <string>Select points</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="clearSelectedPointsButton">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>490</y>
+         <width>171</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Clear selected points</string>
        </property>
       </widget>
      </widget>
@@ -786,6 +806,32 @@
        </property>
        <property name="text">
         <string>Stream lines</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="selectPointsCheckbox2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>30</y>
+         <width>120</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Select points</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="clearSelectedPointsButton_2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>50</y>
+         <width>171</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Clear selected points</string>
        </property>
       </widget>
      </widget>
@@ -836,8 +882,12 @@
     <slot>scaleColors(bool)</slot>
     <slot>setPlotPoints(bool)</slot>
     <slot>selectPoints(bool)</slot>
-    <slot>drawSelectedPoints()</slot>
+    <slot>setDrawSelectedPoints()</slot>
     <slot>drawDefaultPoints()</slot>
+    <slot>showPoints(bool)</slot>
+    <slot>clearSelectedPoints()</slot>
+    <slot>setDrawStreamline(int)</slot>
+    <slot>selectPointsStreamline(bool)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -940,14 +990,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>selectPoints</sender>
+   <sender>selectPointsCheckbox</sender>
    <signal>clicked(bool)</signal>
    <receiver>myGLWidget</receiver>
    <slot>selectPoints(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>485</x>
-     <y>615</y>
+     <x>39</x>
+     <y>521</y>
     </hint>
     <hint type="destinationlabel">
      <x>479</x>
@@ -956,14 +1006,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>selectPoints</sender>
+   <sender>selectPointsCheckbox</sender>
    <signal>clicked(bool)</signal>
    <receiver>radioButton_2</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>495</x>
-     <y>602</y>
+     <x>49</x>
+     <y>508</y>
     </hint>
     <hint type="destinationlabel">
      <x>93</x>
@@ -1032,22 +1082,6 @@
     <hint type="destinationlabel">
      <x>433</x>
      <y>288</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>drawStreamLineCheckbox</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>myGLWidget</receiver>
-   <slot>setDrawStreamline(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>132</x>
-     <y>61</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>321</x>
-     <y>369</y>
     </hint>
    </hints>
   </connection>
@@ -1247,7 +1281,7 @@
    <sender>radioButton_2</sender>
    <signal>clicked()</signal>
    <receiver>myGLWidget</receiver>
-   <slot>drawSelectedPoints()</slot>
+   <slot>setDrawSelectedPoints()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>41</x>
@@ -1260,14 +1294,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>selectPoints</sender>
+   <sender>selectPointsCheckbox</sender>
    <signal>clicked(bool)</signal>
    <receiver>radioButton</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>534</x>
-     <y>605</y>
+     <x>88</x>
+     <y>511</y>
     </hint>
     <hint type="destinationlabel">
      <x>64</x>
@@ -1292,14 +1326,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>selectPoints</sender>
+   <sender>selectPointsCheckbox</sender>
    <signal>clicked(bool)</signal>
    <receiver>drawingHedgehogsCheckbox</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>535</x>
-     <y>606</y>
+     <x>89</x>
+     <y>512</y>
     </hint>
     <hint type="destinationlabel">
      <x>389</x>
@@ -1308,18 +1342,146 @@
    </hints>
   </connection>
   <connection>
-   <sender>selectPoints</sender>
+   <sender>selectPointsCheckbox</sender>
    <signal>clicked(bool)</signal>
    <receiver>drawingMatterCheckbox</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>564</x>
-     <y>609</y>
+     <x>118</x>
+     <y>515</y>
     </hint>
     <hint type="destinationlabel">
      <x>293</x>
      <y>605</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>drawGradientCheckbox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setDrawGradient(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>50</x>
+     <y>597</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>236</x>
+     <y>531</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>showPointsCheckbox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>showPoints(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>501</x>
+     <y>607</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>476</x>
+     <y>501</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>clearSelectedPointsButton</sender>
+   <signal>clicked()</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>clearSelectedPoints()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>158</x>
+     <y>543</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>246</x>
+     <y>547</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>clearSelectedPointsButton_2</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>clearSelectedPoints()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>54</x>
+     <y>99</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>305</x>
+     <y>218</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>selectPointsCheckbox2</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>drawStreamLineCheckbox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>35</x>
+     <y>74</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>33</x>
+     <y>50</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>drawStreamLineCheckbox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setDrawStreamline(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>92</x>
+     <y>56</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>331</x>
+     <y>77</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>selectPointsCheckbox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>selectPoints(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>28</x>
+     <y>510</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>323</x>
+     <y>483</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>selectPointsCheckbox2</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>selectPointsStreamline(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>114</x>
+     <y>72</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>263</x>
+     <y>148</y>
     </hint>
    </hints>
   </connection>

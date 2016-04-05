@@ -42,6 +42,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     saturation_glyph = 1.0;
     draw_grid = false;
     draw_slices = false;
+    show_points = false;
     glyphs = "hedgehogs";
     dataset = "fluid velocity magnitude";
     gradient = false;
@@ -67,6 +68,15 @@ void MyGLWidget::defaultPoints(std::vector<int> &points_x, std::vector<int> &poi
             points_x.insert(points_x.end(), i);
             points_y.insert(points_y.end(), j);
         }
+    }
+}
+
+void MyGLWidget::selectedPoints(std::vector<int> &points_x, std::vector<int> &points_y){
+    for (unsigned i = 0; i < mouse_x.size(); i++){
+        points_x.insert(points_x.end(), mouse_x[i]);
+    }
+    for (unsigned i = 0; i < mouse_y.size(); i++){
+        points_y.insert(points_y.end(),mouse_y[i] );
     }
 }
 
@@ -102,6 +112,9 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     if (gradient){
         drawGradient();
     }
+    if (show_points && ( select_points || draw_selected_points || draw_streamline )){
+        drawSelectedPoints();
+    }
     if (draw_smoke)
     {
         drawSmoke();
@@ -120,6 +133,32 @@ void MyGLWidget::resizeGL(int width, int height)
     gluOrtho2D(0.0, (GLdouble)width, 0.0, (GLdouble)height);
     windowWidth = width; windowHeight = height;
 }
+
+
+void MyGLWidget::drawSelectedPoints(){
+    float x2,y2;
+    float radius  = 2;
+    float angle   = 1.0;
+
+    for (unsigned i = 0; i < mouse_x.size(); i++){
+        glColor3f(255,0,0);
+        glBegin(GL_TRIANGLE_FAN);
+
+        int x = mouse_x[i];
+        int y = mouse_y[i];
+
+
+        for (angle=1.0f;angle<361.0f;angle+=0.2)
+        {
+            x2 = x+sin(angle)*radius;
+            y2 = y+cos(angle)*radius;
+            glVertex2f(x2,y2);
+        }
+        glEnd();
+    }
+
+}
+
 
 void MyGLWidget::mousePressEvent(QMouseEvent *event)
 {
@@ -150,8 +189,8 @@ void MyGLWidget::drawGradient()
             float x = left_rho - right_rho;
             float y = up_rho - below_rho;
             Vector v = Vector(y, x);
-            if (v.length() > 0.1){
-                drawArrow(v, i, j, v.length(), 2, 0, 1);
+            if (v.length() > 0){
+                drawArrow(v, i*cell_width, j*cell_height, v.length(), 2, 0, 1);
             }
         }
 }
@@ -161,12 +200,7 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
     std::vector<int> points_x;
     std::vector<int> points_y;
     if(draw_selected_points){
-        for (unsigned i = 0; i < mouse_x.size(); i++){
-            points_x.insert(points_x.end(), mouse_x[i]);
-        }
-        for (unsigned i = 0; i < mouse_y.size(); i++){
-            points_y.insert(points_y.end(),mouse_y[i] );
-        }
+        selectedPoints(points_x, points_y);
     }
     else if(draw_default_points){
         defaultPoints(points_x, points_y);
@@ -213,10 +247,10 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
                                        (x_coord) + arrow_scale * vx_draw, //x2
                                        (y_coord) + arrow_scale * vy_draw);//y2
                 Vector unscaled_vector = Vector(x_coord, //x1
-                                       y_coord, //y1
-                                       (x_coord) + 70 * vx_draw, //x2
-                                       (y_coord) + 70 * vy_draw);//y2
-                drawArrow(vector, i, j, unscaled_vector.length(), 10, simulation.get_vy_min(), simulation.get_vy_max());
+                                                y_coord, //y1
+                                                (x_coord) + 70 * vx_draw, //x2
+                                                (y_coord) + 70 * vy_draw);//y2
+                drawArrow(vector, x_coord, y_coord, unscaled_vector.length(), 10, simulation.get_vy_min(), simulation.get_vy_max());
             }
         }
         else if (glyphs == "cones"){
@@ -227,15 +261,14 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
                                        (x_coord) + cone_scale * vx_draw, //x2
                                        (y_coord) + cone_scale * vy_draw);//y2
                 Vector unscaled_vector = Vector(x_coord, //x1
-                                       y_coord, //y1
-                                       (x_coord) + 70 * vx_draw, //x2
-                                       (y_coord) + 70 * vy_draw);//y2
-                drawCone(vector, i, j, unscaled_vector.length(), 10, simulation.get_vy_min(), simulation.get_vy_max());
+                                                y_coord, //y1
+                                                (x_coord) + 70 * vx_draw, //x2
+                                                (y_coord) + 70 * vy_draw);//y2
+                drawCone(vector, x_coord, y_coord, unscaled_vector.length(), 10, simulation.get_vy_min(), simulation.get_vy_max());
             }
         }
     }
 }
-
 
 void MyGLWidget::drawForcefield(fftw_real *fx, fftw_real *fy)
 {
@@ -278,13 +311,13 @@ void MyGLWidget::drawForcefield(fftw_real *fx, fftw_real *fy)
         }
 }
 
-void MyGLWidget::drawArrow(Vector vector, int i, int j, float vy, int scaling_factor, float vy_min, float vy_max){
+void MyGLWidget::drawArrow(Vector vector, int x_coord, int y_coord, float vy, int scaling_factor, float vy_min, float vy_max){
     // draw an arrow the size of a cell, scale according to vector length
     float angle = vector.normalize().direction2angle();
 
     set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph,scale_color, vy_min, vy_max);
     glPushMatrix();
-    glTranslatef(cell_width*i,cell_height*j, 0);
+    glTranslatef(x_coord,y_coord, 0);
     glRotated(angle,0,0,1);
     glScaled(log(vector.length()/scaling_factor+1),log(vector.length()/(scaling_factor/2)+1),0);
     //glScaled(log(vector.length()/2+1),log(vector.length()*5+1),0);
@@ -317,7 +350,7 @@ void MyGLWidget::drawCone(Vector vector, int i, int j, float vy, int scaling_fac
 
     set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph, scale_color, vy_min, vy_max);
     glPushMatrix();
-    glTranslatef(cell_width*i,cell_height*j, 0);
+    glTranslatef(i,j, 0);
     glRotated(angle,0,0,1);
     glScaled(log(vector.length()/scaling_factor+1),log(vector.length()/(scaling_factor/2)+1),0);
 
@@ -366,47 +399,40 @@ void MyGLWidget::drawSlices(int n){
 void MyGLWidget::drawStreamline()
 {
     float dt = cell_width/3;
-    float max_size = cell_width*3;
+    float max_size = cell_width*100;
     //drawStreamline(25,25);
-    for (int i = 0; i < DIM; i++)
-        for (int j = 0; j < DIM; j++)
-        {
-            if (i % 5 == 0 && j % 5 == 0){
-                //if ( i ==20 && j==20){
-                float start_x = i + 0.01; // to make sure we are in the cell and not on  the vertex
-                float start_y = j + 0.01; // to make sure we are in the cell and not on  the vert
-                for (int y = 0; y < max_size; y+=dt){
-                    Vector interpolated_vector = interpolate_vector(i, j, cell_width, cell_height, DIM, simulation);
-                    // if outside the grid, stop the stream line
-                    //if(interpolated_vector.X > DIM*cell_width || interpolated_vector.Y > DIM*cell_height || interpolated_vector.X <0 || interpolated_vector.Y <0 ){
-                    //    return;
-                    //}
-                    float length  = interpolated_vector.length();
+    selectedPoints(points_x, points_y);
 
-                    if(length>0){
-                        interpolated_vector.X = interpolated_vector.X / length;
-                        interpolated_vector.Y = interpolated_vector.Y / length;
-                        interpolated_vector.X += interpolated_vector.X * dt;
-                        interpolated_vector.Y += interpolated_vector.Y * dt;
+    for (unsigned s = 0; s < points_x.size(); s++)
+    {
+        float start_x = (float)points_x[s];
+        float start_y = (float)points_y[s];
+        for (int y = 0; y < max_size; y+=dt){
+            Vector interpolated_vector = interpolate_vector(start_x/cell_width, start_y/cell_height, cell_width, cell_height, DIM, simulation);
+            // if outside the grid, stop the stream line
+            //if(interpolated_vector.X > DIM*cell_width || interpolated_vector.Y > DIM*cell_height || interpolated_vector.X <0 || interpolated_vector.Y <0 ){
+            //    return;
+            //}
+            float length  = interpolated_vector.length();
 
-                        //DRAW
-                        glBegin(GL_LINES);				//draw
-                        qglColor(Qt::white);
-                        glVertex2f(start_x, start_y);
-                        glVertex2f(interpolated_vector.X+start_x, interpolated_vector.Y+start_y);
-                        glEnd();
-                        start_x = interpolated_vector.X+start_x;
-                        start_y = interpolated_vector.Y+start_y;
-                        int x_axis = floor(start_x/cell_width);
-                        int y_axis = floor(start_y/cell_height);
-                        i = x_axis;
-                        j = y_axis;
-                    }
-                }
+            if(length>0){
+                interpolated_vector.X = interpolated_vector.X / length;
+                interpolated_vector.Y = interpolated_vector.Y / length;
+                interpolated_vector.X += interpolated_vector.X * dt;
+                interpolated_vector.Y += interpolated_vector.Y * dt;
+
+                //DRAW
+                glBegin(GL_LINES);				//draw
+                qglColor(Qt::white);
+                glVertex2f(start_x, start_y);
+                glVertex2f(interpolated_vector.X*cell_width+points_x[s], interpolated_vector.Y*cell_height+points_y[s]);
+                glEnd();
+                start_x = interpolated_vector.X*cell_width+points_x[s];
+                start_y = interpolated_vector.Y*cell_height+points_y[s];
             }
         }
+    }
 }
-
 
 void MyGLWidget::drawSmoke(){
     int  i, j, idx0, idx1, idx2, idx3; double px0,py0,px1,py1,px2,py2,px3,py3;
@@ -750,6 +776,13 @@ void MyGLWidget::setGlyphType(QString new_glyphs){
     glyphs = new_glyphs;
 }
 
+void MyGLWidget::clearSelectedPoints(){
+    points_x.clear();
+    points_y.clear();
+    mouse_x.clear();
+    mouse_y.clear();
+}
+
 void MyGLWidget::drawGridLines(int DIM){
     glBegin(GL_LINES);
     for(int i=0;i <= DIM/grid_scale;i++) {
@@ -776,6 +809,10 @@ void MyGLWidget::setDrawStreamline(bool new_streamline){
         draw_slices = false;
         draw_smoke = false;
     }
+    else{
+        draw_vecs = true;
+        draw_smoke = true;
+    }
 }
 
 void MyGLWidget::setDrawSlices(bool new_slices){
@@ -795,15 +832,33 @@ void MyGLWidget::selectPoints(bool new_select_points){
     select_points = new_select_points;
     draw_vecs = !new_select_points;
     draw_smoke = !new_select_points;
+    if(draw_streamline){
+        draw_smoke = false;
+        draw_streamline = false;
+    }
 }
 
+void MyGLWidget::selectPointsStreamline(bool new_select_points){
+    select_points = new_select_points;
+    draw_streamline = !new_select_points;
+    if(new_select_points){
+        draw_smoke = false;
+        draw_vecs = false;
+        show_points = true;
+    }
+}
 
 void MyGLWidget::drawDefaultPoints(){
     draw_default_points = true;
     draw_selected_points = false;
 }
 
-void MyGLWidget::drawSelectedPoints(){
+void MyGLWidget::setDrawSelectedPoints(){
     draw_default_points = false;
     draw_selected_points = true;
 }
+
+void MyGLWidget::showPoints(bool new_show_points){
+    show_points = new_show_points;
+}
+
