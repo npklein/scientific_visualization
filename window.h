@@ -31,7 +31,9 @@ private slots:
     void on_selectPointsCheckbox_clicked(bool selectPoints);
     void on_selectPointsCheckbox2_clicked(bool selectPoints);
     void on_slicesCheckBox_clicked(bool set_slices);
-    private:
+    void on_radioButtonDrawDefaultPointStreamlines_clicked(bool checked);
+
+private:
     Ui::Window *ui;
 };
 

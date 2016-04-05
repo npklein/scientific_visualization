@@ -65,6 +65,7 @@
        <property name="mouseTracking">
         <bool>false</bool>
        </property>
+       <zorder>tabWidget</zorder>
       </widget>
      </item>
      <item row="1" column="2">
@@ -845,6 +846,35 @@
        </property>
        <property name="text">
         <string>Slices</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButtonDrawDefaultPointStreamlines">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>200</y>
+         <width>161</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Draw default points</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButtonDrawSelectedPointStreamlines">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>220</y>
+         <width>161</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Draw selected points</string>
        </property>
       </widget>
      </widget>
