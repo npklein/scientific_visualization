@@ -399,7 +399,7 @@ void MyGLWidget::drawSlices(int n){
 
 void MyGLWidget::drawStreamline()
 {
-    float dt = cell_width/1;
+    float dt = cell_width/10;
     float max_size = cell_width*10;
     //drawStreamline(25,25);
     selectedPoints(points_x, points_y);
@@ -409,12 +409,12 @@ void MyGLWidget::drawStreamline()
         float start_x = (float)points_x[s];
         float start_y = (float)points_y[s];
         float total_length = 0;
-        for (int y = 0; y < max_size; y+=dt){
-            Vector interpolated_vector = interpolate_vector(start_x/cell_width, start_y/cell_height, cell_width, cell_height, DIM, simulation);
+        for (int y = 0; y < max_size; y+=dt){ // loop using delta time to do interpolation
+            Vector interpolated_vector = interpolate_vector(start_x/cell_width, start_y/cell_height, cell_width, cell_height, DIM, simulation); //interpolate vector x,y
             // if outside the grid, stop the stream line
             if(interpolated_vector.X+start_x > DIM*cell_width || interpolated_vector.Y+start_y > DIM*cell_height ||
                     interpolated_vector.X+start_x <0 || interpolated_vector.Y+start_y <0 ||
-                    total_length > max_size){
+                    total_length > max_size){ // break if streamline runs out of window or becomes longer than specified
                 break;
             }
             float length  = interpolated_vector.length();
@@ -429,10 +429,10 @@ void MyGLWidget::drawStreamline()
                 //DRAW
                 glBegin(GL_LINES);				//draw
                 qglColor(Qt::white);
-                glVertex2f(start_x, start_y);
+                glVertex2f(start_x, start_y); // draw vertex
                 glVertex2f(interpolated_vector.X+start_x, interpolated_vector.Y+start_y);
                 glEnd();
-                start_x = interpolated_vector.X+start_x;
+                start_x = interpolated_vector.X+start_x; // set new coordinates to start interation dt from
                 start_y = interpolated_vector.Y+start_y;
             }
         }
