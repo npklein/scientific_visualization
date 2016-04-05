@@ -76,6 +76,8 @@ private slots:
 
     void setDim(int new_DIM);
 
+    void setLineThickness(int new_linethickness);
+
     void drawGrid(bool new_draw_grid);
 
     void setGridSize(int position);
@@ -97,6 +99,8 @@ private slots:
     void selectPoints(bool select_points);
 
     void defaultPoints(std::vector<int> &points_x, std::vector<int> &points_y);
+
+    //void drawDefaultPointsStreamline();
 
     void selectedPoints(std::vector<int> &points_x, std::vector<int> &points_y);
 
@@ -151,10 +155,12 @@ private:
     int hue_matter;
     float saturation_matter;
     float saturation_glyph;
+    float line_width;
     bool draw_v;
     bool draw_f;
     bool select_points;
     bool draw_default_points;
+    bool draw_default_points_streamline;
     bool draw_selected_points;
     Simulation simulation;
     fftw_real  cell_width;
