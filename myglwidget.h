@@ -100,7 +100,7 @@ private slots:
 
     void defaultPoints(std::vector<int> &points_x, std::vector<int> &points_y);
 
-    void defaultPointsStreamline(std::vector<int> &points_x, std::vector<int> &points_y);
+    //void drawDefaultPointsStreamline();
 
     void selectedPoints(std::vector<int> &points_x, std::vector<int> &points_y);
 

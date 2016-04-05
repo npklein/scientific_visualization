@@ -73,14 +73,38 @@ void MyGLWidget::defaultPoints(std::vector<int> &points_x, std::vector<int> &poi
     }
 }
 
-void MyGLWidget::defaultPointsStreamline(std::vector<int> &points_x, std::vector<int> &points_y){
+/* void MyGLWidget::drawDefaultPointsStreamline(){
+    int points_x [200] = { };
+    int points_y [200] = { };
     for (int i = 0; i < DIM; i=+10){
         for (int j = 0; j < DIM; j=+10){
             points_x.insert(points_x.end(), i);
             points_y.insert(points_y.end(), j);
         }
     }
-}
+
+    float x2,y2;
+    float radius  = 2;
+    float angle   = 1.0;
+
+    for (unsigned t = 0; t < points_x.size(); t++){
+        glColor3f(255,0,0);
+        glBegin(GL_TRIANGLE_FAN);
+
+        int x = points_x[t];
+        int y = points_y[t];
+
+
+        for (angle=1.0f;angle<361.0f;angle+=0.2)
+        {
+            x2 = x+sin(angle)*radius;
+            y2 = y+cos(angle)*radius;
+            glVertex2f(x2,y2);
+        }
+        glEnd();
+    }
+}*/
+
 
 void MyGLWidget::selectedPoints(std::vector<int> &points_x, std::vector<int> &points_y){
     for (unsigned i = 0; i < mouse_x.size(); i++){
@@ -426,7 +450,8 @@ void MyGLWidget::drawStreamline()
         selectedPoints(points_x, points_y);
     }
     else if(draw_default_points_streamline){
-        defaultPointsStreamline(points_x, points_y);
+        //defaultPointsStreamline(points_x, points_y);
+        //drawDefaultPointsStreamline();
     }
 
 
