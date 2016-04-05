@@ -168,8 +168,8 @@ void MyGLWidget::mousePressEvent(QMouseEvent *event)
 {
     lastPos = event->pos();
     if(select_points){
-        mouse_x.insert(mouse_x.end(), lastPos.x());
-        mouse_y.insert(mouse_y.end(), windowHeight - lastPos.y());
+        mouse_x.insert(mouse_x.end(), lastPos.x() *2);
+        mouse_y.insert(mouse_y.end(), windowHeight - lastPos.y() *2);
     }
 }
 
@@ -177,8 +177,8 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     int mx = event->x();// - lastposition gets calculated in drag(), could save a step by using lastPos.x/y but leaving it like this is safer
     int my = event->y();
-    simulation.drag(mx,my, DIM, windowWidth, windowHeight);  // Works for Freerk when using external display
-    //simulation.drag(mx,my, DIM, windowWidth, windowHeight); // Works for Niek
+    //simulation.drag(mx,my, DIM, windowWidth, windowHeight);  // Works for Freerk when using external display
+    simulation.drag(mx,my, DIM, windowWidth/2, windowHeight/2); // Works for Niek
 }
 
 void MyGLWidget::drawGradient()
@@ -411,8 +411,8 @@ void MyGLWidget::drawSlices(int n){
 void MyGLWidget::defaultPointsStreamline(std::vector<int> &points_x, std::vector<int> &points_y){
     for (int i = 0; i < DIM; i+=10){
         for (int j = 0; j < DIM;j+=10){
-            points_x.insert(points_x.end(), i);
-            points_y.insert(points_y.end(), j);
+            points_x.insert(points_x.end(), i*cell_width);
+            points_y.insert(points_y.end(), j*cell_height);
         }
     }
 }
@@ -462,7 +462,7 @@ void MyGLWidget::drawStreamline(float z, float alpha)
         drawDefaultPointsStreamline();
     }
 
-    /*
+
     for (unsigned s = 0; s < points_x.size(); s++)
     {
         float start_x = (float)points_x[s];
@@ -499,7 +499,7 @@ void MyGLWidget::drawStreamline(float z, float alpha)
             }
         }
     }
-    */
+
 }
 
 void MyGLWidget::drawSmoke(){
