@@ -58,7 +58,7 @@ void zebrafish(float value,float* R,float* G,float* B)
 {
     if (value<0) value=0; if (value>1) value=1;
     int color = 1;
-    if((int)(value*10) % 2 == 0) color = 0;
+    if((int)(value*100) % 2 == 0) color = 0;
     *R = *G = *B = color;
 }
 
