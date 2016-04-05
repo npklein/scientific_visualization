@@ -20,6 +20,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     draw_smoke = true;           //draw the smoke or not
     draw_vecs = true;            //draw the vector field or not
     draw_default_points = true;
+    draw_default_points_streamline = false;
     draw_selected_points = false;
     draw_v = true; // draw velocity
     draw_f = false; // draw forcefield
@@ -40,6 +41,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     hue_matter = 0;
     saturation_matter = 1.0;
     saturation_glyph = 1.0;
+    line_width = 1.0;
     draw_grid = false;
     draw_slices = false;
     show_points = false;
@@ -65,6 +67,15 @@ void MyGLWidget::initializeGL()
 void MyGLWidget::defaultPoints(std::vector<int> &points_x, std::vector<int> &points_y){
     for (int i = 0; i < DIM; i++){
         for (int j = 0; j < DIM; j++){
+            points_x.insert(points_x.end(), i);
+            points_y.insert(points_y.end(), j);
+        }
+    }
+}
+
+void MyGLWidget::defaultPointsStreamline(std::vector<int> &points_x, std::vector<int> &points_y){
+    for (int i = 0; i < DIM; i=+10){
+        for (int j = 0; j < DIM; j=+10){
             points_x.insert(points_x.end(), i);
             points_y.insert(points_y.end(), j);
         }
@@ -409,7 +420,15 @@ void MyGLWidget::drawStreamline()
     float max_size = cell_width*10;
     float max_time = 100;
     //drawStreamline(25,25);
-    selectedPoints(points_x, points_y);
+//    selectedPoints(points_x, points_y);
+
+    if(draw_selected_points){
+        selectedPoints(points_x, points_y);
+    }
+    else if(draw_default_points_streamline){
+        defaultPointsStreamline(points_x, points_y);
+    }
+
 
     float vx_draw = 0;
     float vy_draw = 0;
@@ -441,6 +460,7 @@ void MyGLWidget::drawStreamline()
                 interpolated_vector.Y += interpolated_vector.Y * dt;
 
                 //DRAW
+                glLineWidth((GLfloat)line_width); // set line width
                 glBegin(GL_LINES);				//draw
                 //qglColor(Qt::white);
                 direction_to_color(vx_draw, vy_draw, velocity_color, color_bands, color_clamp_min_glyph, color_clamp_max_glyph, hue_glyph, saturation_glyph);
@@ -790,6 +810,10 @@ void MyGLWidget::setColorBands(int new_color_bands){
 void MyGLWidget::setDim(int new_DIM){
     DIM = new_DIM;
     simulation.init_simulation(DIM);
+}
+
+void MyGLWidget::setLineThickness(int new_linethickness){
+    line_width = new_linethickness;
 }
 
 void MyGLWidget::setGlyphType(QString new_glyphs){
