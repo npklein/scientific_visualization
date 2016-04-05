@@ -851,7 +851,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>240</y>
+         <y>130</y>
          <width>161</width>
          <height>20</height>
         </rect>
@@ -864,7 +864,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>270</y>
+         <y>170</y>
          <width>91</width>
          <height>16</height>
         </rect>
@@ -876,8 +876,8 @@
       <widget class="QSpinBox" name="spinBoxLineThickness">
        <property name="geometry">
         <rect>
-         <x>106</x>
-         <y>263</y>
+         <x>100</x>
+         <y>160</y>
          <width>51</width>
          <height>31</height>
         </rect>
@@ -893,6 +893,19 @@
        </property>
        <property name="displayIntegerBase">
         <number>10</number>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="drawDefaultPointsStreamlineCheckbox">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>100</y>
+         <width>161</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Draw default points</string>
        </property>
       </widget>
      </widget>
@@ -951,6 +964,7 @@
     <slot>selectPointsStreamline(bool)</slot>
     <slot>setDrawSlices(bool)</slot>
     <slot>setLineThickness(int)</slot>
+    <slot>setDrawDefaultStreamline(bool)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -963,8 +977,8 @@
    <slot>showAnimation(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>328</x>
-     <y>31</y>
+     <x>342</x>
+     <y>591</y>
     </hint>
     <hint type="destinationlabel">
      <x>291</x>
@@ -1011,8 +1025,8 @@
    <slot>setFluidDensity()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>452</x>
-     <y>32</y>
+     <x>450</x>
+     <y>592</y>
     </hint>
     <hint type="destinationlabel">
      <x>398</x>
@@ -1027,8 +1041,8 @@
    <slot>setFluidVelocity()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>569</x>
-     <y>32</y>
+     <x>571</x>
+     <y>592</y>
     </hint>
     <hint type="destinationlabel">
      <x>513</x>
@@ -1044,7 +1058,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>687</x>
-     <y>32</y>
+     <y>592</y>
     </hint>
     <hint type="destinationlabel">
      <x>594</x>
@@ -1619,8 +1633,8 @@
    <slot>setDrawSelectedPoints()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>155</x>
-     <y>284</y>
+     <x>170</x>
+     <y>181</y>
     </hint>
     <hint type="destinationlabel">
      <x>273</x>
@@ -1635,12 +1649,28 @@
    <slot>setLineThickness(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>162</x>
-     <y>310</y>
+     <x>165</x>
+     <y>222</y>
     </hint>
     <hint type="destinationlabel">
      <x>243</x>
      <y>310</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>drawDefaultPointsStreamlineCheckbox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setDrawDefaultStreamline(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>132</x>
+     <y>148</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>253</x>
+     <y>140</y>
     </hint>
    </hints>
   </connection>

@@ -64,7 +64,7 @@ private slots:
 
     void drawCone(Vector vector, int i, int j, float vy, int scaling_factor, float vy_min, float vy_max);
 
-    void drawStreamline();
+    void drawStreamline(float z, float alpha);
 
     void setDrawStreamline(bool new_streamline);
 
@@ -100,9 +100,13 @@ private slots:
 
     void defaultPoints(std::vector<int> &points_x, std::vector<int> &points_y);
 
-    //void drawDefaultPointsStreamline();
+    void drawDefaultPointsStreamline();
+
+    void defaultPointsStreamline(std::vector<int> &points_x, std::vector<int> &points_y);
 
     void selectedPoints(std::vector<int> &points_x, std::vector<int> &points_y);
+
+    void setDrawDefaultStreamline(bool);
 
     void drawDefaultPoints();
 
@@ -115,6 +119,8 @@ private slots:
     void clearSelectedPoints();
 
     void selectPointsStreamline(bool new_select_points);
+
+    void selectNumberOfSlices(bool new_number_of_slices);
 
 protected:
     void initializeGL();
@@ -136,6 +142,7 @@ private:
     bool   draw_vecs;            //draw the vector field or not
     int   scalar_col;           //method for scalar coloring
     int DIM;
+    int number_of_slices;
     int number_of_glyphs;
     int grid_scale;
     int color_bands;
@@ -173,6 +180,7 @@ private:
     std::vector<int> mouse_y;
     std::vector<int> points_x;
     std::vector<int> points_y;
+    std::vector<Simulation> simulation_vector;
 };
 
 #endif // MYGLWIDGET_H
