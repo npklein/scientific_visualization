@@ -19,6 +19,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     draw_smoke = true;           //draw the smoke or not
     draw_vecs = true;            //draw the vector field or not
     draw_default_points = true;
+    draw_default_points_streamline = false;
     draw_selected_points = false;
     draw_v = true; // draw velocity
     draw_f = false; // draw forcefield
@@ -39,7 +40,11 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     hue_matter = 0;
     saturation_matter = 1.0;
     saturation_glyph = 1.0;
+<<<<<<< HEAD
     number_of_slices = 5;
+=======
+    line_width = 1.0;
+>>>>>>> e4680fcac919c25594cf39d1d2fdb7586308eaa8
     draw_grid = false;
     draw_slices = false;
     show_points = false;
@@ -70,6 +75,39 @@ void MyGLWidget::defaultPoints(std::vector<int> &points_x, std::vector<int> &poi
         }
     }
 }
+
+/* void MyGLWidget::drawDefaultPointsStreamline(){
+    int points_x [200] = { };
+    int points_y [200] = { };
+    for (int i = 0; i < DIM; i=+10){
+        for (int j = 0; j < DIM; j=+10){
+            points_x.insert(points_x.end(), i);
+            points_y.insert(points_y.end(), j);
+        }
+    }
+
+    float x2,y2;
+    float radius  = 2;
+    float angle   = 1.0;
+
+    for (unsigned t = 0; t < points_x.size(); t++){
+        glColor3f(255,0,0);
+        glBegin(GL_TRIANGLE_FAN);
+
+        int x = points_x[t];
+        int y = points_y[t];
+
+
+        for (angle=1.0f;angle<361.0f;angle+=0.2)
+        {
+            x2 = x+sin(angle)*radius;
+            y2 = y+cos(angle)*radius;
+            glVertex2f(x2,y2);
+        }
+        glEnd();
+    }
+}*/
+
 
 void MyGLWidget::selectedPoints(std::vector<int> &points_x, std::vector<int> &points_y){
     for (unsigned i = 0; i < mouse_x.size(); i++){
@@ -411,7 +449,16 @@ void MyGLWidget::drawStreamline(float z, float alpha)
     float max_size = cell_width*10;
     float max_time = 100;
     //drawStreamline(25,25);
-    selectedPoints(points_x, points_y);
+//    selectedPoints(points_x, points_y);
+
+    if(draw_selected_points){
+        selectedPoints(points_x, points_y);
+    }
+    else if(draw_default_points_streamline){
+        //defaultPointsStreamline(points_x, points_y);
+        //drawDefaultPointsStreamline();
+    }
+
 
     for (unsigned s = 0; s < points_x.size(); s++)
     {
@@ -437,6 +484,7 @@ void MyGLWidget::drawStreamline(float z, float alpha)
                 interpolated_vector.Y += interpolated_vector.Y * dt;
 
                 //DRAW
+                glLineWidth((GLfloat)line_width); // set line width
                 glBegin(GL_LINES);				//draw
                 //qglColor(Qt::white);
                 set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph, scale_color, 0, 1, alpha);
@@ -794,6 +842,10 @@ void MyGLWidget::setColorBands(int new_color_bands){
 void MyGLWidget::setDim(int new_DIM){
     DIM = new_DIM;
     simulation.init_simulation(DIM);
+}
+
+void MyGLWidget::setLineThickness(int new_linethickness){
+    line_width = new_linethickness;
 }
 
 void MyGLWidget::setGlyphType(QString new_glyphs){
