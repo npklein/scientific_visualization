@@ -221,7 +221,7 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
         }
         else if (glyphs == "cones"){
             //
-            if (y % (100/number_of_glyphs)  == 0|| y ==0){
+            if (y % (300/number_of_glyphs)  == 0|| y ==0){
                 Vector vector = Vector(x_coord, //x1
                                        y_coord, //y1
                                        (x_coord) + cone_scale * vx_draw, //x2
@@ -336,6 +336,7 @@ void MyGLWidget::drawCone(Vector vector, int i, int j, float vy, int scaling_fac
         glVertex2f(cell_width/2, cell_height); // draw cone point/tip
         glVertex2f(sin(angle) * radius, cos(angle) * radius); // draw cone base (circle)
     }
+
 
     glEnd();
     glPopMatrix(); // now it's at normal scale again
