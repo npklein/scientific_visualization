@@ -255,7 +255,7 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
         }
         else if (glyphs == "cones"){
             //
-            if (y % (100/number_of_glyphs)  == 0|| y ==0){
+            if (y % (300/number_of_glyphs)  == 0|| y ==0){
                 Vector vector = Vector(x_coord, //x1
                                        y_coord, //y1
                                        (x_coord) + cone_scale * vx_draw, //x2
@@ -315,7 +315,7 @@ void MyGLWidget::drawArrow(Vector vector, int x_coord, int y_coord, float vy, in
     // draw an arrow the size of a cell, scale according to vector length
     float angle = vector.normalize().direction2angle();
 
-    set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph,scale_color, vy_min, vy_max);
+    set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph, scale_color, vy_min, vy_max);
     glPushMatrix();
     glTranslatef(x_coord,y_coord, 0);
     glRotated(angle,0,0,1);
@@ -370,6 +370,7 @@ void MyGLWidget::drawCone(Vector vector, int i, int j, float vy, int scaling_fac
         glVertex2f(sin(angle) * radius, cos(angle) * radius); // draw cone base (circle)
     }
 
+
     glEnd();
     glPopMatrix(); // now it's at normal scale again
     glLoadIdentity(); // needed to stop the rotating, otherwise rotates the entire drawing
@@ -398,8 +399,8 @@ void MyGLWidget::drawSlices(int n){
 
 void MyGLWidget::drawStreamline()
 {
-    float dt = cell_width/3;
-    float max_size = cell_width*100;
+    float dt = cell_width/1;
+    float max_size = cell_width*10;
     //drawStreamline(25,25);
     selectedPoints(points_x, points_y);
 
@@ -407,13 +408,17 @@ void MyGLWidget::drawStreamline()
     {
         float start_x = (float)points_x[s];
         float start_y = (float)points_y[s];
+        float total_length = 0;
         for (int y = 0; y < max_size; y+=dt){
             Vector interpolated_vector = interpolate_vector(start_x/cell_width, start_y/cell_height, cell_width, cell_height, DIM, simulation);
             // if outside the grid, stop the stream line
-            //if(interpolated_vector.X > DIM*cell_width || interpolated_vector.Y > DIM*cell_height || interpolated_vector.X <0 || interpolated_vector.Y <0 ){
-            //    return;
-            //}
+            if(interpolated_vector.X+start_x > DIM*cell_width || interpolated_vector.Y+start_y > DIM*cell_height ||
+                    interpolated_vector.X+start_x <0 || interpolated_vector.Y+start_y <0 ||
+                    total_length > max_size){
+                break;
+            }
             float length  = interpolated_vector.length();
+            total_length += length;
 
             if(length>0){
                 interpolated_vector.X = interpolated_vector.X / length;
@@ -425,10 +430,10 @@ void MyGLWidget::drawStreamline()
                 glBegin(GL_LINES);				//draw
                 qglColor(Qt::white);
                 glVertex2f(start_x, start_y);
-                glVertex2f(interpolated_vector.X*cell_width+points_x[s], interpolated_vector.Y*cell_height+points_y[s]);
+                glVertex2f(interpolated_vector.X+start_x, interpolated_vector.Y+start_y);
                 glEnd();
-                start_x = interpolated_vector.X*cell_width+points_x[s];
-                start_y = interpolated_vector.Y*cell_height+points_y[s];
+                start_x = interpolated_vector.X+start_x;
+                start_y = interpolated_vector.Y+start_y;
             }
         }
     }
