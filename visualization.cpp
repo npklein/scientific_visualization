@@ -79,7 +79,7 @@ void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_c
    if (vy < color_clamp_min){
        vy = color_clamp_min;
    }
-   if (vy > color_clamp_max){
+   else if (vy > color_clamp_max){
        vy = color_clamp_max;
    }
 

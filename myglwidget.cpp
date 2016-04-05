@@ -27,10 +27,10 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     scale_color = false;    // if true, the lowest current value in the screen is the lowest in the color map, same for highest
     DIM = 50;
     // should change to have a color map class that has color clamp values
-    color_clamp_min_matter = 1.0;        // The lower bound value to clamp color map at
-    color_clamp_max_matter = 10.0;        // The higher bound value to clamp color map at
+    color_clamp_min_matter = 0.0;        // The lower bound value to clamp color map at
+    color_clamp_max_matter = 1.0;        // The higher bound value to clamp color map at
     color_clamp_min_glyph = 0.0;        // The lower bound value to clamp color map at
-    color_clamp_max_glyph = 5.0;        // The higher bound value to clamp color map at
+    color_clamp_max_glyph = 1.0;        // The higher bound value to clamp color map at
     velocity_color = 1;
     number_of_glyphs = DIM*2;
     force_field_color = 1;
@@ -168,8 +168,8 @@ void MyGLWidget::mousePressEvent(QMouseEvent *event)
 {
     lastPos = event->pos();
     if(select_points){
-        mouse_x.insert(mouse_x.end(), lastPos.x());
-        mouse_y.insert(mouse_y.end(), windowHeight - lastPos.y());
+        mouse_x.insert(mouse_x.end(), lastPos.x()*2);
+        mouse_y.insert(mouse_y.end(), windowHeight - lastPos.y()*2);
     }
 }
 
@@ -177,8 +177,8 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     int mx = event->x();// - lastposition gets calculated in drag(), could save a step by using lastPos.x/y but leaving it like this is safer
     int my = event->y();
-    simulation.drag(mx,my, DIM, windowWidth, windowHeight);  // Works for Freerk when using external display
-    //simulation.drag(mx,my, DIM, windowWidth, windowHeight); // Works for Niek
+    //simulation.drag(mx,my, DIM, windowWidth, windowHeight);  // Works for Freerk when using external display
+    simulation.drag(mx,my, DIM, windowWidth, windowHeight); // Works for Niek
 }
 
 void MyGLWidget::drawGradient()
@@ -411,8 +411,8 @@ void MyGLWidget::drawSlices(int n){
 void MyGLWidget::defaultPointsStreamline(std::vector<int> &points_x, std::vector<int> &points_y){
     for (int i = 0; i < DIM; i+=10){
         for (int j = 0; j < DIM;j+=10){
-            points_x.insert(points_x.end(), i);
-            points_y.insert(points_y.end(), j);
+            points_x.insert(points_x.end(), i*cell_width);
+            points_y.insert(points_y.end(), j*cell_height);
         }
     }
 }
@@ -462,11 +462,15 @@ void MyGLWidget::drawStreamline(float z, float alpha)
         drawDefaultPointsStreamline();
     }
 
-    /*
+
     for (unsigned s = 0; s < points_x.size(); s++)
     {
         float start_x = (float)points_x[s];
         float start_y = (float)points_y[s];
+        if(draw_default_points_streamline){
+            start_x *= cell_width;
+            start_y *= cell_height;
+        }
         float total_length = 0;
         for (int y = 0; y < max_time; y+=dt){ // loop using delta time to do interpolation
             Vector interpolated_vector = interpolateVector(start_x/cell_width, start_y/cell_height, cell_width, cell_height, DIM, simulation); //interpolate vector x,y
@@ -499,7 +503,7 @@ void MyGLWidget::drawStreamline(float z, float alpha)
             }
         }
     }
-    */
+
 }
 
 void MyGLWidget::drawSmoke(){
