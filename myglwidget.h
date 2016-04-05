@@ -167,6 +167,7 @@ private:
     std::vector<int> mouse_y;
     std::vector<int> points_x;
     std::vector<int> points_y;
+    std::vector<Simulation> simulation_vector;
 };
 
 #endif // MYGLWIDGET_H

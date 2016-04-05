@@ -9,7 +9,6 @@
 #include <cmath>
 #include "vector.cpp"
 #include "grid.h"
-#include <deque>
 
 MyGLWidget::MyGLWidget(QWidget *parent)
 {
@@ -95,7 +94,7 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
         drawGridLines(DIM);
     }
     if(draw_slices){
-        drawSlices(2);
+        drawSlices(20);
     }
     if (draw_streamline){
         drawStreamline();
@@ -380,26 +379,18 @@ void MyGLWidget::drawCone(Vector vector, int i, int j, float vy, int scaling_fac
 void MyGLWidget::drawSlices(int n){
     // n = number of slices (timepoints) to draw
     // use std::queue instead of std::list because it forces FIFO
-    std::deque<Grid> grid_timepoints;
     for(int y = 0; y < n; y++){
         do_one_simulation_step(false);
-        Grid grid = Grid(DIM);
-
-        defaultPoints(points_x, points_y);
-        //  for (int i = 0; i < DIM; i++)
-        //      for (int j = 0; j < DIM; j++)
-        for (unsigned y = 0; y < points_x.size(); y++)
-        {
-            int i = points_x[y];
-            int j = points_y[y];
-            int idx = (j * DIM) + i;
-            grid.addElementToGrid(simulation.get_vx()[idx], simulation.get_vy()[idx], idx);
+        //while(simulation_vector.size() > n){
+        //    simulation_vector.pop_back();
+        //}
+        //simulation_vector.insert(simulation_vector.begin(), simulation);
+        drawStreamline();
         }
-        grid_timepoints.push_front(grid);
-    }
-    Grid popped_grid = grid_timepoints.front();
-    grid_timepoints.pop_back();
-    drawVelocity(popped_grid.vx, popped_grid.vy);
+
+    //simulation = simulation_vector[0];
+    //simulation = simulation_vector[1];
+    //drawVelocity(simulation.get_vx(), simulation.get_vy());
     //updateGL();
 }
 
@@ -494,7 +485,7 @@ void MyGLWidget::drawSmoke(){
 
 void MyGLWidget::do_one_simulation_step(bool update)
 {
-    if (!simulation.get_frozen())
+    if (!simulation.get_frozen() && !select_points)
     {
         simulation.set_forces(DIM);
         simulation.solve(DIM, simulation.get_vx(), simulation.get_vy(), simulation.get_vx0(),
@@ -502,9 +493,10 @@ void MyGLWidget::do_one_simulation_step(bool update)
         // Note to self: * in *simulation.get_vx() because simulation.get_vx() returns 'double *' and diffuse_matter needs 'double'
         simulation.diffuse_matter(DIM, simulation.get_vx(), simulation.get_vy(),
                                   simulation.get_rho(), simulation.get_rho0(), simulation.get_dt());
-        if(update){
-            updateGL();
-        }
+
+    }
+    if(update){
+        updateGL();
     }
 }
 
@@ -815,25 +807,19 @@ void MyGLWidget::setDrawGradient(bool new_gradient){
 
 void MyGLWidget::setDrawStreamline(bool new_streamline){
     draw_streamline = new_streamline;
+    draw_slices = !new_streamline;
     if (draw_streamline) {
         draw_vecs = false;
-        draw_slices = false;
         draw_smoke = false;
-    }
-    else{
-        draw_slices = true;
-    }
+}
 }
 
 void MyGLWidget::setDrawSlices(bool new_slices){
     draw_slices = new_slices;
+    draw_streamline = !new_slices;
     if (draw_slices) {
         draw_vecs = false;
-        draw_streamline = false;
         draw_smoke = false;
-    }
-    if (!draw_slices) {
-        draw_streamline = true;
     }
 }
 
