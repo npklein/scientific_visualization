@@ -109,6 +109,8 @@
        <property name="mouseTracking">
         <bool>false</bool>
        </property>
+       <zorder>tabWidget</zorder>
+       <zorder>tabWidget</zorder>
       </widget>
      </item>
     </layout>
@@ -134,7 +136,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <property name="iconSize">
       <size>
@@ -856,8 +858,8 @@
       <widget class="QCheckBox" name="slicesCheckBox">
        <property name="geometry">
         <rect>
-         <x>20</x>
-         <y>430</y>
+         <x>10</x>
+         <y>280</y>
          <width>86</width>
          <height>20</height>
         </rect>
@@ -927,6 +929,64 @@
         <string>Draw default points</string>
        </property>
       </widget>
+      <widget class="QSpinBox" name="spinBox_2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>310</y>
+         <width>48</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>10</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_14">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>310</y>
+         <width>59</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Alpha</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBox_3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>350</y>
+         <width>48</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <number>20</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_15">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>350</y>
+         <width>141</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Number of slices</string>
+       </property>
+      </widget>
      </widget>
     </widget>
    </item>
@@ -985,6 +1045,8 @@
     <slot>setLineThickness(int)</slot>
     <slot>setDrawDefaultStreamline(bool)</slot>
     <slot>setSelectedPointSize(int)</slot>
+    <slot>setAlpha(int)</slot>
+    <slot>selectNumberOfSlices(int)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -1589,8 +1651,8 @@
    <slot>setDrawSlices(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>60</x>
-     <y>477</y>
+     <x>50</x>
+     <y>327</y>
     </hint>
     <hint type="destinationlabel">
      <x>282</x>
@@ -1609,8 +1671,8 @@
      <y>77</y>
     </hint>
     <hint type="destinationlabel">
-     <x>90</x>
-     <y>476</y>
+     <x>80</x>
+     <y>326</y>
     </hint>
    </hints>
   </connection>
@@ -1707,6 +1769,38 @@
     <hint type="destinationlabel">
      <x>292</x>
      <y>440</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_2</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setAlpha(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>46</x>
+     <y>355</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>318</x>
+     <y>365</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_3</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>selectNumberOfSlices(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>54</x>
+     <y>389</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>280</x>
+     <y>389</y>
     </hint>
    </hints>
   </connection>
