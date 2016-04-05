@@ -73,3 +73,7 @@ void Window::on_slicesCheckBox_clicked(bool set_slices){
 }
 
 
+void Window::on_radioButtonDrawDefaultPointStreamlines_clicked(bool checked)
+{
+    ui->showPointsCheckbox->setChecked(true);
+}
