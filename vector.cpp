@@ -79,17 +79,17 @@ Vector interpolate_vector(float point_x, float point_y, float cell_width, float 
 
     //Compute vector value at given point, using
     //bilinear interpolation of the vector values at
-    interpolated_vector.X -= (1-tx)*(1-ty)*vector1.X;		//the four cell vertices
-    interpolated_vector.Y -= (1-tx)*(1-ty)*vector1.Y;
+    interpolated_vector.X += (1-tx)*(1-ty)*vector1.X;		//the four cell vertices
+    interpolated_vector.Y += (1-tx)*(1-ty)*vector1.Y;
 
-    interpolated_vector.X -= tx*(1-ty)*vector2.X;
-    interpolated_vector.Y -= tx*(1-ty)*vector2.Y;
+    interpolated_vector.X += tx*(1-ty)*vector2.X;
+    interpolated_vector.Y += tx*(1-ty)*vector2.Y;
 
-    interpolated_vector.X -= tx*ty*vector3.X;
-    interpolated_vector.Y -= tx*ty*vector3.Y;
+    interpolated_vector.X += tx*ty*vector3.X;
+    interpolated_vector.Y += tx*ty*vector3.Y;
 
-    interpolated_vector.X -= (1-tx)*ty*vector4.X;
-    interpolated_vector.Y -= (1-tx)*ty*vector4.Y;
+    interpolated_vector.X += (1-tx)*ty*vector4.X;
+    interpolated_vector.Y += (1-tx)*ty*vector4.Y;
     return(interpolated_vector);
 }
 

@@ -65,8 +65,10 @@ void MyGLWidget::initializeGL()
 void MyGLWidget::defaultPoints(std::vector<int> &points_x, std::vector<int> &points_y){
     for (int i = 0; i < DIM; i++){
         for (int j = 0; j < DIM; j++){
+            if(i==45 && j == 45){
             points_x.insert(points_x.end(), i);
             points_y.insert(points_y.end(), j);
+            }
         }
     }
 }
@@ -134,7 +136,6 @@ void MyGLWidget::resizeGL(int width, int height)
     windowWidth = width; windowHeight = height;
 }
 
-
 void MyGLWidget::drawSelectedPoints(){
     float x2,y2;
     float radius  = 2;
@@ -158,7 +159,6 @@ void MyGLWidget::drawSelectedPoints(){
     }
 
 }
-
 
 void MyGLWidget::mousePressEvent(QMouseEvent *event)
 {
@@ -209,23 +209,25 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
     //      for (int j = 0; j < DIM; j++)
     for (unsigned y = 0; y < points_x.size(); y++)
     {
-        int i = points_x[y];
-        int j = points_y[y];
+
         float vx_draw = 0;
         float vy_draw = 0;
         fftw_real x_coord;
         fftw_real y_coord;
-        int idx = (j * DIM) + i;
+
         if(draw_selected_points){
             float point_x = (float)points_x[y]/cell_width;
             float point_y = (float)points_y[y]/cell_height;
+
             Vector interpolated_vector = interpolate_vector(point_x, point_y, cell_width, cell_height, DIM, simulation);
             vx_draw = interpolated_vector.X;
             vy_draw = interpolated_vector.Y;
             x_coord = (fftw_real)points_x[y];
             y_coord = (fftw_real)points_y[y];
         }
-        else if (draw_default_points){
+
+        if (draw_default_points){
+            int idx = (j * DIM) + i;
             vx_draw = vx[idx];
             vy_draw = vy[idx];
             x_coord = (fftw_real)i * cell_width;
@@ -832,6 +834,7 @@ void MyGLWidget::selectPoints(bool new_select_points){
     select_points = new_select_points;
     draw_vecs = !new_select_points;
     draw_smoke = !new_select_points;
+    show_points = true;
     if(draw_streamline){
         draw_smoke = false;
         draw_streamline = false;
