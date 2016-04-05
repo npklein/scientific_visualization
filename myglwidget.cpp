@@ -40,11 +40,8 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     hue_matter = 0;
     saturation_matter = 1.0;
     saturation_glyph = 1.0;
-<<<<<<< HEAD
     number_of_slices = 5;
-=======
     line_width = 1.0;
->>>>>>> e4680fcac919c25594cf39d1d2fdb7586308eaa8
     draw_grid = false;
     draw_slices = false;
     show_points = false;
@@ -76,39 +73,6 @@ void MyGLWidget::defaultPoints(std::vector<int> &points_x, std::vector<int> &poi
     }
 }
 
-/* void MyGLWidget::drawDefaultPointsStreamline(){
-    int points_x [200] = { };
-    int points_y [200] = { };
-    for (int i = 0; i < DIM; i=+10){
-        for (int j = 0; j < DIM; j=+10){
-            points_x.insert(points_x.end(), i);
-            points_y.insert(points_y.end(), j);
-        }
-    }
-
-    float x2,y2;
-    float radius  = 2;
-    float angle   = 1.0;
-
-    for (unsigned t = 0; t < points_x.size(); t++){
-        glColor3f(255,0,0);
-        glBegin(GL_TRIANGLE_FAN);
-
-        int x = points_x[t];
-        int y = points_y[t];
-
-
-        for (angle=1.0f;angle<361.0f;angle+=0.2)
-        {
-            x2 = x+sin(angle)*radius;
-            y2 = y+cos(angle)*radius;
-            glVertex2f(x2,y2);
-        }
-        glEnd();
-    }
-}*/
-
-
 void MyGLWidget::selectedPoints(std::vector<int> &points_x, std::vector<int> &points_y){
     for (unsigned i = 0; i < mouse_x.size(); i++){
         points_x.insert(points_x.end(), mouse_x[i]);
@@ -139,7 +103,7 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     if(draw_slices){
         drawSlices(number_of_slices);
     }
-    if (draw_streamline){
+    if (draw_streamline || draw_default_points_streamline){
         drawStreamline(0, 1);
     }
     if (draw_vecs)
@@ -443,6 +407,45 @@ void MyGLWidget::drawSlices(int n){
     //updateGL();
 }
 
+
+void MyGLWidget::defaultPointsStreamline(std::vector<int> &points_x, std::vector<int> &points_y){
+    for (int i = 0; i < DIM; i+=10){
+        for (int j = 0; j < DIM;j+=10){
+            points_x.insert(points_x.end(), i);
+            points_y.insert(points_y.end(), j);
+        }
+    }
+}
+
+void MyGLWidget::setDrawDefaultStreamline(bool){
+    draw_default_points_streamline = true;
+    draw_vecs = false;
+    draw_smoke = false;
+}
+
+void MyGLWidget::drawDefaultPointsStreamline(){
+    float x2,y2;
+    float radius  = 2;
+    float angle   = 1.0;
+
+    for (unsigned t = 0; t < points_x.size(); t++){
+        glColor3f(255,0,0);
+        glBegin(GL_TRIANGLE_FAN);
+
+        int x = points_x[t];
+        int y = points_y[t];
+
+
+        for (angle=1.0f;angle<361.0f;angle+=0.2)
+        {
+            x2 = x+sin(angle)*radius;
+            y2 = y+cos(angle)*radius;
+            glVertex2f(x2,y2);
+        }
+        glEnd();
+    }
+}
+
 void MyGLWidget::drawStreamline(float z, float alpha)
 {
     float dt = cell_width/10;
@@ -455,11 +458,11 @@ void MyGLWidget::drawStreamline(float z, float alpha)
         selectedPoints(points_x, points_y);
     }
     else if(draw_default_points_streamline){
-        //defaultPointsStreamline(points_x, points_y);
-        //drawDefaultPointsStreamline();
+        defaultPointsStreamline(points_x, points_y);
+        drawDefaultPointsStreamline();
     }
 
-
+    /*
     for (unsigned s = 0; s < points_x.size(); s++)
     {
         float start_x = (float)points_x[s];
@@ -496,6 +499,7 @@ void MyGLWidget::drawStreamline(float z, float alpha)
             }
         }
     }
+    */
 }
 
 void MyGLWidget::drawSmoke(){

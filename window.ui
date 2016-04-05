@@ -48,25 +48,6 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0" colspan="4">
-      <widget class="MyGLWidget" name="myGLWidget" native="true">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>400</width>
-         <height>400</height>
-        </size>
-       </property>
-       <property name="cursor">
-        <cursorShape>PointingHandCursor</cursorShape>
-       </property>
-       <property name="mouseTracking">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="2">
       <widget class="QRadioButton" name="fluidVelocityRadioButton">
        <property name="text">
@@ -153,7 +134,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <property name="iconSize">
       <size>
@@ -870,7 +851,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>240</y>
+         <y>130</y>
          <width>161</width>
          <height>20</height>
         </rect>
@@ -883,7 +864,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>270</y>
+         <y>170</y>
          <width>91</width>
          <height>16</height>
         </rect>
@@ -895,8 +876,8 @@
       <widget class="QSpinBox" name="spinBoxLineThickness">
        <property name="geometry">
         <rect>
-         <x>106</x>
-         <y>263</y>
+         <x>100</x>
+         <y>160</y>
          <width>51</width>
          <height>31</height>
         </rect>
@@ -914,30 +895,17 @@
         <number>10</number>
        </property>
       </widget>
-      <widget class="QSpinBox" name="numberOfSlicesCombobox">
+      <widget class="QRadioButton" name="drawDefaultPointsStreamlineCheckbox">
        <property name="geometry">
         <rect>
-         <x>20</x>
-         <y>460</y>
-         <width>48</width>
-         <height>24</height>
-        </rect>
-       </property>
-       <property name="value">
-        <number>5</number>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_13">
-       <property name="geometry">
-        <rect>
-         <x>80</x>
-         <y>460</y>
-         <width>221</width>
-         <height>16</height>
+         <x>0</x>
+         <y>100</y>
+         <width>161</width>
+         <height>20</height>
         </rect>
        </property>
        <property name="text">
-        <string>Number of slices</string>
+        <string>Draw default points</string>
        </property>
       </widget>
      </widget>
@@ -995,8 +963,8 @@
     <slot>setDrawStreamline(int)</slot>
     <slot>selectPointsStreamline(bool)</slot>
     <slot>setDrawSlices(bool)</slot>
-    <slot>setNumberOfSlices(int)</slot>
     <slot>setLineThickness(int)</slot>
+    <slot>setDrawDefaultStreamline(bool)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -1009,8 +977,8 @@
    <slot>showAnimation(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>328</x>
-     <y>31</y>
+     <x>342</x>
+     <y>591</y>
     </hint>
     <hint type="destinationlabel">
      <x>291</x>
@@ -1057,8 +1025,8 @@
    <slot>setFluidDensity()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>452</x>
-     <y>32</y>
+     <x>450</x>
+     <y>592</y>
     </hint>
     <hint type="destinationlabel">
      <x>398</x>
@@ -1073,8 +1041,8 @@
    <slot>setFluidVelocity()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>569</x>
-     <y>32</y>
+     <x>571</x>
+     <y>592</y>
     </hint>
     <hint type="destinationlabel">
      <x>513</x>
@@ -1090,7 +1058,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>687</x>
-     <y>32</y>
+     <y>592</y>
     </hint>
     <hint type="destinationlabel">
      <x>594</x>
@@ -1659,26 +1627,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>numberOfSlicesCombobox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>myGLWidget</receiver>
-   <slot>setNumberOfSlices(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>41</x>
-     <y>502</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>306</x>
-     <y>463</y>
    <sender>radioButtonDrawSelectedPointsStreamline</sender>
    <signal>clicked()</signal>
    <receiver>myGLWidget</receiver>
    <slot>setDrawSelectedPoints()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>155</x>
-     <y>284</y>
+     <x>170</x>
+     <y>181</y>
     </hint>
     <hint type="destinationlabel">
      <x>273</x>
@@ -1693,12 +1649,28 @@
    <slot>setLineThickness(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>162</x>
-     <y>310</y>
+     <x>165</x>
+     <y>222</y>
     </hint>
     <hint type="destinationlabel">
      <x>243</x>
      <y>310</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>drawDefaultPointsStreamlineCheckbox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setDrawDefaultStreamline(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>132</x>
+     <y>148</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>253</x>
+     <y>140</y>
     </hint>
    </hints>
   </connection>
