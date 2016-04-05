@@ -790,7 +790,7 @@
      </widget>
      <widget class="QWidget" name="streamlines">
       <attribute name="title">
-       <string>Streamlines</string>
+       <string>Streamlines/Slices</string>
       </attribute>
       <widget class="QCheckBox" name="drawStreamLineCheckbox">
        <property name="enabled">
@@ -832,6 +832,19 @@
        </property>
        <property name="text">
         <string>Clear selected points</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="slicesCheckBox">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>430</y>
+         <width>86</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Slices</string>
        </property>
       </widget>
      </widget>
@@ -888,6 +901,7 @@
     <slot>clearSelectedPoints()</slot>
     <slot>setDrawStreamline(int)</slot>
     <slot>selectPointsStreamline(bool)</slot>
+    <slot>setDrawSlices(bool)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -1482,6 +1496,70 @@
     <hint type="destinationlabel">
      <x>263</x>
      <y>148</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slicesCheckBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setDrawSlices(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>60</x>
+     <y>477</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>282</x>
+     <y>332</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>selectPointsCheckbox2</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>slicesCheckBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>88</x>
+     <y>77</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>90</x>
+     <y>476</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>selectPointsCheckbox2</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>drawingMatterCheckbox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>68</x>
+     <y>72</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>274</x>
+     <y>612</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>selectPointsCheckbox2</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>drawingHedgehogsCheckbox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>127</x>
+     <y>72</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>607</y>
     </hint>
    </hints>
   </connection>

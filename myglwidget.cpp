@@ -134,7 +134,6 @@ void MyGLWidget::resizeGL(int width, int height)
     windowWidth = width; windowHeight = height;
 }
 
-
 void MyGLWidget::drawSelectedPoints(){
     float x2,y2;
     float radius  = 2;
@@ -158,7 +157,6 @@ void MyGLWidget::drawSelectedPoints(){
     }
 
 }
-
 
 void MyGLWidget::mousePressEvent(QMouseEvent *event)
 {
@@ -209,23 +207,26 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
     //      for (int j = 0; j < DIM; j++)
     for (unsigned y = 0; y < points_x.size(); y++)
     {
-        int i = points_x[y];
-        int j = points_y[y];
         float vx_draw = 0;
         float vy_draw = 0;
         fftw_real x_coord;
         fftw_real y_coord;
-        int idx = (j * DIM) + i;
+
         if(draw_selected_points){
             float point_x = (float)points_x[y]/cell_width;
             float point_y = (float)points_y[y]/cell_height;
-            Vector interpolated_vector = interpolate_vector(point_x, point_y, cell_width, cell_height, DIM, simulation);
+
+            Vector interpolated_vector = interpolateVector(point_x, point_y, cell_width, cell_height, DIM, simulation);
             vx_draw = interpolated_vector.X;
             vy_draw = interpolated_vector.Y;
             x_coord = (fftw_real)points_x[y];
             y_coord = (fftw_real)points_y[y];
         }
-        else if (draw_default_points){
+
+        if (draw_default_points){
+            int i = points_x[y];
+            int j = points_y[y];
+            int idx = (j * DIM) + i;
             vx_draw = vx[idx];
             vy_draw = vy[idx];
             x_coord = (fftw_real)i * cell_width;
@@ -383,11 +384,16 @@ void MyGLWidget::drawSlices(int n){
     for(int y = 0; y < n; y++){
         do_one_simulation_step(false);
         Grid grid = Grid(DIM);
-        for (int i = 0; i < DIM; i++){
-            for (int j = 0; j < DIM; j++){
-                int idx = (j * DIM) + i;
-                grid.addElementToGrid(simulation.get_vx()[idx], simulation.get_vy()[idx], idx);
-            }
+
+        defaultPoints(points_x, points_y);
+        //  for (int i = 0; i < DIM; i++)
+        //      for (int j = 0; j < DIM; j++)
+        for (unsigned y = 0; y < points_x.size(); y++)
+        {
+            int i = points_x[y];
+            int j = points_y[y];
+            int idx = (j * DIM) + i;
+            grid.addElementToGrid(simulation.get_vx()[idx], simulation.get_vy()[idx], idx);
         }
         grid_timepoints.push_front(grid);
     }
@@ -410,7 +416,7 @@ void MyGLWidget::drawStreamline()
         float start_y = (float)points_y[s];
         float total_length = 0;
         for (int y = 0; y < max_size; y+=dt){
-            Vector interpolated_vector = interpolate_vector(start_x/cell_width, start_y/cell_height, cell_width, cell_height, DIM, simulation);
+            Vector interpolated_vector = interpolateVector(start_x/cell_width, start_y/cell_height, cell_width, cell_height, DIM, simulation);
             // if outside the grid, stop the stream line
             if(interpolated_vector.X+start_x > DIM*cell_width || interpolated_vector.Y+start_y > DIM*cell_height ||
                     interpolated_vector.X+start_x <0 || interpolated_vector.Y+start_y <0 ||
@@ -815,8 +821,7 @@ void MyGLWidget::setDrawStreamline(bool new_streamline){
         draw_smoke = false;
     }
     else{
-        draw_vecs = true;
-        draw_smoke = true;
+        draw_slices = true;
     }
 }
 
@@ -828,8 +833,7 @@ void MyGLWidget::setDrawSlices(bool new_slices){
         draw_smoke = false;
     }
     if (!draw_slices) {
-        draw_vecs = true;
-        draw_smoke = true;
+        draw_streamline = true;
     }
 }
 
@@ -837,6 +841,7 @@ void MyGLWidget::selectPoints(bool new_select_points){
     select_points = new_select_points;
     draw_vecs = !new_select_points;
     draw_smoke = !new_select_points;
+    show_points = true;
     if(draw_streamline){
         draw_smoke = false;
         draw_streamline = false;

@@ -30,6 +30,7 @@ private slots:
     void on_drawStreamLineCheckbox_clicked(bool drawStreamline);
     void on_selectPointsCheckbox_clicked(bool selectPoints);
     void on_selectPointsCheckbox2_clicked(bool selectPoints);
+    void on_slicesCheckBox_clicked(bool set_slices);
     private:
     Ui::Window *ui;
 };
