@@ -462,7 +462,7 @@ void MyGLWidget::drawStreamline(float z, float alpha)
         drawDefaultPointsStreamline();
     }
 
-
+TSTSTESTSETS
     for (unsigned s = 0; s < points_x.size(); s++)
     {
         float start_x = (float)points_x[s];
