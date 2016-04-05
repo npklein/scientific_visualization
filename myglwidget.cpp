@@ -26,11 +26,12 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     scalar_col = 0;           //method for scalar coloring
     scale_color = false;    // if true, the lowest current value in the screen is the lowest in the color map, same for highest
     DIM = 50;
+    selected_point_size = 1;
     // should change to have a color map class that has color clamp values
-    color_clamp_min_matter = 1.0;        // The lower bound value to clamp color map at
-    color_clamp_max_matter = 10.0;        // The higher bound value to clamp color map at
+    color_clamp_min_matter = 0.0;        // The lower bound value to clamp color map at
+    color_clamp_max_matter = 1.0;        // The higher bound value to clamp color map at
     color_clamp_min_glyph = 0.0;        // The lower bound value to clamp color map at
-    color_clamp_max_glyph = 5.0;        // The higher bound value to clamp color map at
+    color_clamp_max_glyph = 1.0;        // The higher bound value to clamp color map at
     velocity_color = 1;
     number_of_glyphs = DIM*2;
     force_field_color = 1;
@@ -142,7 +143,7 @@ void MyGLWidget::resizeGL(int width, int height)
 
 void MyGLWidget::drawSelectedPoints(){
     float x2,y2;
-    float radius  = 2;
+    float radius  = 2*selected_point_size;
     float angle   = 1.0;
 
     for (unsigned i = 0; i < mouse_x.size(); i++){
@@ -168,8 +169,8 @@ void MyGLWidget::mousePressEvent(QMouseEvent *event)
 {
     lastPos = event->pos();
     if(select_points){
-        mouse_x.insert(mouse_x.end(), lastPos.x() *2);
-        mouse_y.insert(mouse_y.end(), windowHeight - lastPos.y() *2);
+        mouse_x.insert(mouse_x.end(), lastPos.x()*2);
+        mouse_y.insert(mouse_y.end(), windowHeight - lastPos.y()*2);
     }
 }
 
@@ -409,8 +410,8 @@ void MyGLWidget::drawSlices(int n){
 
 
 void MyGLWidget::defaultPointsStreamline(std::vector<int> &points_x, std::vector<int> &points_y){
-    for (int i = 0; i < DIM; i+=15){
-        for (int j = 0; j < DIM;j+=15){
+    for (int i = 0; i < DIM; i+=10){
+        for (int j = 0; j < DIM;j+=10){
             points_x.insert(points_x.end(), i*cell_width);
             points_y.insert(points_y.end(), j*cell_height);
         }
@@ -466,6 +467,10 @@ void MyGLWidget::drawStreamline(float z, float alpha)
     {
         float start_x = (float)points_x[s];
         float start_y = (float)points_y[s];
+        if(draw_default_points_streamline){
+            start_x *= cell_width;
+            start_y *= cell_height;
+        }
         float total_length = 0;
         for (int y = 0; y < max_time; y+=dt){ // loop using delta time to do interpolation
             Vector interpolated_vector = interpolateVector(start_x/cell_width, start_y/cell_height, cell_width, cell_height, DIM, simulation); //interpolate vector x,y
@@ -525,23 +530,23 @@ void MyGLWidget::drawSmoke(){
             py3  = floor((fftw_real)j * cell_height);
             idx3 = (j * DIM) + (i + 1);
             set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
-                         saturation_matter, scale_color, simulation.get_rho_min(), simulation.get_rho_max(), 1);
+                         saturation_matter, scale_color, 0, 1, 1);
             glVertex2f(px0, py0);
             set_colormap(simulation.get_rho()[idx1], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
-                         saturation_matter, scale_color, simulation.get_rho_min(), simulation.get_rho_max(), 1);
+                         saturation_matter, scale_color, 0, 1, 1);
             glVertex2f(px1, py1);
             set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
-                         saturation_matter, scale_color, simulation.get_rho_min(), simulation.get_rho_max(), 1);
+                         saturation_matter, scale_color, 0, 1, 1);
             glVertex2f(px2, py2);
 
             set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
-                         saturation_matter, scale_color, simulation.get_rho_min(), simulation.get_rho_max(), 1);
+                         saturation_matter, scale_color, 0, 1, 1);
             glVertex2f(px0, py0);
             set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
-                         saturation_matter, scale_color, simulation.get_rho_min(), simulation.get_rho_max(), 1);
+                         saturation_matter, scale_color,0, 1, 1);
             glVertex2f(px2, py2);
             set_colormap(simulation.get_rho()[idx3], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
-                         saturation_matter, scale_color, simulation.get_rho_min(), simulation.get_rho_max(), 1);
+                         saturation_matter, scale_color, 0, 1, 1);
             glVertex2f(px3, py3);
         }
     }
@@ -752,13 +757,13 @@ void MyGLWidget::drawBar(){
     glBegin (GL_QUADS);
     if (draw_smoke){
         for (int i = 0; i < 1001; i = i + 1){
-            float rho_min = 1;
-            float rho_max = 10;
+            float rho_min = 0;
+            float rho_max = 5;
             if (scale_color){
                 rho_min = simulation.get_rho_min();
                 rho_max = simulation.get_rho_max();
             }
-            set_colormap(100*i,scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, saturation_matter, scale_color, rho_min, rho_max, 1);
+            set_colormap(0.001*i,scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, saturation_matter, scale_color, rho_min, rho_max, 1);
             glVertex3f(15+(0.5*i), 40, 0); //(x,y top left)
             glVertex3f(15+(0.5*i), 10, 0); //(x,y bottom left)
             glVertex3f(15+(0.5*(i+1)),10, 0); //(x,y bottom right)
@@ -792,11 +797,12 @@ void MyGLWidget::OGL_Draw_Text(){
             text_min = QString::number(floor(simulation.get_rho_min()*10)/10);
             text_max = QString::number(floor(simulation.get_rho_max()*10)/10);
         }
-        set_colormap(1-color_clamp_min_matter,scalar_col, color_clamp_min_matter, color_clamp_max_matter,color_bands, hue_matter, 1, scale_color, 0, 1, 1);
+
+        set_colormap(color_clamp_min_matter,scalar_col, color_clamp_min_matter, color_clamp_max_matter,color_bands, hue_matter, 1, scale_color, 0, 1, 1);
         renderText(20, 15, 0, text_min, QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar left
         //qglColor(Qt::black);
         renderText(240, 15, 0, "matter", QFont("Arial", 8, QFont::Bold, false) );
-        set_colormap(1-color_clamp_max_matter, scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, 1, scale_color, 0, 1, 1);
+        set_colormap(color_clamp_max_matter, scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter, 1, scale_color, 0, 1, 1);
         renderText(470, 15, 0, text_max, QFont("Arial", 12, QFont::Bold, false) ); // render bottom bar right
     }
     //QString maxCol = QString::number(color_clamp_max);
@@ -937,3 +943,8 @@ void MyGLWidget::showPoints(bool new_show_points){
 void MyGLWidget::selectNumberOfSlices(bool new_number_of_slices){
     number_of_slices = new_number_of_slices;
 }
+
+void MyGLWidget::setSelectedPointSize(int new_selected_point_size){
+    selected_point_size = new_selected_point_size;
+}
+

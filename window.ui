@@ -134,7 +134,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <property name="iconSize">
       <size>
@@ -787,6 +787,25 @@
         <string>Clear selected points</string>
        </property>
       </widget>
+      <widget class="QSlider" name="horizontalSlider">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>420</y>
+         <width>41</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>10</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="streamlines">
       <attribute name="title">
@@ -965,6 +984,7 @@
     <slot>setDrawSlices(bool)</slot>
     <slot>setLineThickness(int)</slot>
     <slot>setDrawDefaultStreamline(bool)</slot>
+    <slot>setSelectedPointSize(int)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -1671,6 +1691,22 @@
     <hint type="destinationlabel">
      <x>253</x>
      <y>140</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setSelectedPointSize(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>185</x>
+     <y>458</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>292</x>
+     <y>440</y>
     </hint>
    </hints>
   </connection>
