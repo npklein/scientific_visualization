@@ -147,7 +147,7 @@ void Simulation::solve(int n, fftw_real* vx, fftw_real* vy, fftw_real* vx0, fftw
 // velocity diffusion step in the function above. The input matter densities are in rho0 and the result is written into rho.
 void Simulation::diffuse_matter(int n, fftw_real *vx, fftw_real *vy, fftw_real *rho, fftw_real *rho0, fftw_real dt)
 {
-    rho_min = 1;
+    rho_min = 10;
     rho_max = 0;
     fftw_real x, y, x0, y0, s, t;
     int i, j, i0, j0, i1, j1;
@@ -167,7 +167,7 @@ void Simulation::diffuse_matter(int n, fftw_real *vx, fftw_real *vy, fftw_real *
         j1 = (j0+1)%n;
         float rho_value = (1-s)*((1-t)*rho0[i0+n*j0]+t*rho0[i0+n*j1])+s*((1-t)*rho0[i1+n*j0]+t*rho0[i1+n*j1]);
         rho[i+n*j] = rho_value;
-        if ( rho_min< rho_value) rho_min = rho_value;
+        if ( rho_value< rho_min ) rho_min = rho_value;
         else if (rho_value > rho_max) rho_max = rho_value;
 
     }

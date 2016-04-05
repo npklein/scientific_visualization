@@ -122,6 +122,8 @@ private slots:
 
     void selectNumberOfSlices(bool new_number_of_slices);
 
+    void setSelectedPointSize(int new_selected_point_size);
+
 protected:
     void initializeGL();
     void paintGL();
@@ -141,6 +143,7 @@ private:
     bool   draw_smoke;           //draw the smoke or not
     bool   draw_vecs;            //draw the vector field or not
     int   scalar_col;           //method for scalar coloring
+    int selected_point_size;
     int DIM;
     int number_of_slices;
     int number_of_glyphs;
