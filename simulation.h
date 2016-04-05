@@ -25,16 +25,12 @@ class Simulation {
         fftw_real* get_vy() const;
         fftw_real* get_vx0() const;
         fftw_real* get_vy0() const;
-        fftw_real get_vy_max() const;
-        fftw_real get_vx_max() const;
-        fftw_real get_vy_min() const;
-        fftw_real get_vx_min() const;
         fftw_real get_rho_min() const;
         fftw_real get_rho_max() const;
-        fftw_real get_fx_min() const;
-        fftw_real get_fx_max() const;
-        fftw_real get_fy_min() const;
-        fftw_real get_fy_max() const;
+        float get_v_magnitude_min() const;
+        float get_v_magnitude_max() const;
+        float get_f_magnitude_min() const;
+        float get_f_magnitude_max() const;
         //Mutator functions
         void set_frozen(bool);
         void set_visc(float);
@@ -81,6 +77,10 @@ class Simulation {
         fftw_real rho_min, rho_max;
         rfftwnd_plan plan_rc, plan_cr;  //simulation domain discretization
         int frozen;               //toggles on/off the animation
+        float v_magnitude_min;
+        float f_magnitude_min;
+        float v_magnitude_max;
+        float f_magnitude_max;
 
         //FFT: Execute the Fast Fourier Transform on the dataset 'vx'.
         //     'dirfection' indicates if we do the direct (1) or inverse (-1) Fourier Transform

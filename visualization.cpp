@@ -11,11 +11,7 @@ const int COLOR_ZEBRAFISH=3;
 float max(float x, float y)
 { return x > y ? x : y; }
 
-Rgb TransformHS(
-        const Rgb &in,  // color to transform
-        float H,        // hue shift (in degrees)
-        float S          // hue shift (in degrees)
-    )
+Rgb TransformHS(const Rgb &in, float H, float S)
 {
     if(H==0)H=1;
     float SU = S*cos(H*M_PI/180);
@@ -72,7 +68,7 @@ float scale(float valueIn, float baseMin, float baseMax,  float limitMin, float 
 
 //set_colormap: Sets three different types of colormaps
 void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_clamp_max,
-                  int color_bands, int hue_degree, float saturation, bool scale_colors, int vy_min, int vy_max)
+                  int color_bands, int hue_degree, float saturation, bool scale_colors, float vy_min, float vy_max, float alpha)
 {
    float R,G,B;
    R = G = B = 0;
@@ -109,7 +105,7 @@ void set_colormap(float vy, int scalar_col, float color_clamp_min, float color_c
    Rgb color = {R,G,B};
    Rgb new_color = TransformHS(color,hue_degree,saturation);
 
-   glColor3f(new_color.r,new_color.g,new_color.b);
+   glColor4f(new_color.r,new_color.g,new_color.b, alpha);
 }
 
 
@@ -123,7 +119,7 @@ void direction_to_color(float x, float y, int method, int color_bands, int color
     {
 	  f = atan2(y,x) / 3.1415927 + 1;
       // mehtod acts same way as scalar_col in density
-      set_colormap(f, method, color_clamp_min, color_clamp_max, color_bands, hue_degree, saturation, false, 0, 1);
+      set_colormap(f, method, color_clamp_min, color_clamp_max, color_bands, hue_degree, saturation, false, 0, 1, 1);
 	}
 	else
 	{ r = g = b = 1; }

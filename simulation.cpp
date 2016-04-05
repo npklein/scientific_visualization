@@ -1,5 +1,6 @@
 #include "simulation.h"
 #include <cmath>
+#include "vector.h"
 //Default Constructor
 Simulation::Simulation() {
     // default values member variables
@@ -21,18 +22,15 @@ fftw_real* Simulation::get_rho() const{return rho;}
 fftw_real* Simulation::get_rho0() const {return rho0;}
 fftw_real* Simulation::get_vx() const {return vx;}
 fftw_real* Simulation::get_vy() const {return vy;}
-fftw_real Simulation::get_vy_max() const {return vy_max;}
-fftw_real Simulation::get_vx_max() const {return vx_max;}
-fftw_real Simulation::get_vy_min() const {return vy_min;}
-fftw_real Simulation::get_vx_min() const {return vx_min;}
 fftw_real Simulation::get_rho_min() const{return rho_min;}
 fftw_real Simulation::get_rho_max() const{return rho_max;}
-fftw_real Simulation::get_fx_min() const{return fx_min;}
-fftw_real Simulation::get_fx_max() const{return fx_max;}
-fftw_real Simulation::get_fy_min() const{return fy_min;}
-fftw_real Simulation::get_fy_max() const{return fy_max;}
+float Simulation::get_f_magnitude_min() const{return f_magnitude_min*100;}
+float Simulation::get_v_magnitude_min() const {return v_magnitude_min*100;}
+float Simulation::get_f_magnitude_max() const{return f_magnitude_max*100;}
+float Simulation::get_v_magnitude_max() const {return v_magnitude_max*100;}
 fftw_real* Simulation::get_vx0() const {return vx0;}
 fftw_real* Simulation::get_vy0() const {return vy0;}
+
 //Mutator functions
 void Simulation::set_frozen(bool new_frozen){frozen = new_frozen;}
 void Simulation::set_dt(double new_dt){dt = new_dt;}
@@ -75,8 +73,6 @@ int Simulation::clamp(float x)
 //solve: Solve (compute) one step of the fluid flow simulation
 void Simulation::solve(int n, fftw_real* vx, fftw_real* vy, fftw_real* vx0, fftw_real* vy0, fftw_real visc, fftw_real dt)
 {
-    vx_min = fx_min = vy_min = fy_min;
-    vy_max = vx_max = fx_max = fy_max;
     fftw_real x, y, x0, y0, f, r, U[2], V[2], s, t;
     int i, j, i0, j0, i1, j1;
 
@@ -100,7 +96,8 @@ void Simulation::solve(int n, fftw_real* vx, fftw_real* vy, fftw_real* vx0, fftw
 
     for(i=0; i<n; i++)
     for(j=0; j<n; j++)
-    {  vx0[i+(n+2)*j] = vx[i+n*j]; vy0[i+(n+2)*j] = vy[i+n*j]; }
+    {  vx0[i+(n+2)*j] = vx[i+n*j];
+        vy0[i+(n+2)*j] = vy[i+n*j]; }
 
     FFT(1,vx0);
     FFT(1,vy0);
@@ -128,11 +125,21 @@ void Simulation::solve(int n, fftw_real* vx, fftw_real* vy, fftw_real* vx0, fftw
     FFT(-1,vy0);
 
     f = 1.0/(n*n);
+    v_magnitude_max = 0;
+    v_magnitude_min = 1;
     for (i=0;i<n;i++)
        for (j=0;j<n;j++)
-       { vx[i+n*j] = f*vx0[i+(n+2)*j]; vy[i+n*j] = f*vy0[i+(n+2)*j]; }
-        if(vx[i+n*j] < vx_min) vx_min = vx[i+n*j];
-        else if(vx[i+n*j] > vx_min) vx_max = vx[i+n*j];
+       {
+           vx[i+n*j] = f*vx0[i+(n+2)*j];
+           vy[i+n*j] = f*vy0[i+(n+2)*j];
+            float v_magnitude = Vector(vx[i+n*j], vy[i+n*j]).length();
+            if (v_magnitude > v_magnitude_max){
+                v_magnitude_max = v_magnitude;
+            }
+            if (v_magnitude < v_magnitude_min){
+                v_magnitude_min = v_magnitude;
+            }
+       }
 }
 
 
@@ -160,7 +167,7 @@ void Simulation::diffuse_matter(int n, fftw_real *vx, fftw_real *vy, fftw_real *
         j1 = (j0+1)%n;
         float rho_value = (1-s)*((1-t)*rho0[i0+n*j0]+t*rho0[i0+n*j1])+s*((1-t)*rho0[i1+n*j0]+t*rho0[i1+n*j1]);
         rho[i+n*j] = rho_value;
-        if (rho_value < rho_min) rho_min = rho_value;
+        if ( rho_min< rho_value) rho_min = rho_value;
         else if (rho_value > rho_max) rho_max = rho_value;
 
     }
@@ -171,15 +178,22 @@ void Simulation::diffuse_matter(int n, fftw_real *vx, fftw_real *vy, fftw_real *
 void Simulation::set_forces(int DIM)
 {
     int i;
+    f_magnitude_max = 1;
+    f_magnitude_min = 0;
     for (i = 0; i < DIM * DIM; i++)
     {
         rho0[i]  = 0.995 * rho[i];
         fx[i] *= 0.85;
         fy[i] *= 0.85;
-        if (fx[i] < fx_min) fx_min = fx[i];
-        else if (fx[i] > fx_max) fx_max = fx[i];
         vx0[i]    = fx[i];
         vy0[i]    = fy[i];
+        float f_magnitude = Vector(fx[i], fy[i]).length();
+        if (f_magnitude > f_magnitude_max){
+            f_magnitude_max = f_magnitude;
+        }
+        if (f_magnitude < f_magnitude_min){
+            f_magnitude_min = f_magnitude;
+        }
     }
 }
 

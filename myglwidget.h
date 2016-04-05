@@ -64,7 +64,7 @@ private slots:
 
     void drawCone(Vector vector, int i, int j, float vy, int scaling_factor, float vy_min, float vy_max);
 
-    void drawStreamline();
+    void drawStreamline(float z, float alpha);
 
     void setDrawStreamline(bool new_streamline);
 
@@ -112,6 +112,8 @@ private slots:
 
     void selectPointsStreamline(bool new_select_points);
 
+    void selectNumberOfSlices(bool new_number_of_slices);
+
 protected:
     void initializeGL();
     void paintGL();
@@ -132,6 +134,7 @@ private:
     bool   draw_vecs;            //draw the vector field or not
     int   scalar_col;           //method for scalar coloring
     int DIM;
+    int number_of_slices;
     int number_of_glyphs;
     int grid_scale;
     int color_bands;
