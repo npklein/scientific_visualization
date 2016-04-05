@@ -25,15 +25,11 @@ void Window::keyPressEvent(QKeyEvent *e)
         QWidget::keyPressEvent(e);
 }
 
-
 void Window::on_selectPoints_clicked(bool select_points)
 {
     ui->drawingMatterCheckbox->setChecked(!select_points);
     ui->drawingHedgehogsCheckbox->setChecked(!select_points);
 }
-
-
-
 
 void Window::on_drawingHedgehogsCheckbox_clicked(bool select_drawing_hedgehogs)
 {
@@ -49,13 +45,16 @@ void Window::on_drawingMatterCheckbox_clicked(bool select_drawing_matter)
     }
 }
 
-void Window::on_drawStreamLineCheckbox_clicked(bool drawStreamline){
-    ui->drawingMatterCheckbox->setChecked(!drawStreamline);
-    ui->drawingHedgehogsCheckbox->setChecked(!drawStreamline);
+void Window::on_drawStreamLineCheckbox_clicked(bool draw_streamline){
+    if(draw_streamline){
+        ui->drawingMatterCheckbox->setChecked(false);
+        ui->drawingHedgehogsCheckbox->setChecked(false);
+    }
+    ui->slicesCheckBox->setChecked(!draw_streamline);
 }
 
-void Window::on_selectPointsCheckbox_clicked(bool selectPoints){
-    if(selectPoints){
+void Window::on_selectPointsCheckbox_clicked(bool select_points){
+    if(select_points){
         ui->showPointsCheckbox->setChecked(true);
     }
 }
@@ -68,4 +67,9 @@ void Window::on_selectPointsCheckbox2_clicked(bool selectPoints){
         ui->drawStreamLineCheckbox->setChecked(true);
     }
 }
+
+void Window::on_slicesCheckBox_clicked(bool set_slices){
+    ui->drawStreamLineCheckbox->setChecked(!set_slices);
+}
+
 

@@ -48,7 +48,7 @@ float Vector::direction2angle()			//Converts a 2D vector into an orientation (an
 
 }
 
-Vector interpolate_vector(float point_x, float point_y, float cell_width, float cell_height, int DIM, Simulation simulation){
+Vector interpolateVector(float point_x, float point_y, float cell_width, float cell_height, int DIM, Simulation simulation){
     int i = floor(point_x);
     int j = floor(point_y);
     int idx_1 = (j * DIM) + i;

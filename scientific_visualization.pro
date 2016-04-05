@@ -12,7 +12,8 @@ SOURCES += \
     window.cpp \
     myglwidget.cpp \
     vector.cpp \
-    grid.cpp
+    grid.cpp \
+    scalar.cpp
 
 HEADERS += \
     window.h \
@@ -20,7 +21,8 @@ HEADERS += \
     simulation.h \
     vector.h \
     grid.h \
-    visualization.h
+    visualization.h \
+    scalar.h
 
 INCLUDEPATH += fftw-2.1.5/include /usr/local/include include
 LIBS += -L"$$_PRO_FILE_PWD_/fftw-2.1.5/lib" -lrfftw -lfftw -framework OpenGL -framework GLUT -stdlib=libc++
