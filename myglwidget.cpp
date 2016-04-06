@@ -131,8 +131,8 @@ void MyGLWidget::mousePressEvent(QMouseEvent *event)
 {
     lastPos = event->pos();
     if(select_points){
-        mouse_x.insert(mouse_x.end(), lastPos.x()*2);
-        mouse_y.insert(mouse_y.end(), windowHeight - lastPos.y()*2);
+        mouse_x.insert(mouse_x.end(), lastPos.x()); //*2
+        mouse_y.insert(mouse_y.end(), windowHeight - lastPos.y());//*2
     }
 }
 
@@ -467,7 +467,7 @@ void MyGLWidget::drawDefaultPointsStreamline(){
 
 void MyGLWidget::drawStreamline(float z, float alpha)
 {
-    float dt = cell_width/10.0;
+    float dt = cell_width/3;
     float max_size = cell_width*10.0;
     float max_time = 100;
 
