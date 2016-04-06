@@ -46,11 +46,11 @@ private slots:
 
     void drawBar();
 
-    void drawVelocity(fftw_real *vx, fftw_real *vy);
+    void drawVelocity(fftw_real *vx, fftw_real *vy, float z, float alpha);
 
     void drawForcefield(fftw_real *fx, fftw_real *fy);
 
-    void drawSmoke();
+    void drawSmoke(float z, float alpha);
 
     void setFluidDensity();
 
@@ -124,6 +124,7 @@ private slots:
 
     void setSelectedPointSize(int new_selected_point_size);
 
+    void setAlpha(int new_alpha);
 protected:
     void initializeGL();
     void paintGL();
@@ -172,6 +173,8 @@ private:
     bool draw_default_points;
     bool draw_default_points_streamline;
     bool draw_selected_points;
+    int alpha_scale;
+
     Simulation simulation;
     fftw_real  cell_width;
     fftw_real  cell_height;
