@@ -27,6 +27,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     scale_color = false;    // if true, the lowest current value in the screen is the lowest in the color map, same for highest
     DIM = 50;
     selected_point_size = 1;
+    alpha_scale = 5;
     // should change to have a color map class that has color clamp values
     color_clamp_min_matter = 0.0;        // The lower bound value to clamp color map at
     color_clamp_max_matter = 1.0;        // The higher bound value to clamp color map at
@@ -65,23 +66,6 @@ void MyGLWidget::initializeGL()
     qglClearColor(Qt::black);
 }
 
-void MyGLWidget::defaultPoints(std::vector<int> &points_x, std::vector<int> &points_y){
-    for (int i = 0; i < DIM; i++){
-        for (int j = 0; j < DIM; j++){
-            points_x.insert(points_x.end(), i);
-            points_y.insert(points_y.end(), j);
-        }
-    }
-}
-
-void MyGLWidget::selectedPoints(std::vector<int> &points_x, std::vector<int> &points_y){
-    for (unsigned i = 0; i < mouse_x.size(); i++){
-        points_x.insert(points_x.end(), mouse_x[i]);
-    }
-    for (unsigned i = 0; i < mouse_y.size(); i++){
-        points_y.insert(points_y.end(),mouse_y[i] );
-    }
-}
 
 void MyGLWidget::paintGL() //glutDisplayFunc(display);
 {
@@ -104,13 +88,13 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     if(draw_slices){
         drawSlices(number_of_slices);
     }
-    if (draw_streamline || draw_default_points_streamline){
+    if (draw_streamline || (draw_default_points_streamline && draw_streamline)){
         drawStreamline(0, 1);
     }
-    if (draw_vecs)
+    if (draw_vecs && !draw_slices)
     {
         if(draw_v){
-            drawVelocity(simulation.get_vx(), simulation.get_vy());
+            drawVelocity(simulation.get_vx(), simulation.get_vy(), 0, 1);
         }
         else if (draw_f){
             drawForcefield(simulation.get_fx(), simulation.get_fy());
@@ -122,9 +106,9 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     if (show_points && ( select_points || draw_selected_points || draw_streamline )){
         drawSelectedPoints();
     }
-    if (draw_smoke)
+    if (draw_smoke && !draw_slices)
     {
-        drawSmoke();
+        drawSmoke(0,1);
     }
 
     //OGL_Draw_Text();
@@ -141,29 +125,7 @@ void MyGLWidget::resizeGL(int width, int height)
     windowWidth = width; windowHeight = height;
 }
 
-void MyGLWidget::drawSelectedPoints(){
-    float x2,y2;
-    float radius  = 2*selected_point_size;
-    float angle   = 1.0;
 
-    for (unsigned i = 0; i < mouse_x.size(); i++){
-        glColor3f(255,0,0);
-        glBegin(GL_TRIANGLE_FAN);
-
-        int x = mouse_x[i];
-        int y = mouse_y[i];
-
-
-        for (angle=1.0f;angle<361.0f;angle+=0.2)
-        {
-            x2 = x+sin(angle)*radius;
-            y2 = y+cos(angle)*radius;
-            glVertex2f(x2,y2);
-        }
-        glEnd();
-    }
-
-}
 
 void MyGLWidget::mousePressEvent(QMouseEvent *event)
 {
@@ -200,7 +162,7 @@ void MyGLWidget::drawGradient()
         }
 }
 
-void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
+void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy, float z, float alpha)
 {
     std::vector<int> points_x;
     std::vector<int> points_y;
@@ -243,12 +205,12 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy)
             y_coord = (fftw_real)j * cell_height;
         }
         if (glyphs == "hedgehogs"){
-            set_colormap(v_magnitude*100, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph, scale_color, simulation.get_v_magnitude_min(),simulation.get_v_magnitude_max(), 1);
+            set_colormap(v_magnitude*100, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph, scale_color, simulation.get_v_magnitude_min(),simulation.get_v_magnitude_max(), alpha);
 
             if (y % (100/number_of_glyphs)  == 0|| y ==0){
                 glBegin(GL_LINES);				//draw velocities
-                glVertex2f(x_coord, y_coord);
-                glVertex2f(x_coord + hedgehog_scale * vx_draw, y_coord + hedgehog_scale * vy_draw);
+                glVertex3f(x_coord, y_coord, z);
+                glVertex3f(x_coord + hedgehog_scale * vx_draw, y_coord + hedgehog_scale * vy_draw, z);
                 glEnd();
             }
         }
@@ -391,7 +353,19 @@ void MyGLWidget::drawCone(Vector vector, int i, int j, float vy, int scaling_fac
 }
 
 void MyGLWidget::drawSlices(int n){
-   float alpha = 2.0/n;
+   float alpha = alpha_scale/n;
+  /* glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glLoadIdentity();
+   // move camera a distance r away from the center
+   glTranslatef(0, 0, -1);
+
+   // rotate
+   glRotatef(45, 0, 1, 0);
+   glRotatef(0, 1, 0, 0);
+
+   // move to center of circle
+   glTranslatef(-windowWidth/2, -windowHeight/2, -2);
+*/
    for(int y = 0; y < n; y++){
         do_one_simulation_step(false);
         //while(simulation_vector.size() > n){
@@ -399,8 +373,9 @@ void MyGLWidget::drawSlices(int n){
         //}
         //simulation_vector.insert(simulation_vector.begin(), simulation);
 
-        drawStreamline(0, alpha);
+        drawStreamline(n-y, alpha);
     }
+//glLoadIdentity();
 
     //simulation = simulation_vector[0];
     //simulation = simulation_vector[1];
@@ -412,9 +387,52 @@ void MyGLWidget::drawSlices(int n){
 void MyGLWidget::defaultPointsStreamline(std::vector<int> &points_x, std::vector<int> &points_y){
     for (int i = 0; i < DIM; i+=10){
         for (int j = 0; j < DIM;j+=10){
-            points_x.insert(points_x.end(), i*cell_width);
-            points_y.insert(points_y.end(), j*cell_height);
+            points_x.insert(points_x.end(), i);
+            points_y.insert(points_y.end(), j);
         }
+    }
+}
+
+void MyGLWidget::drawSelectedPoints(){
+    float x2,y2;
+    float radius  = 2*selected_point_size;
+    float angle   = 1.0;
+
+    for (unsigned i = 0; i < mouse_x.size(); i++){
+        glColor3f(255,0,0);
+        glBegin(GL_TRIANGLE_FAN);
+
+        int x = mouse_x[i];
+        int y = mouse_y[i];
+
+
+        for (angle=1.0f;angle<361.0f;angle+=0.2)
+        {
+            x2 = x+sin(angle)*radius;
+            y2 = y+cos(angle)*radius;
+            glVertex2f(x2,y2);
+        }
+        glEnd();
+    }
+
+}
+
+
+void MyGLWidget::defaultPoints(std::vector<int> &points_x, std::vector<int> &points_y){
+    for (int i = 0; i < DIM; i++){
+        for (int j = 0; j < DIM; j++){
+            points_x.insert(points_x.end(), i);
+            points_y.insert(points_y.end(), j);
+        }
+    }
+}
+
+void MyGLWidget::selectedPoints(std::vector<int> &points_x, std::vector<int> &points_y){
+    for (unsigned i = 0; i < mouse_x.size(); i++){
+        points_x.insert(points_x.end(), mouse_x[i]);
+    }
+    for (unsigned i = 0; i < mouse_y.size(); i++){
+        points_y.insert(points_y.end(),mouse_y[i] );
     }
 }
 
@@ -433,8 +451,8 @@ void MyGLWidget::drawDefaultPointsStreamline(){
         glColor3f(255,0,0);
         glBegin(GL_TRIANGLE_FAN);
 
-        int x = points_x[t];
-        int y = points_y[t];
+        int x = points_x[t]*cell_width;
+        int y = points_y[t]*cell_height;
 
 
         for (angle=1.0f;angle<361.0f;angle+=0.2)
@@ -449,11 +467,9 @@ void MyGLWidget::drawDefaultPointsStreamline(){
 
 void MyGLWidget::drawStreamline(float z, float alpha)
 {
-    float dt = cell_width/10;
-    float max_size = cell_width*10;
+    float dt = cell_width/10.0;
+    float max_size = cell_width*10.0;
     float max_time = 100;
-    //drawStreamline(25,25);
-//    selectedPoints(points_x, points_y);
 
     if(draw_selected_points){
         selectedPoints(points_x, points_y);
@@ -506,7 +522,7 @@ void MyGLWidget::drawStreamline(float z, float alpha)
 
 }
 
-void MyGLWidget::drawSmoke(){
+void MyGLWidget::drawSmoke(float z, float alpha){
     int  i, j, idx0, idx1, idx2, idx3; double px0,py0,px1,py1,px2,py2,px3,py3;
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glBegin(GL_TRIANGLES);
@@ -530,24 +546,24 @@ void MyGLWidget::drawSmoke(){
             py3  = floor((fftw_real)j * cell_height);
             idx3 = (j * DIM) + (i + 1);
             set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
-                         saturation_matter, scale_color, 0, 1, 1);
-            glVertex2f(px0, py0);
+                         saturation_matter, scale_color, 0, 1, alpha);
+            glVertex3f(px0, py0, z);
             set_colormap(simulation.get_rho()[idx1], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
-                         saturation_matter, scale_color, 0, 1, 1);
-            glVertex2f(px1, py1);
+                         saturation_matter, scale_color, 0, 1, alpha);
+            glVertex3f(px1, py1,z);
             set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
-                         saturation_matter, scale_color, 0, 1, 1);
-            glVertex2f(px2, py2);
+                         saturation_matter, scale_color, 0, 1, alpha);
+            glVertex3f(px2, py2,z);
 
             set_colormap(simulation.get_rho()[idx0], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
-                         saturation_matter, scale_color, 0, 1, 1);
-            glVertex2f(px0, py0);
+                         saturation_matter, scale_color, 0, 1, alpha);
+            glVertex3f(px0, py0,z);
             set_colormap(simulation.get_rho()[idx2], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
-                         saturation_matter, scale_color,0, 1, 1);
-            glVertex2f(px2, py2);
+                         saturation_matter, scale_color,0, 1, alpha);
+            glVertex3f(px2, py2,z);
             set_colormap(simulation.get_rho()[idx3], scalar_col, color_clamp_min_matter, color_clamp_max_matter, color_bands, hue_matter,
-                         saturation_matter, scale_color, 0, 1, 1);
-            glVertex2f(px3, py3);
+                         saturation_matter, scale_color, 0, 1, alpha);
+            glVertex3f(px3, py3,z);
         }
     }
     glEnd();
@@ -889,19 +905,17 @@ void MyGLWidget::setDrawGradient(bool new_gradient){
 
 void MyGLWidget::setDrawStreamline(bool new_streamline){
     draw_streamline = new_streamline;
-    draw_slices = !new_streamline;
     if (draw_streamline) {
         draw_vecs = false;
         draw_smoke = false;
+        draw_slices = false;
     }
 }
 
 void MyGLWidget::setDrawSlices(bool new_slices){
     draw_slices = new_slices;
-    draw_streamline = !new_slices;
     if (draw_slices) {
-        draw_vecs = false;
-        draw_smoke = false;
+        draw_streamline = false;
     }
 }
 
@@ -948,3 +962,6 @@ void MyGLWidget::setSelectedPointSize(int new_selected_point_size){
     selected_point_size = new_selected_point_size;
 }
 
+void MyGLWidget::setAlpha(int new_alpha){
+    alpha_scale = new_alpha;
+}
