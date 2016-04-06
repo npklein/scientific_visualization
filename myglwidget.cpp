@@ -132,8 +132,8 @@ void MyGLWidget::mousePressEvent(QMouseEvent *event)
 {
     lastPos = event->pos();
     if(select_points){
-        mouse_x.insert(mouse_x.end(), lastPos.x()*2);
-        mouse_y.insert(mouse_y.end(), windowHeight - lastPos.y()*2);
+        mouse_x.insert(mouse_x.end(), lastPos.x()); //*2
+        mouse_y.insert(mouse_y.end(), windowHeight - lastPos.y());//*2
     }
 }
 
@@ -141,8 +141,8 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     int mx = event->x();// - lastposition gets calculated in drag(), could save a step by using lastPos.x/y but leaving it like this is safer
     int my = event->y();
-    //simulation.drag(mx,my, DIM, windowWidth, windowHeight);  // Works for Freerk when using external display
-    simulation.drag(mx,my, DIM, windowWidth/2, windowHeight/2); // Works for Niek
+    simulation.drag(mx,my, DIM, windowWidth, windowHeight);  // Works for Freerk when using external display
+    //simulation.drag(mx,my, DIM, windowWidth/2, windowHeight/2); // Works for Niek
 }
 
 void MyGLWidget::drawGradient()
@@ -482,7 +482,7 @@ void MyGLWidget::drawDefaultPointsStreamline(){
 
 void MyGLWidget::drawStreamline(float z, float alpha)
 {
-    float dt = cell_width/10.0;
+    float dt = cell_width/10;
     float max_size = cell_width*10.0;
     float max_time = 50;
 
@@ -493,7 +493,6 @@ void MyGLWidget::drawStreamline(float z, float alpha)
         defaultPointsStreamline(points_x, points_y);
         //drawDefaultPointsStreamline();
     }
-
 
     for (unsigned s = 0; s < points_x.size(); s++)
     {
@@ -516,7 +515,7 @@ void MyGLWidget::drawStreamline(float z, float alpha)
             total_length += length;
 
             if(length>0){
-                float vy = interpolated_vector.length()*300;
+                float vy = interpolated_vector.length()*150;
                 interpolated_vector.X = interpolated_vector.X * 400;
                 interpolated_vector.Y = interpolated_vector.Y * 400;
                 interpolated_vector.X += interpolated_vector.X * dt;
