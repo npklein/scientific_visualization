@@ -25,8 +25,6 @@ private slots:
 
 
     void on_selectPoints_clicked(bool select_points);
-    void on_drawingHedgehogsCheckbox_clicked(bool select_drawing_hedgehogs);
-    void on_drawingMatterCheckbox_clicked(bool select_drawing_matter);
     void on_drawStreamLineCheckbox_clicked(bool drawStreamline);
     void on_selectPointsCheckbox_clicked(bool selectPoints);
     void on_selectPointsCheckbox2_clicked(bool selectPoints);

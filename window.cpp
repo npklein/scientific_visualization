@@ -31,26 +31,14 @@ void Window::on_selectPoints_clicked(bool select_points)
     ui->drawingHedgehogsCheckbox->setChecked(!select_points);
 }
 
-void Window::on_drawingHedgehogsCheckbox_clicked(bool select_drawing_hedgehogs)
-{
-    if(!select_drawing_hedgehogs){
-        ui->drawingMatterCheckbox->setChecked(!select_drawing_hedgehogs);
-    }
-}
-
-void Window::on_drawingMatterCheckbox_clicked(bool select_drawing_matter)
-{
-    if(!select_drawing_matter){
-        ui->drawingHedgehogsCheckbox->setChecked(!select_drawing_matter);
-    }
-}
 
 void Window::on_drawStreamLineCheckbox_clicked(bool draw_streamline){
     if(draw_streamline){
         ui->drawingMatterCheckbox->setChecked(false);
         ui->drawingHedgehogsCheckbox->setChecked(false);
+        ui->slicesCheckBox->setChecked(false);
     }
-    ui->slicesCheckBox->setChecked(!draw_streamline);
+
 }
 
 void Window::on_selectPointsCheckbox_clicked(bool select_points){
@@ -69,7 +57,9 @@ void Window::on_selectPointsCheckbox2_clicked(bool selectPoints){
 }
 
 void Window::on_slicesCheckBox_clicked(bool set_slices){
-    ui->drawStreamLineCheckbox->setChecked(!set_slices);
+    if(set_slices){
+     ui->drawStreamLineCheckbox->setChecked(false);
+    }
 }
 
 

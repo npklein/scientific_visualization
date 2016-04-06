@@ -60,7 +60,7 @@ private slots:
 
     void setColorBands(int colorBands);
 
-    void drawArrow(Vector vector, int x_coord, int y_coord, float vy, int scaling_factor, float vy_min, float vy_max);
+    void drawArrow(Vector vector, int x_coord, int y_coord, float vy, int scaling_factor, float vy_min, float vy_max, int colormap);
 
     void drawCone(Vector vector, int i, int j, float vy, int scaling_factor, float vy_min, float vy_max);
 
@@ -84,7 +84,9 @@ private slots:
 
     void drawGradient();
 
-    void setDrawGradient(bool new_gradient);
+    void setDrawGradientSmoke(bool new_gradient);
+
+    void setDrawGradientVelocity(bool new_gradient);
 
     void drawSlices(int n);
 
@@ -127,7 +129,8 @@ private slots:
 
     void setAlpha(int new_alpha);
 
-    void setGradientSize(int new_size);
+    void setGradientSizeSmoke(int new_size);
+    void setGradientSizeVelocity(int new_size);
 protected:
     void initializeGL();
     void paintGL();
@@ -162,8 +165,10 @@ private:
     float color_clamp_max_glyph;
     float arrow_scale;
     float cone_scale;
-    int gradient_size;
-    bool gradient;
+    int gradient_size_smoke;
+    int gradient_size_velocity;
+    bool gradient_smoke;
+    bool gradient_velocity;
     bool draw_streamline;
     bool draw_slices;
     int hue_glyph;
