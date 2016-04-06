@@ -28,6 +28,7 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     DIM = 50;
     selected_point_size = 1;
     alpha_scale = 5;
+    gradient_size = 5;
     // should change to have a color map class that has color clamp values
     color_clamp_min_matter = 0.0;        // The lower bound value to clamp color map at
     color_clamp_max_matter = 1.0;        // The higher bound value to clamp color map at
@@ -149,17 +150,35 @@ void MyGLWidget::drawGradient()
     for (int i = 0; i < DIM; i++)
         for (int j = 0; j < DIM; j++)
         {
+            if (draw_smoke){
             float left_rho =  simulation.get_rho()[((j-1) * DIM) + i];
             float up_rho =  simulation.get_rho()[(j * DIM) + (i-1)];
             float below_rho =  simulation.get_rho()[(j * DIM) + (i+1)];
             float right_rho =  simulation.get_rho()[((j+1) * DIM) + (i)];
             float x = left_rho - right_rho;
             float y = up_rho - below_rho;
-            Vector v = Vector(y, x);
+            Vector v = Vector(y*gradient_size, x*gradient_size);
             if (v.length() > 0){
                 drawArrow(v, i*cell_width, j*cell_height, v.length(), 2, 0, 1);
             }
+            }
+            if (draw_vecs){
+                float left_vm =  simulation.get_vm()[((j-1) * DIM) + i];
+                float up_vm =  simulation.get_vm()[(j * DIM) + (i-1)];
+                float below_vm =  simulation.get_vm()[(j * DIM) + (i+1)];
+                float right_vm =  simulation.get_vm()[((j+1) * DIM) + (i)];
+                float x = left_vm - right_vm;
+                float y = up_vm - below_vm;
+                Vector v = Vector(y*gradient_size*10, x*10*gradient_size);
+                if (v.length() > 0){
+                    drawArrow(v, i*cell_width, j*cell_height, v.length(), 2, 0, 1);
+                }
+            }
         }
+}
+
+void MyGLWidget::setGradientSize(int new_size){
+    gradient_size = new_size;
 }
 
 void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy, float z, float alpha)

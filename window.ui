@@ -28,6 +28,26 @@
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="1">
     <layout class="QGridLayout" name="gridLayout_2">
+     <item row="1" column="1">
+      <widget class="QRadioButton" name="fluidDensityRadioButton">
+       <property name="text">
+        <string>fluid density</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QRadioButton" name="fluidVelocityRadioButton">
+       <property name="text">
+        <string>|fluid velocity|</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="0">
       <widget class="QCheckBox" name="animationCheckbox">
        <property name="text">
@@ -45,50 +65,6 @@
        </property>
        <property name="checked">
         <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QRadioButton" name="fluidVelocityRadioButton">
-       <property name="text">
-        <string>|fluid velocity|</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QRadioButton" name="forceFieldRadioButton">
-       <property name="text">
-        <string>|force field|</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QCheckBox" name="drawingHedgehogsCheckbox">
-       <property name="text">
-        <string>Draw glyphs</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QRadioButton" name="fluidDensityRadioButton">
-       <property name="text">
-        <string>fluid density</string>
-       </property>
-       <property name="checked">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QCheckBox" name="showPointsCheckbox">
-       <property name="text">
-        <string>Show points</string>
        </property>
       </widget>
      </item>
@@ -111,6 +87,30 @@
        </property>
        <zorder>tabWidget</zorder>
        <zorder>tabWidget</zorder>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QCheckBox" name="showPointsCheckbox">
+       <property name="text">
+        <string>Show points</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QCheckBox" name="drawingHedgehogsCheckbox">
+       <property name="text">
+        <string>Draw glyphs</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QRadioButton" name="forceFieldRadioButton">
+       <property name="text">
+        <string>|force field|</string>
+       </property>
       </widget>
      </item>
     </layout>
@@ -136,7 +136,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <property name="iconSize">
       <size>
@@ -754,7 +754,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>550</y>
+         <y>530</y>
          <width>110</width>
          <height>20</height>
         </rect>
@@ -803,6 +803,34 @@
        </property>
        <property name="maximum">
         <number>10</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QSlider" name="numberOfGlyphsSlider_2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>550</y>
+         <width>121</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>10</number>
+       </property>
+       <property name="pageStep">
+        <number>10</number>
+       </property>
+       <property name="value">
+        <number>5</number>
+       </property>
+       <property name="sliderPosition">
+        <number>5</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -1047,6 +1075,7 @@
     <slot>setSelectedPointSize(int)</slot>
     <slot>setAlpha(int)</slot>
     <slot>selectNumberOfSlices(int)</slot>
+    <slot>setGradientSize(int)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -1059,7 +1088,7 @@
    <slot>showAnimation(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>342</x>
+     <x>340</x>
      <y>591</y>
     </hint>
     <hint type="destinationlabel">
@@ -1107,7 +1136,7 @@
    <slot>setFluidDensity()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>450</x>
+     <x>349</x>
      <y>592</y>
     </hint>
     <hint type="destinationlabel">
@@ -1127,7 +1156,7 @@
      <y>592</y>
     </hint>
     <hint type="destinationlabel">
-     <x>513</x>
+     <x>297</x>
      <y>429</y>
     </hint>
    </hints>
@@ -1139,11 +1168,11 @@
    <slot>setForceField()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>687</x>
+     <x>685</x>
      <y>592</y>
     </hint>
     <hint type="destinationlabel">
-     <x>594</x>
+     <x>378</x>
      <y>407</y>
     </hint>
    </hints>
@@ -1159,7 +1188,7 @@
      <y>521</y>
     </hint>
     <hint type="destinationlabel">
-     <x>479</x>
+     <x>263</x>
      <y>564</y>
     </hint>
    </hints>
@@ -1431,7 +1460,7 @@
      <y>105</y>
     </hint>
     <hint type="destinationlabel">
-     <x>590</x>
+     <x>374</x>
      <y>356</y>
     </hint>
    </hints>
@@ -1524,7 +1553,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>50</x>
-     <y>597</y>
+     <y>577</y>
     </hint>
     <hint type="destinationlabel">
      <x>236</x>
@@ -1543,7 +1572,7 @@
      <y>607</y>
     </hint>
     <hint type="destinationlabel">
-     <x>476</x>
+     <x>260</x>
      <y>501</y>
     </hint>
    </hints>
@@ -1801,6 +1830,22 @@
     <hint type="destinationlabel">
      <x>280</x>
      <y>389</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>numberOfGlyphsSlider_2</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setGradientSize(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>133</x>
+     <y>591</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>232</x>
+     <y>527</y>
     </hint>
    </hints>
   </connection>
