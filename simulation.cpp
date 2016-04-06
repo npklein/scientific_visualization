@@ -22,6 +22,7 @@ fftw_real* Simulation::get_rho() const{return rho;}
 fftw_real* Simulation::get_rho0() const {return rho0;}
 fftw_real* Simulation::get_vx() const {return vx;}
 fftw_real* Simulation::get_vy() const {return vy;}
+fftw_real* Simulation::get_vm() const {return vm;}
 fftw_real Simulation::get_rho_min() const{return rho_min;}
 fftw_real Simulation::get_rho_max() const{return rho_max;}
 float Simulation::get_f_magnitude_min() const{return f_magnitude_min*100;}
@@ -45,6 +46,7 @@ void Simulation::init_simulation(int n)
     dim     = n * 2*(n/2+1)*sizeof(fftw_real);        //Allocate data structures
     vx       = (fftw_real*) malloc(dim);
     vy       = (fftw_real*) malloc(dim);
+    vm       = (fftw_real*) malloc(dim);
     vx0      = (fftw_real*) malloc(dim);
     vy0      = (fftw_real*) malloc(dim);
     dim     = n * n * sizeof(fftw_real);
@@ -132,6 +134,7 @@ void Simulation::solve(int n, fftw_real* vx, fftw_real* vy, fftw_real* vx0, fftw
        {
            vx[i+n*j] = f*vx0[i+(n+2)*j];
            vy[i+n*j] = f*vy0[i+(n+2)*j];
+           vm[i+n*j] = Vector(vx[i+n*j], vy[i+n*j]).length();
             float v_magnitude = Vector(vx[i+n*j], vy[i+n*j]).length();
             if (v_magnitude > v_magnitude_max){
                 v_magnitude_max = v_magnitude;
