@@ -136,7 +136,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <property name="iconSize">
       <size>
@@ -1076,6 +1076,7 @@
     <slot>setAlpha(int)</slot>
     <slot>selectNumberOfSlices(int)</slot>
     <slot>setGradientSize(int)</slot>
+    <slot>setDrawSelectedPointsStreamline()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -1741,7 +1742,7 @@
    <sender>radioButtonDrawSelectedPointsStreamline</sender>
    <signal>clicked()</signal>
    <receiver>myGLWidget</receiver>
-   <slot>setDrawSelectedPoints()</slot>
+   <slot>setDrawSelectedPointsStreamline()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>170</x>

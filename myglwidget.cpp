@@ -104,7 +104,7 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     if (gradient){
         drawGradient();
     }
-    if (show_points && ( select_points || draw_selected_points || draw_streamline )){
+    if (show_points && ( select_points || draw_selected_points )){
         drawSelectedPoints();
     }
     if (draw_smoke && !draw_slices)
@@ -392,7 +392,7 @@ void MyGLWidget::drawSlices(int n){
         //}
         //simulation_vector.insert(simulation_vector.begin(), simulation);
 
-        drawStreamline(n-y, alpha);
+        drawStreamline(y, alpha);
     }
 //glLoadIdentity();
 
@@ -455,15 +455,11 @@ void MyGLWidget::selectedPoints(std::vector<int> &points_x, std::vector<int> &po
     }
 }
 
-void MyGLWidget::setDrawDefaultStreamline(bool){
-    draw_default_points_streamline = true;
-    draw_vecs = false;
-    draw_smoke = false;
-}
+
 
 void MyGLWidget::drawDefaultPointsStreamline(){
     float x2,y2;
-    float radius  = 2;
+    float radius  = 2*selected_point_size;;
     float angle   = 1.0;
 
     for (unsigned t = 0; t < points_x.size(); t++){
@@ -488,14 +484,14 @@ void MyGLWidget::drawStreamline(float z, float alpha)
 {
     float dt = cell_width/10.0;
     float max_size = cell_width*10.0;
-    float max_time = 100;
+    float max_time = 50;
 
     if(draw_selected_points){
         selectedPoints(points_x, points_y);
     }
     else if(draw_default_points_streamline){
         defaultPointsStreamline(points_x, points_y);
-        drawDefaultPointsStreamline();
+        //drawDefaultPointsStreamline();
     }
 
 
@@ -960,6 +956,8 @@ void MyGLWidget::selectPointsStreamline(bool new_select_points){
     }
 }
 
+
+
 void MyGLWidget::drawDefaultPoints(){
     draw_default_points = true;
     draw_selected_points = false;
@@ -969,6 +967,19 @@ void MyGLWidget::setDrawSelectedPoints(){
     draw_default_points = false;
     draw_selected_points = true;
 }
+
+void MyGLWidget::setDrawSelectedPointsStreamline(){
+    draw_selected_points  = true;
+    draw_default_points_streamline = false;
+}
+
+void MyGLWidget::setDrawDefaultStreamline(bool){
+    draw_default_points_streamline = true;
+    draw_selected_points = false;
+    draw_vecs = false;
+    draw_smoke = false;
+}
+
 
 void MyGLWidget::showPoints(bool new_show_points){
     show_points = new_show_points;

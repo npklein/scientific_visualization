@@ -111,6 +111,7 @@ private slots:
     void drawDefaultPoints();
 
     void setDrawSelectedPoints();
+    void setDrawSelectedPointsStreamline();
 
     void drawSelectedPoints();
 
