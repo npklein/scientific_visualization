@@ -750,19 +750,6 @@
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QCheckBox" name="drawGradientCheckbox">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>530</y>
-         <width>110</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Draw gradient</string>
-       </property>
-      </widget>
       <widget class="QCheckBox" name="selectPointsCheckbox">
        <property name="geometry">
         <rect>
@@ -808,11 +795,190 @@
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
+     </widget>
+     <widget class="QWidget" name="streamlines">
+      <attribute name="title">
+       <string>Gradient/Streamlines/Slices</string>
+      </attribute>
+      <widget class="QCheckBox" name="drawStreamLineCheckbox">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>190</y>
+         <width>118</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Stream lines</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="selectPointsCheckbox2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>210</y>
+         <width>120</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Select points</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="clearSelectedPointsButton_2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>230</y>
+         <width>171</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Clear selected points</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="slicesCheckBox">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>460</y>
+         <width>86</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Slices</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButtonDrawSelectedPointsStreamline">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>310</y>
+         <width>161</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Draw selected points</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_13">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>350</y>
+         <width>91</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Line thickness:</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBoxLineThickness">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>340</y>
+         <width>51</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="maximum">
+        <number>50</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>1</number>
+       </property>
+       <property name="displayIntegerBase">
+        <number>10</number>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="drawDefaultPointsStreamlineCheckbox">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>280</y>
+         <width>161</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Draw default points</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBox_2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>490</y>
+         <width>48</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>10</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_14">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>490</y>
+         <width>59</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Alpha</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBox_3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>530</y>
+         <width>48</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <number>20</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_15">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>530</y>
+         <width>141</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Number of slices</string>
+       </property>
+      </widget>
       <widget class="QSlider" name="numberOfGlyphsSlider_2">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>550</y>
+         <y>60</y>
          <width>121</width>
          <height>22</height>
         </rect>
@@ -836,134 +1002,39 @@
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
-     </widget>
-     <widget class="QWidget" name="streamlines">
-      <attribute name="title">
-       <string>Streamlines/Slices</string>
-      </attribute>
-      <widget class="QCheckBox" name="drawStreamLineCheckbox">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
+      <widget class="QCheckBox" name="drawGradientCheckbox">
        <property name="geometry">
         <rect>
-         <x>0</x>
+         <x>10</x>
          <y>10</y>
-         <width>118</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Stream lines</string>
-       </property>
-      </widget>
-      <widget class="QCheckBox" name="selectPointsCheckbox2">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>30</y>
-         <width>120</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Select points</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="clearSelectedPointsButton_2">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>50</y>
          <width>171</width>
-         <height>32</height>
+         <height>20</height>
         </rect>
        </property>
        <property name="text">
-        <string>Clear selected points</string>
+        <string>Draw smoke gradient</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="slicesCheckBox">
+      <widget class="QCheckBox" name="drawGradientCheckbox_2">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>280</y>
-         <width>86</width>
+         <y>30</y>
+         <width>181</width>
          <height>20</height>
         </rect>
        </property>
        <property name="text">
-        <string>Slices</string>
+        <string>Draw velocity gradient</string>
        </property>
       </widget>
-      <widget class="QRadioButton" name="radioButtonDrawSelectedPointsStreamline">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>130</y>
-         <width>161</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Draw selected points</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_13">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>170</y>
-         <width>91</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Line thickness:</string>
-       </property>
-      </widget>
-      <widget class="QSpinBox" name="spinBoxLineThickness">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>160</y>
-         <width>51</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="maximum">
-        <number>50</number>
-       </property>
-       <property name="singleStep">
-        <number>1</number>
-       </property>
-       <property name="value">
-        <number>1</number>
-       </property>
-       <property name="displayIntegerBase">
-        <number>10</number>
-       </property>
-      </widget>
-      <widget class="QRadioButton" name="drawDefaultPointsStreamlineCheckbox">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>100</y>
-         <width>161</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Draw default points</string>
-       </property>
-      </widget>
-      <widget class="QSpinBox" name="spinBox_2">
+      <widget class="QSlider" name="numberOfGlyphsSlider_3">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>310</y>
-         <width>48</width>
-         <height>24</height>
+         <y>90</y>
+         <width>121</width>
+         <height>22</height>
         </rect>
        </property>
        <property name="minimum">
@@ -972,47 +1043,43 @@
        <property name="maximum">
         <number>10</number>
        </property>
+       <property name="pageStep">
+        <number>10</number>
+       </property>
+       <property name="value">
+        <number>5</number>
+       </property>
+       <property name="sliderPosition">
+        <number>5</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
       </widget>
-      <widget class="QLabel" name="label_14">
+      <widget class="QLabel" name="label_16">
        <property name="geometry">
         <rect>
-         <x>70</x>
-         <y>310</y>
+         <x>140</x>
+         <y>60</y>
          <width>59</width>
          <height>16</height>
         </rect>
        </property>
        <property name="text">
-        <string>Alpha</string>
+        <string>Smoke</string>
        </property>
       </widget>
-      <widget class="QSpinBox" name="spinBox_3">
+      <widget class="QLabel" name="label_17">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>350</y>
-         <width>48</width>
-         <height>24</height>
-        </rect>
-       </property>
-       <property name="minimum">
-        <number>2</number>
-       </property>
-       <property name="maximum">
-        <number>20</number>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_15">
-       <property name="geometry">
-        <rect>
-         <x>60</x>
-         <y>350</y>
-         <width>141</width>
+         <x>140</x>
+         <y>90</y>
+         <width>59</width>
          <height>16</height>
         </rect>
        </property>
        <property name="text">
-        <string>Number of slices</string>
+        <string>Velocity</string>
        </property>
       </widget>
      </widget>
@@ -1052,7 +1119,7 @@
     <slot>drawGrid(bool)</slot>
     <slot>setGridSize(int)</slot>
     <slot>drawDispersion(bool)</slot>
-    <slot>setDrawGradient(bool)</slot>
+    <slot>setDrawGradientSmoke(bool)</slot>
     <slot>setDrawStreamline(bool)</slot>
     <slot>setFluidDensity()</slot>
     <slot>setFluidVelocity()</slot>
@@ -1075,8 +1142,10 @@
     <slot>setSelectedPointSize(int)</slot>
     <slot>setAlpha(int)</slot>
     <slot>selectNumberOfSlices(int)</slot>
-    <slot>setGradientSize(int)</slot>
+    <slot>setGradientSizeSmoke(int)</slot>
     <slot>setDrawSelectedPointsStreamline()</slot>
+    <slot>setDrawGradientVelocity(bool)</slot>
+    <slot>setGradientSizeVelocity(int)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -1547,22 +1616,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>drawGradientCheckbox</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>myGLWidget</receiver>
-   <slot>setDrawGradient(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>50</x>
-     <y>577</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>236</x>
-     <y>531</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>showPointsCheckbox</sender>
    <signal>clicked(bool)</signal>
    <receiver>myGLWidget</receiver>
@@ -1602,7 +1655,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>54</x>
-     <y>99</y>
+     <y>279</y>
     </hint>
     <hint type="destinationlabel">
      <x>305</x>
@@ -1618,11 +1671,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>35</x>
-     <y>74</y>
+     <y>254</y>
     </hint>
     <hint type="destinationlabel">
      <x>33</x>
-     <y>50</y>
+     <y>230</y>
     </hint>
    </hints>
   </connection>
@@ -1634,7 +1687,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>92</x>
-     <y>56</y>
+     <y>236</y>
     </hint>
     <hint type="destinationlabel">
      <x>331</x>
@@ -1666,7 +1719,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>114</x>
-     <y>72</y>
+     <y>252</y>
     </hint>
     <hint type="destinationlabel">
      <x>263</x>
@@ -1682,7 +1735,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>50</x>
-     <y>327</y>
+     <y>507</y>
     </hint>
     <hint type="destinationlabel">
      <x>282</x>
@@ -1698,11 +1751,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>88</x>
-     <y>77</y>
+     <y>257</y>
     </hint>
     <hint type="destinationlabel">
      <x>80</x>
-     <y>326</y>
+     <y>506</y>
     </hint>
    </hints>
   </connection>
@@ -1714,7 +1767,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>68</x>
-     <y>72</y>
+     <y>252</y>
     </hint>
     <hint type="destinationlabel">
      <x>274</x>
@@ -1730,7 +1783,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>127</x>
-     <y>72</y>
+     <y>252</y>
     </hint>
     <hint type="destinationlabel">
      <x>424</x>
@@ -1746,7 +1799,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>170</x>
-     <y>181</y>
+     <y>361</y>
     </hint>
     <hint type="destinationlabel">
      <x>273</x>
@@ -1762,7 +1815,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>165</x>
-     <y>222</y>
+     <y>402</y>
     </hint>
     <hint type="destinationlabel">
      <x>243</x>
@@ -1778,7 +1831,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>132</x>
-     <y>148</y>
+     <y>328</y>
     </hint>
     <hint type="destinationlabel">
      <x>253</x>
@@ -1810,7 +1863,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>46</x>
-     <y>355</y>
+     <y>535</y>
     </hint>
     <hint type="destinationlabel">
      <x>318</x>
@@ -1826,7 +1879,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>54</x>
-     <y>389</y>
+     <y>569</y>
     </hint>
     <hint type="destinationlabel">
      <x>280</x>
@@ -1835,18 +1888,66 @@
    </hints>
   </connection>
   <connection>
+   <sender>drawGradientCheckbox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setDrawGradientSmoke(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>82</x>
+     <y>54</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>251</x>
+     <y>64</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
    <sender>numberOfGlyphsSlider_2</sender>
    <signal>sliderMoved(int)</signal>
    <receiver>myGLWidget</receiver>
-   <slot>setGradientSize(int)</slot>
+   <slot>setGradientSizeSmoke(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>133</x>
-     <y>591</y>
+     <x>141</x>
+     <y>101</y>
     </hint>
     <hint type="destinationlabel">
-     <x>232</x>
-     <y>527</y>
+     <x>299</x>
+     <y>90</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>drawGradientCheckbox_2</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setDrawGradientVelocity(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>142</x>
+     <y>77</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>66</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>numberOfGlyphsSlider_3</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setGradientSizeVelocity(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>98</x>
+     <y>133</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>330</x>
+     <y>125</y>
     </hint>
    </hints>
   </connection>

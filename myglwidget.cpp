@@ -28,7 +28,8 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     DIM = 50;
     selected_point_size = 1;
     alpha_scale = 5;
-    gradient_size = 5;
+    gradient_size_smoke = 5;
+    gradient_size_velocity = 5;
     // should change to have a color map class that has color clamp values
     color_clamp_min_matter = 0.0;        // The lower bound value to clamp color map at
     color_clamp_max_matter = 1.0;        // The higher bound value to clamp color map at
@@ -50,7 +51,8 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     show_points = false;
     glyphs = "hedgehogs";
     dataset = "fluid velocity magnitude";
-    gradient = false;
+    gradient_smoke = false;
+    gradient_velocity = false;
     draw_streamline = false;
     simulation.init_simulation(DIM);
     QTimer *timer = new QTimer;
@@ -101,7 +103,7 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
             drawForcefield(simulation.get_fx(), simulation.get_fy());
         }
     }
-    if (gradient){
+    if (gradient_smoke || gradient_velocity){
         drawGradient();
     }
     if (show_points && ( select_points || draw_selected_points )){
@@ -150,36 +152,41 @@ void MyGLWidget::drawGradient()
     for (int i = 0; i < DIM; i++)
         for (int j = 0; j < DIM; j++)
         {
-            if (draw_smoke){
+            if (gradient_smoke){
             float left_rho =  simulation.get_rho()[((j-1) * DIM) + i];
             float up_rho =  simulation.get_rho()[(j * DIM) + (i-1)];
             float below_rho =  simulation.get_rho()[(j * DIM) + (i+1)];
             float right_rho =  simulation.get_rho()[((j+1) * DIM) + (i)];
             float x = left_rho - right_rho;
             float y = up_rho - below_rho;
-            Vector v = Vector(y*gradient_size, x*gradient_size);
+            Vector v = Vector(y*gradient_size_smoke, x*gradient_size_smoke);
             if (v.length() > 0){
-                drawArrow(v, i*cell_width, j*cell_height, v.length(), 2, 0, 1);
+                drawArrow(v, i*cell_width, j*cell_height, v.length(), 2, 0, 1, scalar_col);
             }
             }
-            if (draw_vecs){
+            if (gradient_velocity){
                 float left_vm =  simulation.get_vm()[((j-1) * DIM) + i];
                 float up_vm =  simulation.get_vm()[(j * DIM) + (i-1)];
                 float below_vm =  simulation.get_vm()[(j * DIM) + (i+1)];
                 float right_vm =  simulation.get_vm()[((j+1) * DIM) + (i)];
                 float x = left_vm - right_vm;
                 float y = up_vm - below_vm;
-                Vector v = Vector(y*gradient_size*10, x*10*gradient_size);
+                Vector v = Vector(y*gradient_size_velocity*20, x*20*gradient_size_velocity);
                 if (v.length() > 0){
-                    drawArrow(v, i*cell_width, j*cell_height, v.length(), 2, 0, 1);
+                    drawArrow(v, i*cell_width, j*cell_height, v.length(), 2, 0, 1, velocity_color);
                 }
             }
         }
 }
 
-void MyGLWidget::setGradientSize(int new_size){
-    gradient_size = new_size;
+void MyGLWidget::setGradientSizeSmoke(int new_size){
+    gradient_size_smoke = new_size;
 }
+
+void MyGLWidget::setGradientSizeVelocity(int new_size){
+    gradient_size_velocity = new_size;
+}
+
 
 void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy, float z, float alpha)
 {
@@ -243,7 +250,7 @@ void MyGLWidget::drawVelocity(fftw_real *vx, fftw_real *vy, float z, float alpha
                                                 y_coord, //y1
                                                 (x_coord) + 70 * vx_draw, //x2
                                                 (y_coord) + 70 * vy_draw);//y2
-                drawArrow(vector, x_coord, y_coord, unscaled_vector.length(), 10, simulation.get_v_magnitude_min(), simulation.get_v_magnitude_max());
+                drawArrow(vector, x_coord, y_coord, unscaled_vector.length(), 10, simulation.get_v_magnitude_min(), simulation.get_v_magnitude_max(), velocity_color);
             }
         }
         else if (glyphs == "cones"){
@@ -288,7 +295,7 @@ void MyGLWidget::drawForcefield(fftw_real *fx, fftw_real *fy)
                                            ((fftw_real)i * cell_width) + arrow_scale * fx[idx], //x2
                                            ((fftw_real)j * cell_height) + arrow_scale * fy[idx]);//y2
 
-                    drawArrow(vector, i, j, vector.length()/15, 10, simulation.get_f_magnitude_min(), simulation.get_f_magnitude_max());
+                    drawArrow(vector, i, j, vector.length()/15, 10, simulation.get_f_magnitude_min(), simulation.get_f_magnitude_max(), velocity_color);
                 }
             }
             else if (glyphs == "cones"){
@@ -306,11 +313,11 @@ void MyGLWidget::drawForcefield(fftw_real *fx, fftw_real *fy)
         }
 }
 
-void MyGLWidget::drawArrow(Vector vector, int x_coord, int y_coord, float vy, int scaling_factor, float vy_min, float vy_max){
+void MyGLWidget::drawArrow(Vector vector, int x_coord, int y_coord, float vy, int scaling_factor, float vy_min, float vy_max, int colormap){
     // draw an arrow the size of a cell, scale according to vector length
     float angle = vector.normalize().direction2angle();
 
-    set_colormap(vy, velocity_color, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph, scale_color, vy_min, vy_max, 1);
+    set_colormap(vy, colormap, color_clamp_min_glyph, color_clamp_max_glyph, color_bands, hue_glyph, saturation_glyph, scale_color, vy_min, vy_max, 1);
     glPushMatrix();
     glTranslatef(x_coord,y_coord, 0);
     glRotated(angle,0,0,1);
@@ -373,7 +380,8 @@ void MyGLWidget::drawCone(Vector vector, int i, int j, float vy, int scaling_fac
 
 void MyGLWidget::drawSlices(int n){
    float alpha = alpha_scale/n;
-  /* glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   /*
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glLoadIdentity();
    // move camera a distance r away from the center
    glTranslatef(0, 0, -1);
@@ -387,6 +395,7 @@ void MyGLWidget::drawSlices(int n){
 */
    for(int y = 0; y < n; y++){
         do_one_simulation_step(false);
+        do_one_simulation_step(false);
         //while(simulation_vector.size() > n){
         //    simulation_vector.pop_back();
         //}
@@ -394,12 +403,11 @@ void MyGLWidget::drawSlices(int n){
 
         drawStreamline(y, alpha);
     }
-//glLoadIdentity();
+ glLoadIdentity();
 
     //simulation = simulation_vector[0];
     //simulation = simulation_vector[1];
     //drawVelocity(simulation.get_vx(), simulation.get_vy());
-    //updateGL();
 }
 
 
@@ -615,18 +623,14 @@ void MyGLWidget::showAnimation(bool new_frozen)
 void MyGLWidget::drawMatter(bool new_draw_smoke)
 {
     draw_smoke = new_draw_smoke;
-    if (!draw_smoke) {
-        draw_vecs = true;
-    }
-    else{draw_slices = false;}
+    if(draw_vecs){draw_slices = false;}
 
 }
 
 void MyGLWidget::drawHedgehogs(bool new_draw_vecs)
 {
     draw_vecs = new_draw_vecs;
-    if (!draw_vecs) {draw_smoke = true;}
-    else{draw_slices = false;}
+    if(draw_vecs){draw_slices = false;}
 }
 
 void MyGLWidget::drawGrid(bool new_draw_grid)
@@ -911,9 +915,15 @@ void MyGLWidget::drawGridLines(int DIM){
     glEnd();
 }
 
-void MyGLWidget::setDrawGradient(bool new_gradient){
-    gradient = new_gradient;
-    if (gradient){
+void MyGLWidget::setDrawGradientSmoke(bool new_gradient){
+    gradient_smoke = new_gradient;
+    if (gradient_smoke){
+        draw_slices = false;
+    }
+}
+void MyGLWidget::setDrawGradientVelocity(bool new_gradient){
+    gradient_velocity = new_gradient;
+    if (gradient_velocity){
         draw_slices = false;
     }
 }
