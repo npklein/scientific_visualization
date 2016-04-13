@@ -23,6 +23,12 @@ public slots:
     void do_one_simulation_step();
 
 private slots:
+    void zoom(int zoom);
+
+    void selectNumberOfSlices(int slices);
+
+    void perspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar);
+
     void showAnimation(bool new_frozen);
 
     void drawMatter(bool);
@@ -88,7 +94,7 @@ private slots:
 
     void setDrawGradientVelocity(bool new_gradient);
 
-    void drawSlices(int n);
+   // void drawSlices(int n);
 
     void setNumberOfGlyphs(int position);
 
@@ -123,7 +129,6 @@ private slots:
 
     void selectPointsStreamline(bool new_select_points);
 
-    void selectNumberOfSlices(bool new_number_of_slices);
 
     void setSelectedPointSize(int new_selected_point_size);
 
@@ -183,7 +188,10 @@ private:
     bool draw_default_points_streamline;
     bool draw_selected_points;
     int alpha_scale;
-
+    float glOrtho_xmin;
+    float glOrtho_xmax;
+    float glOrtho_ymin;
+    float glOrtho_ymax;
     Simulation simulation;
     fftw_real  cell_width;
     fftw_real  cell_height;

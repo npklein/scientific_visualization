@@ -85,8 +85,6 @@
        <property name="mouseTracking">
         <bool>false</bool>
        </property>
-       <zorder>tabWidget</zorder>
-       <zorder>tabWidget</zorder>
       </widget>
      </item>
      <item row="2" column="2">
@@ -136,7 +134,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>3</number>
      </property>
      <property name="iconSize">
       <size>
@@ -798,7 +796,7 @@
      </widget>
      <widget class="QWidget" name="streamlines">
       <attribute name="title">
-       <string>Gradient/Streamlines/Slices</string>
+       <string>Gradient and Streamlines</string>
       </attribute>
       <widget class="QCheckBox" name="drawStreamLineCheckbox">
        <property name="enabled">
@@ -840,19 +838,6 @@
        </property>
        <property name="text">
         <string>Clear selected points</string>
-       </property>
-      </widget>
-      <widget class="QCheckBox" name="slicesCheckBox">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>460</y>
-         <width>86</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Slices</string>
        </property>
       </widget>
       <widget class="QRadioButton" name="radioButtonDrawSelectedPointsStreamline">
@@ -914,64 +899,6 @@
        </property>
        <property name="text">
         <string>Draw default points</string>
-       </property>
-      </widget>
-      <widget class="QSpinBox" name="spinBox_2">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>490</y>
-         <width>48</width>
-         <height>24</height>
-        </rect>
-       </property>
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>10</number>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_14">
-       <property name="geometry">
-        <rect>
-         <x>70</x>
-         <y>490</y>
-         <width>59</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Alpha</string>
-       </property>
-      </widget>
-      <widget class="QSpinBox" name="spinBox_3">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>530</y>
-         <width>48</width>
-         <height>24</height>
-        </rect>
-       </property>
-       <property name="minimum">
-        <number>2</number>
-       </property>
-       <property name="maximum">
-        <number>20</number>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_15">
-       <property name="geometry">
-        <rect>
-         <x>60</x>
-         <y>530</y>
-         <width>141</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Number of slices</string>
        </property>
       </widget>
       <widget class="QSlider" name="numberOfGlyphsSlider_2">
@@ -1083,6 +1010,114 @@
        </property>
       </widget>
      </widget>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Slices</string>
+      </attribute>
+      <widget class="QLabel" name="label_15">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>60</y>
+         <width>141</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Number of slices</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBox_2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>100</y>
+         <width>48</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="value">
+        <number>5</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_14">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>100</y>
+         <width>59</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Alpha</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBox_3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>60</y>
+         <width>48</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="slicesCheckBox">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>86</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Slices</string>
+       </property>
+      </widget>
+      <widget class="QSlider" name="verticalSlider">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>140</y>
+         <width>22</width>
+         <height>160</height>
+        </rect>
+       </property>
+       <property name="sliderPosition">
+        <number>50</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_18">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>140</y>
+         <width>59</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Zoom</string>
+       </property>
+      </widget>
+     </widget>
     </widget>
    </item>
   </layout>
@@ -1146,6 +1181,8 @@
     <slot>setDrawSelectedPointsStreamline()</slot>
     <slot>setDrawGradientVelocity(bool)</slot>
     <slot>setGradientSizeVelocity(int)</slot>
+    <slot>setNumberOfSlices(int)</slot>
+    <slot>zoom(int)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -1728,54 +1765,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>slicesCheckBox</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>myGLWidget</receiver>
-   <slot>setDrawSlices(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>50</x>
-     <y>507</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>282</x>
-     <y>332</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>selectPointsCheckbox2</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>slicesCheckBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>88</x>
-     <y>257</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>80</x>
-     <y>506</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>selectPointsCheckbox2</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>drawingMatterCheckbox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>68</x>
-     <y>252</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>274</x>
-     <y>612</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>selectPointsCheckbox2</sender>
    <signal>clicked(bool)</signal>
    <receiver>drawingHedgehogsCheckbox</receiver>
@@ -1856,38 +1845,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>spinBox_2</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>myGLWidget</receiver>
-   <slot>setAlpha(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>46</x>
-     <y>535</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>318</x>
-     <y>365</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBox_3</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>myGLWidget</receiver>
-   <slot>selectNumberOfSlices(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>54</x>
-     <y>569</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>280</x>
-     <y>389</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>drawGradientCheckbox</sender>
    <signal>clicked(bool)</signal>
    <receiver>myGLWidget</receiver>
@@ -1948,6 +1905,70 @@
     <hint type="destinationlabel">
      <x>330</x>
      <y>125</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slicesCheckBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setDrawSlices(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>61</x>
+     <y>80</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>260</x>
+     <y>73</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_3</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>selectNumberOfSlices(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>47</x>
+     <y>109</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>252</x>
+     <y>110</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_2</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>setAlpha(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>42</x>
+     <y>147</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>235</x>
+     <y>156</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>verticalSlider</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>myGLWidget</receiver>
+   <slot>zoom(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>49</x>
+     <y>216</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>408</x>
+     <y>238</y>
     </hint>
    </hints>
   </connection>

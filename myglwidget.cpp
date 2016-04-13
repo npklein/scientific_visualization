@@ -47,10 +47,15 @@ MyGLWidget::MyGLWidget(QWidget *parent)
     number_of_slices = 5;
     line_width = 1.0;
     draw_grid = false;
+    glOrtho_xmin = -500;
+    glOrtho_xmax = windowWidth+500;
+    glOrtho_ymin = -500;
+    glOrtho_ymax = windowHeight+500;
     draw_slices = false;
     show_points = false;
     glyphs = "hedgehogs";
     dataset = "fluid velocity magnitude";
+    number_of_slices = 2;
     gradient_smoke = false;
     gradient_velocity = false;
     draw_streamline = false;
@@ -74,6 +79,8 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
 {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_TABLE);
+    glEnable(GL_SMOOTH);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable (GL_BLEND);
@@ -88,54 +95,124 @@ void MyGLWidget::paintGL() //glutDisplayFunc(display);
     if (draw_grid){
         drawGridLines(DIM);
     }
+
     if(draw_slices){
-        drawSlices(number_of_slices);
+        glEnable(GL_BLEND);
+
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glClearColor(0, 0, 0, 0);
+        glViewport(0,0,windowWidth,windowHeight);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        //glRotatef(45, 0.0f, 0.0f,0.0f);
+        glOrtho(glOrtho_xmin, glOrtho_xmax, glOrtho_ymin, glOrtho_ymax, 0, 50) ;
+        GLdouble aspect = windowWidth / (windowHeight ? windowHeight : 1);
+        const GLdouble zNear = 1, zFar = 30, fov = -5;
+        perspective(fov, aspect, zNear, zFar);
     }
+
     if (draw_streamline || (draw_default_points_streamline && draw_streamline)){
+        if(draw_streamline){
         drawStreamline(0, 1);
+        }
+        else{
+        for (int i = 0; i < number_of_slices; i++){
+
+            glMatrixMode(GL_MODELVIEW);
+            glLoadIdentity();
+            glTranslatef((i-number_of_slices/2)*100, (i-number_of_slices/2)*100, i-number_of_slices);
+            float alpha = alpha_scale/(float)number_of_slices;
+            drawStreamline(0, alpha);
+}
+        }
     }
-    if (draw_vecs && !draw_slices)
+    if (draw_vecs)
     {
         if(draw_v){
-            drawVelocity(simulation.get_vx(), simulation.get_vy(), 0, 1);
+            if(!draw_slices){
+                drawVelocity(simulation.get_vx(), simulation.get_vy(), 0, 1);
+            }
+            else{
+                for (int i = 0; i < number_of_slices; i++){
+
+                    glMatrixMode(GL_MODELVIEW);
+                    glLoadIdentity();
+                    glTranslatef((i-number_of_slices/2)*100, (i-number_of_slices/2)*100, i-number_of_slices);
+                    float alpha = alpha_scale/(float)number_of_slices;
+                    drawVelocity(simulation.get_vx(), simulation.get_vy(), 0, alpha);
+
+                }
+
+            }
         }
         else if (draw_f){
             drawForcefield(simulation.get_fx(), simulation.get_fy());
         }
     }
     if (gradient_smoke || gradient_velocity){
+        glShadeModel(GL_SMOOTH);
         drawGradient();
     }
     if (show_points && ( select_points || draw_selected_points )){
         drawSelectedPoints();
     }
-    if (draw_smoke && !draw_slices)
+    if (draw_smoke)
     {
-        drawSmoke(0,1);
+        if(!draw_slices){
+            drawSmoke(0,1);
+        }
+        else{
+            for (int i = 0; i < number_of_slices; i++){
+                glMatrixMode(GL_MODELVIEW);
+                glLoadIdentity();
+                glTranslatef((i-number_of_slices/2)*100, (i-number_of_slices/2)*100, i-number_of_slices);
+                float alpha = alpha_scale/(float)number_of_slices;
+                drawSmoke(0,alpha);
+            }
+        }
     }
 
     //OGL_Draw_Text();
     glFlush();
 }
 
-void MyGLWidget::resizeGL(int width, int height)
+void MyGLWidget::perspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar)
 {
-    // removing below had no effect on what is drawn, so better to not use to lower complexity
-    //glViewport(0.0f, 0.0f, (GLfloat)width, (GLfloat)height);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluOrtho2D(0.0, (GLdouble)width, 0.0, (GLdouble)height);
-    windowWidth = width; windowHeight = height;
+    GLdouble xmin, xmax, ymin, ymax;
+
+    ymax = zNear * tan( fovy * M_PI / 360.0 );
+    ymin = -ymax;
+    xmin = ymin * aspect;
+    xmax = ymax * aspect;
+
+    glFrustum( xmin, xmax, ymin, ymax, zNear, zFar );
 }
 
+void MyGLWidget::resizeGL(int width, int height)
+{
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    windowWidth = width; windowHeight = height;
+    glOrtho(0.0, (GLdouble)windowWidth, 0.0, (GLdouble)windowHeight,0,50);
+    //gluOrtho2D(0.0, (GLdouble)width, 0.0, (GLdouble)height);
 
+    glOrtho_xmax = windowWidth+500;
+    glOrtho_ymax = windowHeight+500;
+}
+
+void MyGLWidget::zoom(int zoom){
+    glOrtho_xmin = -500 +((zoom-49)*100);
+    glOrtho_xmax = windowWidth + 500 + ((51-zoom)*100);
+    glOrtho_ymin = -500 +((zoom-49)*100);
+    glOrtho_ymax = windowHeight + 500 + ((51-zoom)*100);
+}
 
 void MyGLWidget::mousePressEvent(QMouseEvent *event)
 {
     lastPos = event->pos();
     if(select_points){
-        mouse_x.insert(mouse_x.end(), lastPos.x()); //*2
-        mouse_y.insert(mouse_y.end(), windowHeight - lastPos.y());//*2
+        mouse_x.insert(mouse_x.end(), lastPos.x()*2); //
+        mouse_y.insert(mouse_y.end(), windowHeight - lastPos.y()*2);//
     }
 }
 
@@ -143,8 +220,8 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     int mx = event->x();// - lastposition gets calculated in drag(), could save a step by using lastPos.x/y but leaving it like this is safer
     int my = event->y();
-    simulation.drag(mx,my, DIM, windowWidth, windowHeight);  // Works for Freerk when using external display
-    //simulation.drag(mx,my, DIM, windowWidth/2, windowHeight/2); // Works for Niek
+    //simulation.drag(mx,my, DIM, windowWidth, windowHeight);  // Works for Freerk when using external display
+    simulation.drag(mx,my, DIM, windowWidth/2, windowHeight/2); // Works for Niek
 }
 
 void MyGLWidget::drawGradient()
@@ -153,16 +230,16 @@ void MyGLWidget::drawGradient()
         for (int j = 0; j < DIM; j++)
         {
             if (gradient_smoke){
-            float left_rho =  simulation.get_rho()[((j-1) * DIM) + i];
-            float up_rho =  simulation.get_rho()[(j * DIM) + (i-1)];
-            float below_rho =  simulation.get_rho()[(j * DIM) + (i+1)];
-            float right_rho =  simulation.get_rho()[((j+1) * DIM) + (i)];
-            float x = left_rho - right_rho;
-            float y = up_rho - below_rho;
-            Vector v = Vector(y*gradient_size_smoke, x*gradient_size_smoke);
-            if (v.length() > 0){
-                drawArrow(v, i*cell_width, j*cell_height, v.length(), 2, 0, 1, scalar_col);
-            }
+                float left_rho =  simulation.get_rho()[((j-1) * DIM) + i];
+                float up_rho =  simulation.get_rho()[(j * DIM) + (i-1)];
+                float below_rho =  simulation.get_rho()[(j * DIM) + (i+1)];
+                float right_rho =  simulation.get_rho()[((j+1) * DIM) + (i)];
+                float x = left_rho - right_rho;
+                float y = up_rho - below_rho;
+                Vector v = Vector(y*gradient_size_smoke, x*gradient_size_smoke);
+                if (v.length() > 0){
+                    drawArrow(v, i*cell_width, j*cell_height, v.length(), 2, 0, 1, scalar_col);
+                }
             }
             if (gradient_velocity){
                 float left_vm =  simulation.get_vm()[((j-1) * DIM) + i];
@@ -360,7 +437,7 @@ void MyGLWidget::drawCone(Vector vector, int i, int j, float vy, int scaling_fac
     glBegin(GL_TRIANGLE_FAN);
     glVertex3f(0, 0, 0);
     // Smooth shading
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glShadeModel(GL_SMOOTH);
     glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
     //glEnable (GL_LIGHTING);
@@ -377,10 +454,10 @@ void MyGLWidget::drawCone(Vector vector, int i, int j, float vy, int scaling_fac
     glPopMatrix(); // now it's at normal scale again
     glLoadIdentity(); // needed to stop the rotating, otherwise rotates the entire drawing
 }
-
+/*
 void MyGLWidget::drawSlices(int n){
-   float alpha = alpha_scale/n;
-   /*
+    float alpha = alpha_scale/n;
+
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glLoadIdentity();
    // move camera a distance r away from the center
@@ -392,8 +469,8 @@ void MyGLWidget::drawSlices(int n){
 
    // move to center of circle
    glTranslatef(-windowWidth/2, -windowHeight/2, -2);
-*/
-   for(int y = 0; y < n; y++){
+
+    for(int y = 0; y < n; y++){
         do_one_simulation_step(false);
         do_one_simulation_step(false);
         //while(simulation_vector.size() > n){
@@ -403,13 +480,13 @@ void MyGLWidget::drawSlices(int n){
 
         drawStreamline(y, alpha);
     }
- glLoadIdentity();
+    glLoadIdentity();
 
     //simulation = simulation_vector[0];
     //simulation = simulation_vector[1];
     //drawVelocity(simulation.get_vx(), simulation.get_vy());
 }
-
+*/
 
 void MyGLWidget::defaultPointsStreamline(std::vector<int> &points_x, std::vector<int> &points_y){
     for (int i = 0; i < DIM; i+=10){
@@ -623,14 +700,11 @@ void MyGLWidget::showAnimation(bool new_frozen)
 void MyGLWidget::drawMatter(bool new_draw_smoke)
 {
     draw_smoke = new_draw_smoke;
-    if(draw_vecs){draw_slices = false;}
-
 }
 
 void MyGLWidget::drawHedgehogs(bool new_draw_vecs)
 {
     draw_vecs = new_draw_vecs;
-    if(draw_vecs){draw_slices = false;}
 }
 
 void MyGLWidget::drawGrid(bool new_draw_grid)
@@ -931,16 +1005,26 @@ void MyGLWidget::setDrawGradientVelocity(bool new_gradient){
 void MyGLWidget::setDrawStreamline(bool new_streamline){
     draw_streamline = new_streamline;
     if (draw_streamline) {
-        draw_vecs = false;
-        draw_smoke = false;
-        draw_slices = false;
+      //  draw_vecs = false;
+      //  draw_smoke = false;
+     //   draw_slices = false;
     }
 }
 
 void MyGLWidget::setDrawSlices(bool new_slices){
     draw_slices = new_slices;
     if (draw_slices) {
-        draw_streamline = false;
+        //draw_streamline = false;
+    }
+    else{
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            glOrtho(0.0, (GLdouble)windowWidth, 0.0, (GLdouble)windowHeight,0,50);
+           // glViewport(0,0,windowWidth,windowHeight);
+           // glMatrixMode(GL_PROJECTION);
+           // glLoadIdentity();
+           // glOrtho(0-1000, windowWidth+1000, 0-1000, windowHeight+1000, 0, 50) ;
+
     }
 }
 
@@ -994,9 +1078,7 @@ void MyGLWidget::showPoints(bool new_show_points){
     show_points = new_show_points;
 }
 
-void MyGLWidget::selectNumberOfSlices(bool new_number_of_slices){
-    number_of_slices = new_number_of_slices;
-}
+
 
 void MyGLWidget::setSelectedPointSize(int new_selected_point_size){
     selected_point_size = new_selected_point_size;
@@ -1004,4 +1086,8 @@ void MyGLWidget::setSelectedPointSize(int new_selected_point_size){
 
 void MyGLWidget::setAlpha(int new_alpha){
     alpha_scale = new_alpha;
+}
+
+void MyGLWidget::selectNumberOfSlices(int slices){
+    number_of_slices = slices;
 }
