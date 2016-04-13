@@ -20,7 +20,7 @@
    <bool>false</bool>
   </property>
   <property name="windowTitle">
-   <string>Fluid simulation</string>
+   <string>Fluid simulation - Niek de Klein (P274422) and Freerk van Dijk (P264906)</string>
   </property>
   <property name="layoutDirection">
    <enum>Qt::LeftToRight</enum>
@@ -1085,7 +1085,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>Slices</string>
+        <string>Slices*</string>
        </property>
       </widget>
       <widget class="QSlider" name="verticalSlider">
@@ -1115,6 +1115,32 @@
        </property>
        <property name="text">
         <string>Zoom</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_19">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>290</y>
+         <width>141</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>*Do not resize before</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_20">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>310</y>
+         <width>141</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>using slices</string>
        </property>
       </widget>
      </widget>

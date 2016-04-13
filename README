@@ -1,4 +1,4 @@
-
+By: Niek de Klein (P274422) & Freerk van Dijk (P264906)
 
 Fluid Flow demo for Mac OS X
 =============================
@@ -13,7 +13,7 @@ This is the fluid flow demo application ported for Mac OS X. For a full descript
 
 2.0. Requirements
 
-This application has been tested on several MacBook (Pro) computers running OS X versions 10.5x..10.6.x. The code does only depend on the OpenGL and GLUT frameworks, which are both installed by default under OS X.
+This application has been tested on several MacBook (Pro) computers running OS X versions 10.11.x and 10.10.5. The code does only depend on the OpenGL and GLUT frameworks, which are both installed by default under OS X.
 
 
 2.1. Building the FFTW library:
@@ -33,6 +33,11 @@ cd ../..
 
 
 2.2. Building the application itself
+
+
+Download and install Qt (http://www.qt.io/). Then
+
+qmake
 
 make
 
