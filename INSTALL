@@ -1,0 +1,28 @@
+
+1. Build the FFTW library:
+
+cd fftw-2.1.5/sourceAndDoc
+
+./configure
+
+If something does not work in the above step, please see the FFTW documentation.
+
+make
+
+cp fftw/.libs/libfftw.a ../lib
+cp rfftw/.libs/librfftw.a ../lib
+
+cd ../..
+
+
+2. Building the application itself
+
+
+Download and install Qt (http://www.qt.io/). Then
+
+qmake
+
+make
+
+The final application, called smoke, should be created in the current directory (where this INSTALL file is placed).
+
